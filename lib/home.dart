@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:landlearn/util/sample.dart';
+import 'package:landlearn/widget/TextSelectable.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -15,11 +17,13 @@ class _HomeState extends State<Home> {
       child: Row(
         children: [
           Expanded(
-            child: TextField(
-              controller: textController,
-              minLines: 20,
-              maxLines: 20,
-            ),
+            child: Text(sample),
+            // child: TextSelectable(text: sample),
+            // child: TextField(
+            //   controller: textController,
+            //   minLines: 20,
+            //   maxLines: 20,
+            // ),
           ),
           Column(children: [
             Text(getAllWordCount()),
@@ -40,8 +44,8 @@ class _HomeState extends State<Home> {
   }
 
   void mapWord() {
-    final wordList = textController.text
-        .split(RegExp("(?:(?![a-zA-Z])'|'(?![a-zA-Z])|[^a-zA-Z'])+"));
+    // final wordList = textController.text
+    final wordList = sample.split(_regex);
 
     for (var w in wordList) {
       String firstC;
@@ -86,4 +90,6 @@ class _HomeState extends State<Home> {
 
     return sum.toString();
   }
+
+  final _regex = RegExp("(?:(?![a-zA-Z])'|'(?![a-zA-Z])|[^a-zA-Z'])+");
 }
