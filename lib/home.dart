@@ -40,19 +40,8 @@ class _HomeState extends State<Home> {
   }
 
   void mapWord() {
-    textController.text.replaceAll('\n', ' ');
-    final wordList = (textController.text
-            .replaceAll('\n', ' ')
-            .replaceAll('.', ' ')
-            .replaceAll(',', ' ')
-            .replaceAll('?', ' ')
-            .replaceAll('!', ' ')
-            .replaceAll('\'', ' ')
-            .replaceAll('"', ' ')
-            .replaceAll('“', ' ')
-            .replaceAll('”', ' '))
-        // .split(RegExp('(\w+)'));
-        .split(RegExp(' '));
+    final wordList = textController.text
+        .split(RegExp("(?:(?![a-zA-Z])'|'(?![a-zA-Z])|[^a-zA-Z'])+"));
 
     for (var w in wordList) {
       String firstC;
