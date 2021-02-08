@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:landlearn/widget/ShowMoreTextPopup.dart';
 
 /// Easy to use text widget, which converts inlined urls into clickable links.
@@ -57,6 +58,8 @@ class _TextSelectableState extends State<TextSelectable> {
           decoration: TextDecoration.underline,
         );
 
+    final wordsBox = Hive.box('words');
+
     final others = _regex.allMatches(widget.text);
 
     if (others.isEmpty) {
@@ -72,24 +75,30 @@ class _TextSelectableState extends State<TextSelectable> {
 
       if (i < words.length) {
         final word = words[i];
+        final wordState = wordsBox.get(word.toLowerCase());
 
         final recognizer = TapGestureRecognizer()
           ..onTapDown = (d) {
-            final p = d.globalPosition;
+            wordsBox.put(word.toLowerCase(), wordState == 0 ? 1 : 0);
+            // final p = d.globalPosition;
 
-            return ShowMoreTextPopup(
-              context,
-              text: word,
-              width: 100,
-              height: 50,
-            ).show(rect: Rect.fromLTRB(p.dx, p.dy, p.dx + 1, p.dy + 1));
+            // return ShowMoreTextPopup(
+            //   context,
+            //   text: word + ' $wordState',
+            //   width: 100,
+            //   height: 50,
+            // ).show(rect: Rect.fromLTRB(p.dx, p.dy, p.dx + 1, p.dy + 1));
           };
 
         _gestureRecognizers.add(recognizer);
+
         textSpans.add(
           TextSpan(
             text: word,
-            style: linkStyle,
+            // style: linkStyle,
+            style: TextStyle(
+              color: wordState == 0 ? Colors.grey : Colors.green,
+            ),
             recognizer: recognizer,
           ),
         );
