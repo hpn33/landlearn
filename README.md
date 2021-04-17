@@ -12,3 +12,7 @@ splite by word
 unicode version
 '?[^\\p{L}']+'?
 
+
+## TODO
+* [ ] page for all word
+* [ ] 
