@@ -15,7 +15,7 @@ class ShowMoreTextPopup {
   late Rect _showRect;
   bool _isDownArrow = true;
 
-  late VoidCallback dismissCallback;
+  VoidCallback? dismissCallback;
 
   late Size _screenSize;
 
@@ -31,7 +31,7 @@ class ShowMoreTextPopup {
     this.context, {
     required double height,
     required double width,
-    required VoidCallback onDismiss,
+    VoidCallback? onDismiss,
     Color? backgroundColor,
     required String text,
     TextStyle? textStyle,
@@ -49,20 +49,30 @@ class ShowMoreTextPopup {
     this._padding = padding ?? EdgeInsets.all(4.0);
   }
 
-  /// Shows a popup near a widget with key [widgetKey] or [rect].
-  void show({Rect? rect, GlobalKey? widgetKey}) {
-    if (rect == null && widgetKey == null) {
-      assert(
-          rect != null && widgetKey != null, 'need one of rect or widgetKey');
-      return;
-    }
+  /// Shows a popup near a widget with key [widgetKey] .
+  void showWithKey(GlobalKey widgetKey) {
+    // get globalRect of widget with key [key]
+    final renderBox =
+        widgetKey.currentContext!.findRenderObject()! as RenderBox;
+    final offset = renderBox.localToGlobal(Offset.zero);
 
-    this._text = _text;
-    this._showRect = rect ?? _getWidgetGlobalRect(widgetKey!);
+    final rect = Rect.fromLTWH(
+      offset.dx,
+      offset.dy,
+      renderBox.size.width,
+      renderBox.size.height,
+    );
+
+    show(rect);
+  }
+
+  /// Shows a popup near a widget with [rect].
+  void show(Rect rect) {
+    this._showRect = rect;
     this._screenSize = window.physicalSize / window.devicePixelRatio;
-    this.dismissCallback = dismissCallback;
 
-    _calculatePosition(context);
+    // calculate position
+    _offset = _calculateOffset(context);
 
     _entry = OverlayEntry(builder: (context) {
       return buildPopupLayout(_offset);
@@ -70,19 +80,6 @@ class ShowMoreTextPopup {
 
     Overlay.of(context)!.insert(_entry);
     _isVisible = true;
-  }
-
-  void _calculatePosition(BuildContext context) {
-    _offset = _calculateOffset(context);
-  }
-
-  /// Returns globalRect of widget with key [key]
-  Rect _getWidgetGlobalRect(GlobalKey key) {
-    final renderBox = key.currentContext!.findRenderObject()! as RenderBox;
-    final offset = renderBox.localToGlobal(Offset.zero);
-
-    return Rect.fromLTWH(
-        offset.dx, offset.dy, renderBox.size.width, renderBox.size.height);
   }
 
   /// Returns calculated widget offset using [context]
@@ -170,10 +167,11 @@ class ShowMoreTextPopup {
     if (!_isVisible) {
       return;
     }
+
     _entry.remove();
     _isVisible = false;
     if (dismissCallback != null) {
-      dismissCallback();
+      dismissCallback!();
     }
   }
 }
@@ -181,28 +179,30 @@ class ShowMoreTextPopup {
 /// [TrianglePainter] is custom painter for drawing a triangle for popup
 /// to point specific widget
 class TrianglePainter extends CustomPainter {
-  bool isDownArrow;
-  Color color;
+  final bool isDownArrow;
+  final Color color;
 
   TrianglePainter({this.isDownArrow = true, required this.color});
 
   /// Draws the triangle of specific [size] on [canvas]
   @override
   void paint(Canvas canvas, Size size) {
-    Path path = new Path();
-    Paint paint = new Paint();
-    paint.strokeWidth = 2.0;
-    paint.color = color;
-    paint.style = PaintingStyle.fill;
+    final path = Path();
+    final paint = Paint()
+      ..strokeWidth = 2.0
+      ..color = color
+      ..style = PaintingStyle.fill;
 
     if (isDownArrow) {
-      path.moveTo(0.0, -1.0);
-      path.lineTo(size.width, -1.0);
-      path.lineTo(size.width / 2.0, size.height);
+      path
+        ..moveTo(0.0, -1.0)
+        ..lineTo(size.width, -1.0)
+        ..lineTo(size.width / 2.0, size.height);
     } else {
-      path.moveTo(size.width / 2.0, 0.0);
-      path.lineTo(0.0, size.height + 1);
-      path.lineTo(size.width, size.height + 1);
+      path
+        ..moveTo(size.width / 2.0, 0.0)
+        ..lineTo(0.0, size.height + 1)
+        ..lineTo(size.width, size.height + 1);
     }
 
     canvas.drawPath(path, paint);
@@ -210,7 +210,5 @@ class TrianglePainter extends CustomPainter {
 
   /// Specifies to redraw for [customPainter]
   @override
-  bool shouldRepaint(CustomPainter customPainter) {
-    return true;
-  }
+  bool shouldRepaint(CustomPainter customPainter) => true;
 }
