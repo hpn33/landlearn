@@ -3,6 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hive/hive.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:landlearn/hive/project.dart';
+import 'package:landlearn/hive/word.dart';
 
 final wordMapProvider = ChangeNotifierProvider.autoDispose((ref) => WordMap());
 
@@ -133,22 +134,33 @@ class StudyPage extends HookWidget {
   void mapingWord(BuildContext context, String input) async {
     final mapMap = context.read(wordMapProvider);
     final wordList = input.split(_regex);
-    final wordsBox = Hive.box('words');
+    final wordsBox = Hive.box<WordObj>('words');
 
     // await wordsBox.clear();
     mapMap.clear();
     // map.state = {};
-
+    print(wordList.length);
     for (var word in wordList) {
-      if (word.isNotEmpty) {
-        // await Future.delayed(Duration(milliseconds: 1));
-        mapMap.addWord(word);
-
-        if (!wordsBox.containsKey(word.toLowerCase()))
-          await wordsBox.put(word.toLowerCase(), 0);
-
-        // if (wordsBox.containsKey(w)) wordsBox.add(w);
+      if (word.isEmpty) {
+        continue;
       }
+
+      // await Future.delayed(Duration(milliseconds: 1));
+      mapMap.addWord(word);
+
+      final wordLowerCase = word.toLowerCase();
+      final firstWord = wordLowerCase.characters.first;
+
+      if (wordsBox.values
+          .where((element) => element.word.startsWith(firstWord))
+          .where((element) => element.word == wordLowerCase)
+          .isEmpty) {
+        await wordsBox.add(
+          WordObj()..word = word.toLowerCase(),
+        );
+      }
+
+      // if (wordsBox.containsKey(w)) wordsBox.add(w);
     }
   }
 

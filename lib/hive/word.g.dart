@@ -8,7 +8,7 @@ part of 'word.dart';
 
 class WordObjAdapter extends TypeAdapter<WordObj> {
   @override
-  final int typeId = 0;
+  final int typeId = 1;
 
   @override
   WordObj read(BinaryReader reader) {
@@ -18,16 +18,19 @@ class WordObjAdapter extends TypeAdapter<WordObj> {
     };
     return WordObj()
       ..word = fields[0] as String
-      ..know = fields[1] as bool;
+      ..translate = fields[1] as String
+      ..know = fields[2] as bool;
   }
 
   @override
   void write(BinaryWriter writer, WordObj obj) {
     writer
-      ..writeByte(2)
+      ..writeByte(3)
       ..writeByte(0)
       ..write(obj.word)
       ..writeByte(1)
+      ..write(obj.translate)
+      ..writeByte(2)
       ..write(obj.know);
   }
 

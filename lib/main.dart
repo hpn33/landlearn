@@ -6,6 +6,7 @@ import 'package:landlearn/hive/project.dart';
 
 import 'app.dart';
 import 'hive/project.dart';
+import 'hive/word.dart';
 
 void main() async {
   await loadHive();
@@ -17,9 +18,8 @@ Future<void> loadHive() async {
   await Hive.initFlutter();
 
   Hive.registerAdapter(ProjectObjAdapter());
+  Hive.registerAdapter(WordObjAdapter());
 
-  await Hive.openBox('words')
-    ..clear();
-  await Hive.openBox('projects')
-    ..clear();
+  await Hive.openBox<WordObj>('words');
+  await Hive.openBox<ProjectObj>('projects');
 }

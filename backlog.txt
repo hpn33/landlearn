@@ -1,9 +1,0 @@
-Disctionary App
-https://github.com/lohanidamodar/fl_dictio
-
-
-sql
-hook
-riverpod
-hive
-translate api
