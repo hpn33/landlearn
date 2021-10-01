@@ -1,5 +1,56 @@
 # landlearn
 
+import your .srt file (subtitle) to this app and know the word in file
+you check the word that you know and you can learn other word
+
+later you add another file, can see how many percentage of word know and how many not know
+
+
+can import content by other way .srt file is a goal for now
+
+
+## the step of project
+
+first: word section
+---
+a section for anything that need to work on words
+
+secend: content section
+---
+adding a text and doing process on
+
+the process is:
+
+analyze words and add to dictionary
+analyze content word and show status of content awarness
+
+
+
+## what is needed?
+* [ ] s
+
+
+## data structure
+
+
+#### words
+
+id
+word
+translate
+know
+
+#### contents
+id
+title
+body
+
+
+
+
+## resource
+
+
 Disctionary App
 https://github.com/lohanidamodar/fl_dictio
 
@@ -17,38 +68,16 @@ unicode version
 '?[^\\p{L}']+'?
 
 
+text editor 
+https://levelup.gitconnected.com/flutter-medium-like-text-editor-b41157f50f0e
+
+https://github.com/singerdmx/flutter-quill
+
+https://flutterawesome.com/tag/editor/
+
+
+
+
 ## TODO
-* [ ] page for all word
-
-
-
-data structure
-
-words
-word
-translate
-know
-
-content
-id
-title
-text
-
-
-content_data
-id
-content_id
-?
-
-
-
-home page
-
-* show content
-* add content
-
-
-
-
-
-
+* [ ] import .srt convert to content
+* [ ] export word from content

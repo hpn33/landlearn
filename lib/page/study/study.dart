@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:hive/hive.dart';
+// import 'package:hive/hive.dart;
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:landlearn/hive/project.dart';
-import 'package:landlearn/hive/word.dart';
+import 'package:landlearn/service/db/database.dart';
+// import 'package:landlearn/hive/project.dart';
+// import 'package:landlearn/hive/word.dart';
 
 final wordMapProvider = ChangeNotifierProvider.autoDispose((ref) => WordMap());
 
@@ -65,9 +66,9 @@ class StudyPage extends HookWidget {
 
   // final int keyId;
   // final String text;
-  final ProjectObj project;
+  final Content content;
 
-  StudyPage(this.project);
+  StudyPage(this.content);
 
   @override
   Widget build(BuildContext context) {
@@ -80,7 +81,7 @@ class StudyPage extends HookWidget {
 
     // useListenable(box.listenable(keys: [project.key]));
 
-    final textController = useTextEditingController(text: project.text);
+    final textController = useTextEditingController(text: content.content);
 
     return Material(
       child: Column(
@@ -96,8 +97,8 @@ class StudyPage extends HookWidget {
                   child: SingleChildScrollView(
                     child: TextField(
                       controller: textController,
-                      // minLines: 20,
-                      // maxLines: 1000,
+                      minLines: 20,
+                      maxLines: 1000,
                     ),
                   ),
                 ),
@@ -134,7 +135,7 @@ class StudyPage extends HookWidget {
   void mapingWord(BuildContext context, String input) async {
     final mapMap = context.read(wordMapProvider);
     final wordList = input.split(_regex);
-    final wordsBox = Hive.box<WordObj>('words');
+    // final wordsBox = Hive.box<WordObj>('words');
 
     // await wordsBox.clear();
     mapMap.clear();
@@ -151,14 +152,14 @@ class StudyPage extends HookWidget {
       final wordLowerCase = word.toLowerCase();
       final firstWord = wordLowerCase.characters.first;
 
-      if (wordsBox.values
-          .where((element) => element.word.startsWith(firstWord))
-          .where((element) => element.word == wordLowerCase)
-          .isEmpty) {
-        await wordsBox.add(
-          WordObj()..word = word.toLowerCase(),
-        );
-      }
+      // if (wordsBox.values
+      //     .where((element) => element.word.startsWith(firstWord))
+      //     .where((element) => element.word == wordLowerCase)
+      //     .isEmpty) {
+      //   await wordsBox.add(
+      //     WordObj()..word = word.toLowerCase(),
+      //   );
+      // }
 
       // if (wordsBox.containsKey(w)) wordsBox.add(w);
     }
@@ -175,9 +176,10 @@ class StudyPage extends HookWidget {
           TextButton(
             child: Text('save'),
             onPressed: () {
-              project
-                ..text = textController.text
-                ..save();
+              // project
+              //   ..text = textController.text
+              //   ..save();
+
               // box.put(keyId, project..text = textController.text);
               // box.get(keyId);
             },

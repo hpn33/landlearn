@@ -1,110 +1,66 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:hive/hive.dart';
-import 'package:landlearn/hive/project.dart';
-import 'package:landlearn/hive/word.dart';
-import 'package:landlearn/page/dialog/add_content_dialog.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:landlearn/page/study/study.dart';
-import 'package:hive_flutter/hive_flutter.dart';
+import 'package:landlearn/service/db/database.dart';
+
+import 'dialog/add_content_dialog.dart';
+import 'dialog/add_word_dialog.dart';
+
+final wordsP = StreamProvider((ref) => ref.read(dbProvider).wordDao.watching());
+final contentsP =
+    StreamProvider((ref) => ref.read(dbProvider).contentDao.watching());
 
 class HomePage extends HookWidget {
   @override
   Widget build(BuildContext context) {
-    final projectBox = Hive.box<ProjectObj>('projects');
-    useListenable(projectBox.listenable());
-    final projects = projectBox.values.toList();
+    // final db = useProvider(dbProvider);
+    // db.clearAllTable();
 
     return Material(
       child: SafeArea(
-        child: Column(
+        child: Row(
           children: [
-            topBar(context),
-            Expanded(
-              child: Row(
-                children: [
-                  Expanded(child: contents(context, projects)),
-                  SizedBox(width: 15),
-                  Expanded(child: words(context)),
-                ],
-              ),
-            ),
+            Expanded(child: words(context)),
+            Expanded(child: contents(context)),
           ],
         ),
       ),
     );
   }
 
-  Widget contents(BuildContext context, List<ProjectObj> projects) {
-    return Column(
-      children: [
-        Text('Content'),
-        Divider(),
-        Expanded(
-          child: GridView.builder(
-            itemCount: projects.length,
-            gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-              maxCrossAxisExtent: 300,
-            ),
-            itemBuilder: (context, index) {
-              final project = projects[index];
-
-              return Card(
-                child: InkWell(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (BuildContext context) => StudyPage(project),
-                      ),
-                    );
-                  },
-                  child: Column(
-                    children: [
-                      Text(
-                        '${project.title}',
-                        style: TextStyle(fontSize: 22),
-                      ),
-                      Divider(),
-                      Text('word count: 1654'),
-                      Text('undrestand: %80'),
-                      Spacer(),
-                      // Row(
-                      //   children: [
-                      //     IconButton(
-                      //       icon: Icon(Icons.delete),
-                      //       onPressed: () {
-                      //         project.delete();
-                      //       },
-                      //     ),
-                      //   ],
-                      // ),
-                    ],
-                  ),
-                ),
-              );
-            },
-          ),
-        ),
-      ],
-    );
-  }
-
   Widget words(BuildContext context) {
-    final words = Hive.box<WordObj>('words').values.toList()
-      ..sort((a, b) => a.word.compareTo(b.word));
+    final wordsFuture = useProvider(wordsP);
 
     return Column(
       children: [
-        Text('Words'),
-        Divider(),
+        Row(
+          children: [
+            IconButton(
+              icon: Icon(Icons.add),
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (c) => addWordDialog(),
+                );
+              },
+            )
+          ],
+        ),
         Expanded(
           child: Scrollbar(
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  for (final word in words) Text(word.word),
-                ],
-              ),
+            child: Column(
+              children: [
+                ...wordsFuture.when(
+                  data: (List<Word> words) => [
+                    for (final word in words) Text(word.word),
+                  ],
+                  loading: () => [CircularProgressIndicator()],
+                  error: (Object error, StackTrace? stackTrace) => [
+                    Text('$error || $stackTrace'),
+                  ],
+                ),
+              ],
             ),
           ),
         ),
@@ -112,21 +68,56 @@ class HomePage extends HookWidget {
     );
   }
 
-  Widget topBar(BuildContext context) {
-    return Material(
-      elevation: 6,
-      child: Row(
-        children: [
-          TextButton(
-            child: Text('create'),
-            onPressed: () {
-              showDialog(
-                context: context,
-                builder: (cox) => addContentDialog(),
-              );
-            },
+  Widget contents(BuildContext context) {
+    final contentsFuture = useProvider(contentsP);
+
+    return Column(
+      children: [
+        Row(
+          children: [
+            IconButton(
+              icon: Icon(Icons.add),
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (c) => addContentDialog(),
+                );
+              },
+            )
+          ],
+        ),
+        Expanded(
+          child: Scrollbar(
+            child: Column(
+              children: [
+                ...contentsFuture.when(
+                  data: (List<Content> contents) => [
+                    for (final content in contents)
+                      contentItem(context, content),
+                  ],
+                  loading: () => [CircularProgressIndicator()],
+                  error: (Object error, StackTrace? stackTrace) => [
+                    Text('$error || $stackTrace'),
+                  ],
+                ),
+              ],
+            ),
           ),
-        ],
+        ),
+      ],
+    );
+  }
+
+  Widget contentItem(BuildContext context, Content content) {
+    return Card(
+      child: InkWell(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (c) => StudyPage(content)),
+          );
+        },
+        child: Text(content.title),
       ),
     );
   }
