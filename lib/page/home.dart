@@ -48,23 +48,54 @@ class HomePage extends HookWidget {
           ],
         ),
         Expanded(
-          child: Scrollbar(
-            child: Column(
-              children: [
-                ...wordsFuture.when(
-                  data: (List<Word> words) => [
-                    for (final word in words) Text(word.word),
-                  ],
-                  loading: () => [CircularProgressIndicator()],
-                  error: (Object error, StackTrace? stackTrace) => [
-                    Text('$error || $stackTrace'),
-                  ],
+          child: Row(
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      ...wordsFuture.when(
+                        data: (List<Word> words) => [
+                          for (final word
+                              in words
+                                ..sort((a, b) => a.word.compareTo(b.word)))
+                            wordItem(context, word),
+                        ],
+                        loading: () => [CircularProgressIndicator()],
+                        error: (Object error, StackTrace? stackTrace) => [
+                          Text('$error || $stackTrace'),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ],
+    );
+  }
+
+  Widget wordItem(BuildContext context, Word word) {
+    return Card(
+      child: InkWell(
+        onTap: () {
+          final db = context.read(dbProvider);
+
+          db.wordDao.updating(word.copyWith(know: !word.know));
+        },
+        child: Row(
+          children: [
+            Text(word.word),
+            SizedBox(width: 10),
+            Container(
+                height: 5,
+                width: 5,
+                color: word.know ? Colors.green : Colors.grey),
+          ],
+        ),
+      ),
     );
   }
 
@@ -87,21 +118,27 @@ class HomePage extends HookWidget {
           ],
         ),
         Expanded(
-          child: Scrollbar(
-            child: Column(
-              children: [
-                ...contentsFuture.when(
-                  data: (List<Content> contents) => [
-                    for (final content in contents)
-                      contentItem(context, content),
-                  ],
-                  loading: () => [CircularProgressIndicator()],
-                  error: (Object error, StackTrace? stackTrace) => [
-                    Text('$error || $stackTrace'),
-                  ],
+          child: Row(
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      ...contentsFuture.when(
+                        data: (List<Content> contents) => [
+                          for (final content in contents)
+                            contentItem(context, content),
+                        ],
+                        loading: () => [CircularProgressIndicator()],
+                        error: (Object error, StackTrace? stackTrace) => [
+                          Text('$error || $stackTrace'),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ],

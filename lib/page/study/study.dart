@@ -135,12 +135,15 @@ class StudyPage extends HookWidget {
   void mapingWord(BuildContext context, String input) async {
     final mapMap = context.read(wordMapProvider);
     final wordList = input.split(_regex);
+    final db = context.read(dbProvider);
+    final allWord = await db.wordDao.getAll();
+
     // final wordsBox = Hive.box<WordObj>('words');
 
     // await wordsBox.clear();
     mapMap.clear();
     // map.state = {};
-    print(wordList.length);
+    // print(wordList.length);
     for (var word in wordList) {
       if (word.isEmpty) {
         continue;
@@ -152,6 +155,12 @@ class StudyPage extends HookWidget {
       final wordLowerCase = word.toLowerCase();
       final firstWord = wordLowerCase.characters.first;
 
+      if (allWord
+          .where((element) => element.word.startsWith(firstWord))
+          .where((element) => element.word == wordLowerCase)
+          .isEmpty) {
+        await db.wordDao.add(word.toLowerCase());
+      }
       // if (wordsBox.values
       //     .where((element) => element.word.startsWith(firstWord))
       //     .where((element) => element.word == wordLowerCase)
