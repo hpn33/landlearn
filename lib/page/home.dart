@@ -44,6 +44,12 @@ class HomePage extends HookWidget {
                   builder: (c) => addWordDialog(),
                 );
               },
+            ),
+            TextButton(
+              child: Text('delete all'),
+              onPressed: () {
+                context.read(dbProvider).clearAllTable();
+              },
             )
           ],
         ),
