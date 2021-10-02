@@ -136,7 +136,6 @@ class StudyPage extends HookWidget {
     final mapMap = context.read(wordMapProvider);
     final wordList = input.split(_regex);
     final db = context.read(dbProvider);
-    final allWord = await db.wordDao.getAll();
 
     // final wordsBox = Hive.box<WordObj>('words');
 
@@ -144,6 +143,9 @@ class StudyPage extends HookWidget {
     mapMap.clear();
     // map.state = {};
     // print(wordList.length);
+
+    // final dubcheck = <String, int?>{};
+
     for (var word in wordList) {
       if (word.isEmpty) {
         continue;
@@ -155,23 +157,27 @@ class StudyPage extends HookWidget {
       final wordLowerCase = word.toLowerCase();
       final firstWord = wordLowerCase.characters.first;
 
-      if (allWord
+      if ((await db.wordDao.getAll())
           .where((element) => element.word.startsWith(firstWord))
           .where((element) => element.word == wordLowerCase)
           .isEmpty) {
-        await db.wordDao.add(word.toLowerCase());
+        // dubcheck[wordLowerCase] =
+        //     dubcheck[wordLowerCase] == null ? 1 : dubcheck[wordLowerCase]! + 1;
+        await db.wordDao.add(wordLowerCase);
       }
+
       // if (wordsBox.values
       //     .where((element) => element.word.startsWith(firstWord))
       //     .where((element) => element.word == wordLowerCase)
       //     .isEmpty) {
       //   await wordsBox.add(
-      //     WordObj()..word = word.toLowerCase(),
+      //     WordObj()..word = wordLowerCase,
       //   );
       // }
 
       // if (wordsBox.containsKey(w)) wordsBox.add(w);
     }
+    // print(dubcheck);
   }
 
   final _regex = RegExp("(?:(?![a-zA-Z])'|'(?![a-zA-Z])|[^a-zA-Z'])+");
