@@ -61,12 +61,46 @@ class HomePage extends HookWidget {
                   child: Column(
                     children: [
                       ...wordsFuture.when(
-                        data: (List<Word> words) => [
-                          for (final word
-                              in words
-                                ..sort((a, b) => a.word.compareTo(b.word)))
-                            wordItem(context, word),
-                        ],
+                        data: (List<Word> words) {
+                          final charMap = <String, int?>{};
+
+                          for (final word in words) {
+                            charMap[word.word.substring(0, 1)] = null;
+                          }
+
+                          final chars = charMap.keys.toList()
+                            ..sort((a, b) => a.compareTo(b));
+
+                          return [
+                            for (final char in chars)
+                              Card(
+                                child: Column(
+                                  children: [
+                                    Text(char),
+                                    Divider(),
+                                    Wrap(
+                                      children: [
+                                        for (final word in words.where(
+                                            (element) =>
+                                                element.word.startsWith(char)))
+                                          wordItem(context, word)
+                                        // Card(
+                                        //   child: Text(
+                                        //     '${word.word}',
+                                        //     style: TextStyle(
+                                        //       fontSize:
+                                        //           12.0 + word.value.count,
+                                        //     ),
+                                        //   ),
+                                        // ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            // wordItem(context, word),
+                          ];
+                        },
                         loading: () => [CircularProgressIndicator()],
                         error: (Object error, StackTrace? stackTrace) => [
                           Text('$error || $stackTrace'),
@@ -92,6 +126,7 @@ class HomePage extends HookWidget {
           db.wordDao.updating(word.copyWith(know: !word.know));
         },
         child: Row(
+          mainAxisSize: MainAxisSize.min,
           children: [
             Text(word.word),
             SizedBox(width: 10),
