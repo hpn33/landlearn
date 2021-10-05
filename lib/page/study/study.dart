@@ -132,10 +132,10 @@ class StudyPage extends HookWidget {
                         textAlign: TextAlign.center,
                       ),
                       ElevatedButton(
-                        child: Text('split'),
+                        child: Text('analyze'),
                         onPressed:
                             // null
-                            () => mapingWord(context, textController.text),
+                            () => analyze(context, textController.text),
                       ),
                     ],
                   ),
@@ -180,7 +180,7 @@ class StudyPage extends HookWidget {
     );
   }
 
-  void mapingWord(BuildContext context, String input) async {
+  void analyze(BuildContext context, String input) async {
     final mapMap = context.read(wordMapProvider)..clear();
     final wordList = input.split(_regex);
     final db = context.read(dbProvider);
