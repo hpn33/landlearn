@@ -12,13 +12,28 @@ class WordView extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
+    final wordsFuture = useProvider(wordsP);
+
     return Container(
-      child: words(context),
+      child: wordsFuture.when(
+        data: (List<Word> words) {
+          return wordsWidget(context, words);
+        },
+        loading: () => CircularProgressIndicator(),
+        error: (Object error, StackTrace? stackTrace) =>
+            Text('$error || $stackTrace'),
+      ),
     );
   }
 
-  Widget words(BuildContext context) {
-    final wordsFuture = useProvider(wordsP);
+  Widget wordsWidget(BuildContext context, List<Word> words) {
+    final charMap = <String, int?>{};
+
+    for (final word in words) {
+      charMap[word.word.substring(0, 1)] = null;
+    }
+
+    final chars = charMap.keys.toList()..sort((a, b) => a.compareTo(b));
 
     return Column(
       children: [
@@ -35,6 +50,34 @@ class WordView extends HookWidget {
             ),
           ],
         ),
+        Row(
+          children: [
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  words.length.toString() +
+                      '/' +
+                      words.where((element) => !element.know).length.toString(),
+                ),
+              ),
+            ),
+            Card(
+              color: Colors.green[200],
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                    words.where((element) => element.know).length.toString() +
+                        ' ( %' +
+                        (words.where((element) => element.know).length /
+                                words.length *
+                                100)
+                            .toStringAsFixed(1) +
+                        ' )'),
+              ),
+            ),
+          ],
+        ),
         Expanded(
           child: Row(
             children: [
@@ -42,52 +85,30 @@ class WordView extends HookWidget {
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
-                      ...wordsFuture.when(
-                        data: (List<Word> words) {
-                          final charMap = <String, int?>{};
-
-                          for (final word in words) {
-                            charMap[word.word.substring(0, 1)] = null;
-                          }
-
-                          final chars = charMap.keys.toList()
-                            ..sort((a, b) => a.compareTo(b));
-
-                          return [
-                            for (final char in chars)
-                              Card(
-                                child: Column(
-                                  children: [
-                                    Text(char),
-                                    Divider(),
-                                    Wrap(
-                                      children: [
-                                        for (final word in words.where(
-                                            (element) =>
-                                                element.word.startsWith(char)))
-                                          wordItem(context, word)
-                                        // Card(
-                                        //   child: Text(
-                                        //     '${word.word}',
-                                        //     style: TextStyle(
-                                        //       fontSize:
-                                        //           12.0 + word.value.count,
-                                        //     ),
-                                        //   ),
-                                        // ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            // wordItem(context, word),
-                          ];
-                        },
-                        loading: () => [CircularProgressIndicator()],
-                        error: (Object error, StackTrace? stackTrace) => [
-                          Text('$error || $stackTrace'),
-                        ],
-                      ),
+                      for (final char in chars)
+                        Column(
+                          children: [
+                            Card(
+                                child: Row(
+                              children: [
+                                Text(char),
+                              ],
+                            )),
+                            Wrap(
+                              children: [
+                                for (final word
+                                    in words
+                                        .where((element) =>
+                                            element.word.startsWith(char))
+                                        .toList()
+                                      ..sort(
+                                          (a, b) => a.word.compareTo(b.word)))
+                                  wordItem(context, word)
+                              ],
+                            ),
+                            SizedBox(height: 30),
+                          ],
+                        ),
                     ],
                   ),
                 ),
@@ -101,22 +122,16 @@ class WordView extends HookWidget {
 
   Widget wordItem(BuildContext context, Word word) {
     return Card(
+      color: word.know ? Colors.green[100] : null,
       child: InkWell(
         onTap: () {
           final db = context.read(dbProvider);
 
           db.wordDao.updating(word.copyWith(know: !word.know));
         },
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(word.word),
-            SizedBox(width: 10),
-            Container(
-                height: 5,
-                width: 5,
-                color: word.know ? Colors.green : Colors.grey),
-          ],
+        child: Padding(
+          padding: const EdgeInsets.all(4.0),
+          child: Text(word.word),
         ),
       ),
     );
