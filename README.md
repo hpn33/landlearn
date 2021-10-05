@@ -9,6 +9,20 @@ later you add another file, can see how many percentage of word know and how man
 can import content by other way .srt file is a goal for now
 
 
+
+## the plan todo
+first page has tab view
+with to tab ( word and content )
+word: on word can edit them and show status of them ( count of work - percent of knowing )
+content: show the list of content ( show knowlabe percent over each content card ) - add and delete - if click on each then go to study page 
+
+study( is for content): like tab view one side for the text and another side for status of words
+almost like word section on first page
+
+train area: this accesable from word section
+and this is for train over words ( by different mode - train all - review knowlage - search over unknow word )
+
+
 ## the step of project
 
 first: word section

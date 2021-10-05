@@ -157,6 +157,7 @@ class StudyPage extends HookWidget {
       final wordLowerCase = word.toLowerCase();
       final firstWord = wordLowerCase.characters.first;
 
+// TODO: better solution
       if ((await db.wordDao.getAll())
           .where((element) => element.word.startsWith(firstWord))
           .where((element) => element.word == wordLowerCase)
