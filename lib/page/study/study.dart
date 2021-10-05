@@ -8,8 +8,14 @@ import 'package:landlearn/service/db/database.dart';
 
 final wordMapProvider = ChangeNotifierProvider.autoDispose((ref) => WordMap());
 
+class WordData {
+  Word? word;
+  int count = 0;
+}
+
 class WordMap extends ChangeNotifier {
-  final map = <String, Map<String, int>>{};
+  // { char: map { word , word data }}
+  final map = <String, Map<String, WordData>>{};
 
   void clear() {
     map.clear();
@@ -19,15 +25,19 @@ class WordMap extends ChangeNotifier {
 
   void addWord(String word) {
     final w = word.toLowerCase();
-    final firstC = w.characters.first;
+    final firstC = w.substring(0, 1);
 
     if (!map.containsKey(firstC)) map[firstC] = {};
 
-    if (!map[firstC]!.containsKey(w)) map[firstC]![w] = 0;
+    if (!map[firstC]!.containsKey(w)) map[firstC]![w] = WordData();
 
-    map[firstC]![w] = map[firstC]![w]! + 1;
+    map[firstC]![w]!.count++;
 
     notifyListeners();
+  }
+
+  void updateWord(Word word) {
+    map[word.word.substring(0, 1)]![word.word]!.word = word;
   }
 }
 
@@ -35,7 +45,8 @@ final allWordCountInTextP = StateProvider.autoDispose<String>((ref) {
   final wordMap = ref.watch(wordMapProvider).map;
   var sum = 0;
 
-  for (var c in wordMap.entries) for (var w in c.value.entries) sum += w.value;
+  for (var c in wordMap.entries)
+    for (var w in c.value.entries) sum += w.value.count;
 
   return sum.toString();
 });
@@ -49,16 +60,22 @@ final wordCountP = StateProvider.autoDispose<String>((ref) {
   return sum.toString();
 });
 
-final wordsProvider = StateProvider.autoDispose<String>((ref) {
+final wordsSortedP =
+    StateProvider.autoDispose<Map<String, Map<String, WordData>>>((ref) {
   final wordMap = ref.watch(wordMapProvider).map;
-  final words = <String>[];
+  // final words = <String>[];
 
-  for (final c in wordMap.entries) {
-    words.add('${c.key}\n--------');
-    for (var w in c.value.entries) words.add('${w.value} ${w.key}');
-  }
+  return {
+    for (final char in (wordMap.keys.toList()..sort((a, b) => a.compareTo(b))))
+      if (wordMap.containsKey(char)) char: wordMap[char]!
+  };
 
-  return words.join('\n');
+  // for (final c in newWordMap.entries) {
+  //   words.add('${c.key}\n--------');
+  //   for (var w in c.value.entries) words.add('${w.value} ${w.key}');
+  // }
+
+  // return words.join('\n');
 });
 
 class StudyPage extends HookWidget {
@@ -74,7 +91,7 @@ class StudyPage extends HookWidget {
   Widget build(BuildContext context) {
     final allWordCount = useProvider(allWordCountInTextP).state;
     final wordCount = useProvider(wordCountP).state;
-    final words = useProvider(wordsProvider).state;
+    final wordsSorted = useProvider(wordsSortedP).state;
 
     // final box = Hive.box<ProjectObj>('projects');
     // final project = box.get(keyId);
@@ -123,7 +140,38 @@ class StudyPage extends HookWidget {
                     ],
                   ),
                 ),
-                Expanded(child: SingleChildScrollView(child: Text(words))),
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        for (final wordsByChar in wordsSorted.entries)
+                          Card(
+                            child: Column(
+                              children: [
+                                Text(wordsByChar.key),
+                                Divider(),
+                                Wrap(
+                                  children: [
+                                    for (final wordRow
+                                        in wordsByChar.value.entries)
+                                      Card(
+                                        child: Text(
+                                          '${wordRow.key}',
+                                          style: TextStyle(
+                                            fontSize:
+                                                12.0 + wordRow.value.count,
+                                          ),
+                                        ),
+                                      ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
@@ -133,52 +181,32 @@ class StudyPage extends HookWidget {
   }
 
   void mapingWord(BuildContext context, String input) async {
-    final mapMap = context.read(wordMapProvider);
+    final mapMap = context.read(wordMapProvider)..clear();
     final wordList = input.split(_regex);
     final db = context.read(dbProvider);
-
-    // final wordsBox = Hive.box<WordObj>('words');
-
-    // await wordsBox.clear();
-    mapMap.clear();
-    // map.state = {};
-    // print(wordList.length);
-
-    // final dubcheck = <String, int?>{};
+    final allWord = (await db.wordDao.getAll()).map((e) => e.word).toList();
 
     for (var word in wordList) {
       if (word.isEmpty) {
         continue;
       }
 
-      // await Future.delayed(Duration(milliseconds: 1));
       mapMap.addWord(word);
 
+      await Future.delayed(Duration(milliseconds: 1));
+
       final wordLowerCase = word.toLowerCase();
-      final firstWord = wordLowerCase.characters.first;
+      final firstWord = wordLowerCase.substring(0, 1);
 
-// TODO: better solution
-      if ((await db.wordDao.getAll())
-          .where((element) => element.word.startsWith(firstWord))
-          .where((element) => element.word == wordLowerCase)
+      if (allWord
+          .where((element) => element.startsWith(firstWord))
+          .where((element) => element == wordLowerCase)
           .isEmpty) {
-        // dubcheck[wordLowerCase] =
-        //     dubcheck[wordLowerCase] == null ? 1 : dubcheck[wordLowerCase]! + 1;
-        await db.wordDao.add(wordLowerCase);
+        final addedWord = await db.wordDao.add(wordLowerCase);
+        mapMap.updateWord(addedWord);
+        allWord.add(wordLowerCase);
       }
-
-      // if (wordsBox.values
-      //     .where((element) => element.word.startsWith(firstWord))
-      //     .where((element) => element.word == wordLowerCase)
-      //     .isEmpty) {
-      //   await wordsBox.add(
-      //     WordObj()..word = wordLowerCase,
-      //   );
-      // }
-
-      // if (wordsBox.containsKey(w)) wordsBox.add(w);
     }
-    // print(dubcheck);
   }
 
   final _regex = RegExp("(?:(?![a-zA-Z])'|'(?![a-zA-Z])|[^a-zA-Z'])+");
