@@ -94,4 +94,7 @@ https://flutterawesome.com/tag/editor/
 
 ## TODO
 * [ ] import .srt convert to content
-* [ ] export word from content
+* [x] analyze content and export words
+* [ ] show awareness of content
+* [ ] show knowed word on study page
+* [ ] 
