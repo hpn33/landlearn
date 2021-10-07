@@ -132,7 +132,16 @@ class ContentView extends HookWidget {
             MaterialPageRoute(builder: (c) => StudyPage(content)),
           );
         },
-        child: Text(content.title),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            children: [
+              Text(content.title),
+              Spacer(),
+              Text('100% (not Impl)'),
+            ],
+          ),
+        ),
       ),
     );
   }

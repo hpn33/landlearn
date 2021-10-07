@@ -20,7 +20,7 @@ class Database extends _$Database {
   Database(QueryExecutor e) : super(e);
 
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 2;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -28,8 +28,15 @@ class Database extends _$Database {
         //  clearAllTable();
         // },
         onUpgrade: (m, from, to) async {
-          // if (from == 1) {
-          //   m.createTable(contents);
+          var newFrom = from;
+
+          if (newFrom == 1) {
+            await m.addColumn(contents, contents.data);
+            newFrom = 2;
+          }
+
+          // if (newFrom == 2) {
+
           // }
         },
         // beforeOpen: (details) async {

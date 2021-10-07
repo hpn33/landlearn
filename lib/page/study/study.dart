@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 // import 'package:hive/hive.dart;
@@ -9,7 +11,7 @@ import 'package:landlearn/service/db/database.dart';
 final wordMapProvider = ChangeNotifierProvider.autoDispose((ref) => WordMap());
 
 class WordData {
-  Word? word;
+  late Word word;
   int count = 0;
 }
 
@@ -23,21 +25,29 @@ class WordMap extends ChangeNotifier {
     notifyListeners();
   }
 
-  void addWord(String word) {
-    final w = word.toLowerCase();
+  void addWord(Word word) {
+    final w = word.word.toLowerCase();
     final firstC = w.substring(0, 1);
 
     if (!map.containsKey(firstC)) map[firstC] = {};
 
-    if (!map[firstC]!.containsKey(w)) map[firstC]![w] = WordData();
+    if (!map[firstC]!.containsKey(w)) map[firstC]![w] = WordData()..word = word;
 
     map[firstC]![w]!.count++;
 
     notifyListeners();
   }
 
-  void updateWord(Word word) {
-    map[word.word.substring(0, 1)]![word.word]!.word = word;
+  String toJson() {
+    final m = map.entries
+        .map((e) => e.value.entries.map((e) => e.value.word))
+        .expand((element) => element);
+
+    final object = {
+      for (final w in m) w.word: w.id.toString(),
+    };
+
+    return jsonEncode(object);
   }
 }
 
@@ -191,10 +201,6 @@ class StudyPage extends HookWidget {
         continue;
       }
 
-      mapMap.addWord(word);
-
-      await Future.delayed(Duration(milliseconds: 1));
-
       final wordLowerCase = word.toLowerCase();
       final firstWord = wordLowerCase.substring(0, 1);
 
@@ -203,10 +209,13 @@ class StudyPage extends HookWidget {
           .where((element) => element == wordLowerCase)
           .isEmpty) {
         final addedWord = await db.wordDao.add(wordLowerCase);
-        mapMap.updateWord(addedWord);
+
+        mapMap.addWord(addedWord);
         allWord.add(wordLowerCase);
       }
     }
+
+    db.contentDao.updateData(content, mapMap.toJson());
   }
 
   final _regex = RegExp("(?:(?![a-zA-Z])'|'(?![a-zA-Z])|[^a-zA-Z'])+");

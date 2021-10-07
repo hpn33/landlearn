@@ -216,7 +216,12 @@ class Content extends DataClass implements Insertable<Content> {
   final int id;
   final String title;
   final String content;
-  Content({required this.id, required this.title, required this.content});
+  final String data;
+  Content(
+      {required this.id,
+      required this.title,
+      required this.content,
+      required this.data});
   factory Content.fromData(Map<String, dynamic> data, GeneratedDatabase db,
       {String? prefix}) {
     final effectivePrefix = prefix ?? '';
@@ -227,6 +232,8 @@ class Content extends DataClass implements Insertable<Content> {
           .mapFromDatabaseResponse(data['${effectivePrefix}title'])!,
       content: const StringType()
           .mapFromDatabaseResponse(data['${effectivePrefix}content'])!,
+      data: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}data'])!,
     );
   }
   @override
@@ -235,6 +242,7 @@ class Content extends DataClass implements Insertable<Content> {
     map['id'] = Variable<int>(id);
     map['title'] = Variable<String>(title);
     map['content'] = Variable<String>(content);
+    map['data'] = Variable<String>(data);
     return map;
   }
 
@@ -243,6 +251,7 @@ class Content extends DataClass implements Insertable<Content> {
       id: Value(id),
       title: Value(title),
       content: Value(content),
+      data: Value(data),
     );
   }
 
@@ -253,6 +262,7 @@ class Content extends DataClass implements Insertable<Content> {
       id: serializer.fromJson<int>(json['id']),
       title: serializer.fromJson<String>(json['title']),
       content: serializer.fromJson<String>(json['content']),
+      data: serializer.fromJson<String>(json['data']),
     );
   }
   @override
@@ -262,69 +272,83 @@ class Content extends DataClass implements Insertable<Content> {
       'id': serializer.toJson<int>(id),
       'title': serializer.toJson<String>(title),
       'content': serializer.toJson<String>(content),
+      'data': serializer.toJson<String>(data),
     };
   }
 
-  Content copyWith({int? id, String? title, String? content}) => Content(
+  Content copyWith({int? id, String? title, String? content, String? data}) =>
+      Content(
         id: id ?? this.id,
         title: title ?? this.title,
         content: content ?? this.content,
+        data: data ?? this.data,
       );
   @override
   String toString() {
     return (StringBuffer('Content(')
           ..write('id: $id, ')
           ..write('title: $title, ')
-          ..write('content: $content')
+          ..write('content: $content, ')
+          ..write('data: $data')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode =>
-      $mrjf($mrjc(id.hashCode, $mrjc(title.hashCode, content.hashCode)));
+  int get hashCode => $mrjf($mrjc(id.hashCode,
+      $mrjc(title.hashCode, $mrjc(content.hashCode, data.hashCode))));
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is Content &&
           other.id == this.id &&
           other.title == this.title &&
-          other.content == this.content);
+          other.content == this.content &&
+          other.data == this.data);
 }
 
 class ContentsCompanion extends UpdateCompanion<Content> {
   final Value<int> id;
   final Value<String> title;
   final Value<String> content;
+  final Value<String> data;
   const ContentsCompanion({
     this.id = const Value.absent(),
     this.title = const Value.absent(),
     this.content = const Value.absent(),
+    this.data = const Value.absent(),
   });
   ContentsCompanion.insert({
     this.id = const Value.absent(),
     required String title,
     required String content,
-  })   : title = Value(title),
+    this.data = const Value.absent(),
+  })  : title = Value(title),
         content = Value(content);
   static Insertable<Content> custom({
     Expression<int>? id,
     Expression<String>? title,
     Expression<String>? content,
+    Expression<String>? data,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (title != null) 'title': title,
       if (content != null) 'content': content,
+      if (data != null) 'data': data,
     });
   }
 
   ContentsCompanion copyWith(
-      {Value<int>? id, Value<String>? title, Value<String>? content}) {
+      {Value<int>? id,
+      Value<String>? title,
+      Value<String>? content,
+      Value<String>? data}) {
     return ContentsCompanion(
       id: id ?? this.id,
       title: title ?? this.title,
       content: content ?? this.content,
+      data: data ?? this.data,
     );
   }
 
@@ -340,6 +364,9 @@ class ContentsCompanion extends UpdateCompanion<Content> {
     if (content.present) {
       map['content'] = Variable<String>(content.value);
     }
+    if (data.present) {
+      map['data'] = Variable<String>(data.value);
+    }
     return map;
   }
 
@@ -348,7 +375,8 @@ class ContentsCompanion extends UpdateCompanion<Content> {
     return (StringBuffer('ContentsCompanion(')
           ..write('id: $id, ')
           ..write('title: $title, ')
-          ..write('content: $content')
+          ..write('content: $content, ')
+          ..write('data: $data')
           ..write(')'))
         .toString();
   }
@@ -372,8 +400,14 @@ class $ContentsTable extends Contents with TableInfo<$ContentsTable, Content> {
   late final GeneratedColumn<String?> content = GeneratedColumn<String?>(
       'content', aliasedName, false,
       typeName: 'TEXT', requiredDuringInsert: true);
+  final VerificationMeta _dataMeta = const VerificationMeta('data');
+  late final GeneratedColumn<String?> data = GeneratedColumn<String?>(
+      'data', aliasedName, false,
+      typeName: 'TEXT',
+      requiredDuringInsert: false,
+      defaultValue: Constant('{}'));
   @override
-  List<GeneratedColumn> get $columns => [id, title, content];
+  List<GeneratedColumn> get $columns => [id, title, content, data];
   @override
   String get aliasedName => _alias ?? 'contents';
   @override
@@ -397,6 +431,10 @@ class $ContentsTable extends Contents with TableInfo<$ContentsTable, Content> {
           content.isAcceptableOrUnknown(data['content']!, _contentMeta));
     } else if (isInserting) {
       context.missing(_contentMeta);
+    }
+    if (data.containsKey('data')) {
+      context.handle(
+          _dataMeta, this.data.isAcceptableOrUnknown(data['data']!, _dataMeta));
     }
     return context;
   }
