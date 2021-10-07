@@ -2,26 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:landlearn/page/dialog/add_content_dialog.dart';
+import 'package:landlearn/page/hub_provider.dart';
 import 'package:landlearn/page/study/study.dart';
-import 'package:landlearn/service/db/database.dart';
-
-final contentsP =
-    StreamProvider((ref) => ref.read(dbProvider).contentDao.watching());
+import 'package:landlearn/service/model/ContentO.dart';
 
 class ContentView extends HookWidget {
   const ContentView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final hub = useProvider(hubProvider);
+    useListenable(hub.contents);
+
     return Container(
-      child: contents2(context),
+      child: contents2(context, hub.contents.value),
     );
   }
 
-  Widget contents(
-    BuildContext context,
-    // List<ProjectObj> projects
-  ) {
+  Widget contents(BuildContext context) {
     return Column(
       children: [
         Text('Content'),
@@ -77,9 +75,7 @@ class ContentView extends HookWidget {
     );
   }
 
-  Widget contents2(BuildContext context) {
-    final contentsFuture = useProvider(contentsP);
-
+  Widget contents2(BuildContext context, List<ContentO> contents) {
     return Column(
       children: [
         Row(
@@ -102,16 +98,8 @@ class ContentView extends HookWidget {
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
-                      ...contentsFuture.when(
-                        data: (List<Content> contents) => [
-                          for (final content in contents)
-                            contentItem(context, content),
-                        ],
-                        loading: () => [CircularProgressIndicator()],
-                        error: (Object error, StackTrace? stackTrace) => [
-                          Text('$error || $stackTrace'),
-                        ],
-                      ),
+                      for (final content in contents)
+                        contentItem(context, content),
                     ],
                   ),
                 ),
@@ -123,20 +111,20 @@ class ContentView extends HookWidget {
     );
   }
 
-  Widget contentItem(BuildContext context, Content content) {
+  Widget contentItem(BuildContext context, ContentO contentO) {
     return Card(
       child: InkWell(
         onTap: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (c) => StudyPage(content)),
+            MaterialPageRoute(builder: (c) => StudyPage(contentO)),
           );
         },
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Row(
             children: [
-              Text(content.title),
+              Text(contentO.content.title),
               Spacer(),
               Text('100% (not Impl)'),
             ],

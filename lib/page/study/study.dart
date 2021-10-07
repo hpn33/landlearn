@@ -2,11 +2,10 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-// import 'package:hive/hive.dart;
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:landlearn/page/hub_provider.dart';
 import 'package:landlearn/service/db/database.dart';
-// import 'package:landlearn/hive/project.dart';
-// import 'package:landlearn/hive/word.dart';
+import 'package:landlearn/service/model/ContentO.dart';
 
 final wordMapProvider = ChangeNotifierProvider.autoDispose((ref) => WordMap());
 
@@ -40,14 +39,11 @@ class WordMap extends ChangeNotifier {
 
   String toJson() {
     final m = map.entries
-        .map((e) => e.value.entries.map((e) => e.value.word))
-        .expand((element) => element);
+        .map((e) => e.value.entries.map((e) => e.value.word.id))
+        .expand((element) => element)
+        .toList();
 
-    final object = {
-      for (final w in m) w.word: w.id.toString(),
-    };
-
-    return jsonEncode(object);
+    return jsonEncode(m);
   }
 }
 
@@ -70,45 +66,37 @@ final wordCountP = StateProvider.autoDispose<String>((ref) {
   return sum.toString();
 });
 
-final wordsSortedP =
-    StateProvider.autoDispose<Map<String, Map<String, WordData>>>((ref) {
-  final wordMap = ref.watch(wordMapProvider).map;
-  // final words = <String>[];
+// final wordsSortedP =
+//     StateProvider.autoDispose<Map<String, Map<String, WordData>>>((ref) {
+//   final wordMap = ref.watch(wordMapProvider).map;
+//   // final words = <String>[];
 
-  return {
-    for (final char in (wordMap.keys.toList()..sort((a, b) => a.compareTo(b))))
-      if (wordMap.containsKey(char)) char: wordMap[char]!
-  };
+//   return {
+//     for (final char in (wordMap.keys.toList()..sort((a, b) => a.compareTo(b))))
+//       if (wordMap.containsKey(char)) char: wordMap[char]!
+//   };
 
-  // for (final c in newWordMap.entries) {
-  //   words.add('${c.key}\n--------');
-  //   for (var w in c.value.entries) words.add('${w.value} ${w.key}');
-  // }
+//   // for (final c in newWordMap.entries) {
+//   //   words.add('${c.key}\n--------');
+//   //   for (var w in c.value.entries) words.add('${w.value} ${w.key}');
+//   // }
 
-  // return words.join('\n');
-});
+//   // return words.join('\n');
+// });
 
 class StudyPage extends HookWidget {
-  // final textController = TextEditingController();
+  final ContentO contentO;
 
-  // final int keyId;
-  // final String text;
-  final Content content;
-
-  StudyPage(this.content);
+  StudyPage(this.contentO);
 
   @override
   Widget build(BuildContext context) {
     final allWordCount = useProvider(allWordCountInTextP).state;
     final wordCount = useProvider(wordCountP).state;
-    final wordsSorted = useProvider(wordsSortedP).state;
+    // final wordsSorted = useProvider(wordsSortedP).state;
 
-    // final box = Hive.box<ProjectObj>('projects');
-    // final project = box.get(keyId);
-
-    // useListenable(box.listenable(keys: [project.key]));
-
-    final textController = useTextEditingController(text: content.content);
+    final textController =
+        useTextEditingController(text: contentO.content.content);
 
     return Material(
       child: Column(
@@ -151,36 +139,7 @@ class StudyPage extends HookWidget {
                   ),
                 ),
                 Expanded(
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        for (final wordsByChar in wordsSorted.entries)
-                          Card(
-                            child: Column(
-                              children: [
-                                Text(wordsByChar.key),
-                                Divider(),
-                                Wrap(
-                                  children: [
-                                    for (final wordRow
-                                        in wordsByChar.value.entries)
-                                      Card(
-                                        child: Text(
-                                          '${wordRow.key}',
-                                          style: TextStyle(
-                                            fontSize:
-                                                12.0 + wordRow.value.count,
-                                          ),
-                                        ),
-                                      ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                      ],
-                    ),
-                  ),
+                  child: wordOfContent(contentO.wordsSorted),
                 ),
               ],
             ),
@@ -190,32 +149,53 @@ class StudyPage extends HookWidget {
     );
   }
 
+  Widget wordOfContent(Map<String, List<Word>> wordsSorted) {
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          for (final wordsByChar in wordsSorted.entries)
+            Card(
+              child: Column(
+                children: [
+                  Text(wordsByChar.key),
+                  Divider(),
+                  Wrap(
+                    children: [
+                      for (final wordRow in wordsByChar.value)
+                        Card(
+                          child: Text(
+                            '${wordRow.word}',
+                            // TODO: show count of word in content
+                            style: TextStyle(
+                                // fontSize: 12.0 + wordRow.value.count,
+                                ),
+                          ),
+                        ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+
   void analyze(BuildContext context, String input) async {
     final mapMap = context.read(wordMapProvider)..clear();
     final wordList = input.split(_regex);
-    final db = context.read(dbProvider);
-    final allWord = (await db.wordDao.getAll()).map((e) => e.word).toList();
+
+    final hub = context.read(hubProvider);
 
     for (var word in wordList) {
       if (word.isEmpty) {
         continue;
       }
 
-      final wordLowerCase = word.toLowerCase();
-      final firstWord = wordLowerCase.substring(0, 1);
-
-      if (allWord
-          .where((element) => element.startsWith(firstWord))
-          .where((element) => element == wordLowerCase)
-          .isEmpty) {
-        final addedWord = await db.wordDao.add(wordLowerCase);
-
-        mapMap.addWord(addedWord);
-        allWord.add(wordLowerCase);
-      }
+      mapMap.addWord(await hub.getOrAddWord(word));
     }
 
-    db.contentDao.updateData(content, mapMap.toJson());
+    hub.db.contentDao.updateData(contentO.content, mapMap.toJson());
   }
 
   final _regex = RegExp("(?:(?![a-zA-Z])'|'(?![a-zA-Z])|[^a-zA-Z'])+");
@@ -226,17 +206,17 @@ class StudyPage extends HookWidget {
       child: Row(
         children: [
           BackButton(),
-          TextButton(
-            child: Text('save'),
-            onPressed: () {
-              // project
-              //   ..text = textController.text
-              //   ..save();
+          // TextButton(
+          //   child: Text('save'),
+          //   onPressed: () {
+          //     // project
+          //     //   ..text = textController.text
+          //     //   ..save();
 
-              // box.put(keyId, project..text = textController.text);
-              // box.get(keyId);
-            },
-          ),
+          //     // box.put(keyId, project..text = textController.text);
+          //     // box.get(keyId);
+          //   },
+          // ),
         ],
       ),
     );

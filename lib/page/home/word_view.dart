@@ -1,40 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:landlearn/page/hub_provider.dart';
 import 'package:landlearn/service/db/database.dart';
 
 import '../dialog/add_word_dialog.dart';
-
-final wordsP = StreamProvider((ref) => ref.read(dbProvider).wordDao.watching());
 
 class WordView extends HookWidget {
   const WordView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final wordsFuture = useProvider(wordsP);
+    final hub = useProvider(hubProvider);
+    useListenable(hub.alphaSort);
 
     return Container(
-      child: wordsFuture.when(
-        data: (List<Word> words) {
-          return wordsWidget(context, words);
-        },
-        loading: () => CircularProgressIndicator(),
-        error: (Object error, StackTrace? stackTrace) =>
-            Text('$error || $stackTrace'),
-      ),
+      child: wordsWidget(context, hub.words.value, hub.alphaSort.value),
     );
   }
 
-  Widget wordsWidget(BuildContext context, List<Word> words) {
-    final charMap = <String, int?>{};
-
-    for (final word in words) {
-      charMap[word.word.substring(0, 1)] = null;
-    }
-
-    final chars = charMap.keys.toList()..sort((a, b) => a.compareTo(b));
-
+  Widget wordsWidget(
+    BuildContext context,
+    List<Word> words,
+    Map<String, List<Word>> sortedWord,
+  ) {
     return Column(
       children: [
         Row(
@@ -85,24 +74,18 @@ class WordView extends HookWidget {
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
-                      for (final char in chars)
+                      for (final item in sortedWord.entries)
                         Column(
                           children: [
                             Card(
                                 child: Row(
                               children: [
-                                Text(char),
+                                Text(item.key),
                               ],
                             )),
                             Wrap(
                               children: [
-                                for (final word
-                                    in words
-                                        .where((element) =>
-                                            element.word.startsWith(char))
-                                        .toList()
-                                      ..sort(
-                                          (a, b) => a.word.compareTo(b.word)))
+                                for (final word in item.value)
                                   wordItem(context, word)
                               ],
                             ),
