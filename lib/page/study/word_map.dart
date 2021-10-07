@@ -12,6 +12,22 @@ class WordMap extends ChangeNotifier {
   // { char: map { word , word data }}
   final map = <String, List<WordData>>{};
 
+  String get wordCount {
+    var sum = 0;
+
+    for (var c in map.entries) sum += c.value.length;
+
+    return sum.toString();
+  }
+
+  String get allWordCount {
+    var sum = 0;
+
+    for (var c in map.entries) for (var w in c.value) sum += w.count;
+
+    return sum.toString();
+  }
+
   void clear() {
     map.clear();
 

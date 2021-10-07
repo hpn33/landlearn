@@ -16,20 +16,17 @@ class Hub {
   final contents = ValueNotifier(<ContentData>[]);
 
   Future<void> init() async {
-    db.wordDao.watching()
-      ..listen((event) {
-        words.value = event;
-        sortWord();
-      });
+    words.addListener(sortWord);
+
+    db.wordDao.watching()..listen((event) => words.value = event);
 
     db.contentDao.watching()
       ..listen((event) {
-        contents.value =
-            event.map((e) => ContentData()..init(this, e)).toList();
+        contents.value = event.map((e) => ContentData(this, e)).toList();
       });
   }
 
-  void sortWord() async {
+  void sortWord() {
     alphaSort.value = {};
 
     final a = <String, List<Word>>{};
@@ -54,15 +51,20 @@ class Hub {
 
   Future<Word> getOrAddWord(String word) async {
     final wordLowerCase = word.toLowerCase();
-    final alphaList = alphaSort.value[wordLowerCase.substring(0, 1)];
+    final firstChar = wordLowerCase.substring(0, 1);
 
-    final w = alphaList!.where((element) => element.word == wordLowerCase);
+    if (!alphaSort.value.containsKey(firstChar)) {
+      alphaSort.value[firstChar] = [];
+    }
+
+    final w = alphaSort.value[firstChar]!
+        .where((element) => element.word == wordLowerCase);
 
     if (w.isEmpty) {
       final addedWord = await db.wordDao.add(wordLowerCase);
 
-      words.value.add(addedWord);
-      sortWord();
+      words.value = [...words.value, addedWord];
+      alphaSort.value[wordLowerCase.substring(0, 1)]!.add(addedWord);
 
       return addedWord;
     }

@@ -126,13 +126,7 @@ class ContentView extends HookWidget {
             children: [
               Text(contentO.content.title),
               Spacer(),
-              Text(
-                ((contentO.words.where((element) => element.word.know).length /
-                                contentO.words.length) *
-                            100)
-                        .toStringAsFixed(1) +
-                    '% (not Impl)',
-              ),
+              Text(contentO.awarnessPercent.toStringAsFixed(1) + '%'),
             ],
           ),
         ),
