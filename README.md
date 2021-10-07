@@ -10,7 +10,7 @@ can import content by other way .srt file is a goal for now
 
 
 
-## the plan todo
+## The Concept
 first page has tab view
 with to tab ( word and content )
 word: on word can edit them and show status of them ( count of work - percent of knowing )
@@ -21,6 +21,12 @@ almost like word section on first page
 
 train area: this accesable from word section
 and this is for train over words ( by different mode - train all - review knowlage - search over unknow word )
+
+next plan:
+a way to learning - learn word by more usablity ( common use )
+and with any level few text to read and underestand have much word know
+
+
 
 
 ## the step of project
