@@ -1,58 +1,18 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:landlearn/page/hub_provider.dart';
 import 'package:landlearn/service/db/database.dart';
-import 'package:landlearn/service/model/ContentO.dart';
+import 'package:landlearn/service/model/content_data.dart';
 
-final wordMapProvider = ChangeNotifierProvider.autoDispose((ref) => WordMap());
-
-class WordData {
-  late Word word;
-  int count = 0;
-}
-
-class WordMap extends ChangeNotifier {
-  // { char: map { word , word data }}
-  final map = <String, Map<String, WordData>>{};
-
-  void clear() {
-    map.clear();
-
-    notifyListeners();
-  }
-
-  void addWord(Word word) {
-    final w = word.word.toLowerCase();
-    final firstC = w.substring(0, 1);
-
-    if (!map.containsKey(firstC)) map[firstC] = {};
-
-    if (!map[firstC]!.containsKey(w)) map[firstC]![w] = WordData()..word = word;
-
-    map[firstC]![w]!.count++;
-
-    notifyListeners();
-  }
-
-  String toJson() {
-    final m = map.entries
-        .map((e) => e.value.entries.map((e) => e.value.word.id))
-        .expand((element) => element)
-        .toList();
-
-    return jsonEncode(m);
-  }
-}
+import '../../service/model/word_data.dart';
+import 'word_map.dart';
 
 final allWordCountInTextP = StateProvider.autoDispose<String>((ref) {
   final wordMap = ref.watch(wordMapProvider).map;
   var sum = 0;
 
-  for (var c in wordMap.entries)
-    for (var w in c.value.entries) sum += w.value.count;
+  for (var c in wordMap.entries) for (var w in c.value) sum += w.count;
 
   return sum.toString();
 });
@@ -85,23 +45,21 @@ final wordCountP = StateProvider.autoDispose<String>((ref) {
 // });
 
 class StudyPage extends HookWidget {
-  final ContentO contentO;
+  final ContentData contentO;
 
   StudyPage(this.contentO);
 
   @override
   Widget build(BuildContext context) {
-    final allWordCount = useProvider(allWordCountInTextP).state;
-    final wordCount = useProvider(wordCountP).state;
     // final wordsSorted = useProvider(wordsSortedP).state;
 
-    final textController =
-        useTextEditingController(text: contentO.content.content);
+    // final textController =
+    //     useTextEditingController(text: contentO.content.content);
 
     return Material(
       child: Column(
         children: [
-          topBar(textController),
+          topBar(context),
           Expanded(
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -110,36 +68,16 @@ class StudyPage extends HookWidget {
                   // child: Text(textController.text),
                   // child: SingleChildScrollView(child: TextSelectable(text: text)),
                   child: SingleChildScrollView(
-                    child: TextField(
-                      controller: textController,
-                      minLines: 20,
-                      maxLines: 1000,
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    children: [
-                      Text(
-                        'text word\n$allWordCount',
-                        textAlign: TextAlign.center,
-                      ),
-                      Text(
-                        'word count\n$wordCount',
-                        textAlign: TextAlign.center,
-                      ),
-                      ElevatedButton(
-                        child: Text('analyze'),
-                        onPressed:
-                            // null
-                            () => analyze(context, textController.text),
-                      ),
-                    ],
+                    child: Text(contentO.content.content),
+                    // TextField(
+                    //   controller: textController,
+                    //   minLines: 20,
+                    //   maxLines: 1000,
+                    // ),
                   ),
                 ),
                 Expanded(
-                  child: wordOfContent(contentO.wordsSorted),
+                  child: wordOfContent(context, contentO.wordsSorted),
                 ),
               ],
             ),
@@ -149,7 +87,10 @@ class StudyPage extends HookWidget {
     );
   }
 
-  Widget wordOfContent(Map<String, List<Word>> wordsSorted) {
+  Widget wordOfContent(
+    BuildContext context,
+    Map<String, List<WordData>> wordsSorted,
+  ) {
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -163,12 +104,23 @@ class StudyPage extends HookWidget {
                     children: [
                       for (final wordRow in wordsByChar.value)
                         Card(
-                          child: Text(
-                            '${wordRow.word}',
-                            // TODO: show count of word in content
-                            style: TextStyle(
-                                // fontSize: 12.0 + wordRow.value.count,
+                          color: wordRow.word.know ? Colors.green[100] : null,
+                          child: InkWell(
+                            onTap: () {
+                              final db = context.read(dbProvider);
+
+                              db.wordDao.updating(wordRow.word
+                                  .copyWith(know: !wordRow.word.know));
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.all(4.0),
+                              child: Text(
+                                '${wordRow.word.word}',
+                                style: TextStyle(
+                                  fontSize: 12.0 + wordRow.count,
                                 ),
+                              ),
+                            ),
                           ),
                         ),
                     ],
@@ -200,7 +152,10 @@ class StudyPage extends HookWidget {
 
   final _regex = RegExp("(?:(?![a-zA-Z])'|'(?![a-zA-Z])|[^a-zA-Z'])+");
 
-  Widget topBar(TextEditingController textController) {
+  Widget topBar(BuildContext context) {
+    final allWordCount = useProvider(allWordCountInTextP).state;
+    final wordCount = useProvider(wordCountP).state;
+
     return Material(
       elevation: 6,
       child: Row(
@@ -217,6 +172,20 @@ class StudyPage extends HookWidget {
           //     // box.get(keyId);
           //   },
           // ),
+          Text(
+            'text word\n$allWordCount',
+            textAlign: TextAlign.center,
+          ),
+          Text(
+            'word count\n$wordCount',
+            textAlign: TextAlign.center,
+          ),
+          ElevatedButton(
+            child: Text('analyze'),
+            onPressed:
+                // null
+                () => analyze(context, contentO.content.content),
+          ),
         ],
       ),
     );

@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:landlearn/service/db/database.dart';
-import 'package:landlearn/service/model/ContentO.dart';
+import 'package:landlearn/service/model/content_data.dart';
 import 'package:landlearn/util/util.dart';
 
 final hubProvider = Provider((ref) => Hub(ref.read(dbProvider)));
@@ -13,7 +13,7 @@ class Hub {
 
   final words = ValueNotifier(<Word>[]);
   final alphaSort = ValueNotifier(<String, List<Word>>{});
-  final contents = ValueNotifier(<ContentO>[]);
+  final contents = ValueNotifier(<ContentData>[]);
 
   Future<void> init() async {
     db.wordDao.watching()
@@ -24,7 +24,8 @@ class Hub {
 
     db.contentDao.watching()
       ..listen((event) {
-        contents.value = event.map((e) => ContentO()..init(this, e)).toList();
+        contents.value =
+            event.map((e) => ContentData()..init(this, e)).toList();
       });
   }
 

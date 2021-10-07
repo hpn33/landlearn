@@ -4,7 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:landlearn/page/dialog/add_content_dialog.dart';
 import 'package:landlearn/page/hub_provider.dart';
 import 'package:landlearn/page/study/study.dart';
-import 'package:landlearn/service/model/ContentO.dart';
+import 'package:landlearn/service/model/content_data.dart';
 
 class ContentView extends HookWidget {
   const ContentView({Key? key}) : super(key: key);
@@ -75,7 +75,7 @@ class ContentView extends HookWidget {
     );
   }
 
-  Widget contents2(BuildContext context, List<ContentO> contents) {
+  Widget contents2(BuildContext context, List<ContentData> contents) {
     return Column(
       children: [
         Row(
@@ -111,7 +111,7 @@ class ContentView extends HookWidget {
     );
   }
 
-  Widget contentItem(BuildContext context, ContentO contentO) {
+  Widget contentItem(BuildContext context, ContentData contentO) {
     return Card(
       child: InkWell(
         onTap: () {
