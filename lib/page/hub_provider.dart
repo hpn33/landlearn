@@ -20,11 +20,18 @@ class Hub {
   Future<void> init() async {
     words.addListener(sortWord);
 
-    db.wordDao.watching()..listen((event) => words.value = event);
+    db.wordDao.watching()
+      ..listen((event) {
+        words.value = event;
+
+        print('word watchin event');
+      });
 
     db.contentDao.watching()
       ..listen((event) {
         contentDatas.value = event.map((e) => ContentData(this, e)).toList();
+
+        print('content watching event');
       });
   }
 
@@ -72,5 +79,17 @@ class Hub {
     }
 
     return w.first;
+  }
+
+  void resetAllTable() {
+    db.resetAllTable();
+
+    words.value = [];
+    alphaSort.value = {};
+    contentDatas.value = [];
+
+    words.notifyListeners();
+    alphaSort.notifyListeners();
+    contentDatas.notifyListeners();
   }
 }

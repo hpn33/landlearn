@@ -60,7 +60,7 @@ class Database extends _$Database {
         // },
       );
 
-  void clearAllTable() {
+  void resetAllTable() {
     final migrator = createMigrator();
 
     for (final table in allTables) {

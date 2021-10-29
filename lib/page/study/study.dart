@@ -71,7 +71,6 @@ class StudyPage extends HookWidget {
         // useListenable(contentData.words);
         final wordsSorted = studyController.wordsSorted;
         useListenable(wordsSorted);
-        print('notify');
 
         return SingleChildScrollView(
           child: Column(

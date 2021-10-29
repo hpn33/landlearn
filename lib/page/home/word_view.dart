@@ -13,6 +13,7 @@ class WordView extends HookWidget {
   Widget build(BuildContext context) {
     final hub = useProvider(hubProvider);
     useListenable(hub.alphaSort);
+    useListenable(hub.words);
 
     return Container(
       child: wordsWidget(context, hub.words.value, hub.alphaSort.value),
