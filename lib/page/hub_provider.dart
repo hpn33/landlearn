@@ -15,7 +15,7 @@ class Hub {
 
   final words = ValueNotifier(<Word>[]);
   final alphaSort = ValueNotifier(<String, List<Word>>{});
-  final contents = ValueNotifier(<ContentData>[]);
+  final contentDatas = ValueNotifier(<ContentData>[]);
 
   Future<void> init() async {
     words.addListener(sortWord);
@@ -24,7 +24,7 @@ class Hub {
 
     db.contentDao.watching()
       ..listen((event) {
-        contents.value = event.map((e) => ContentData(this, e)).toList();
+        contentDatas.value = event.map((e) => ContentData(this, e)).toList();
       });
   }
 

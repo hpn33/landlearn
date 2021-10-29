@@ -9,9 +9,9 @@ import '../../service/model/word_data.dart';
 import 'word_map.dart';
 
 class StudyPage extends HookWidget {
-  final ContentData contentO;
+  final ContentData contentData;
 
-  StudyPage(this.contentO);
+  StudyPage(this.contentData);
 
   @override
   Widget build(BuildContext context) {
@@ -19,13 +19,13 @@ class StudyPage extends HookWidget {
 
     useListenable(studyController.editMode);
 
-    useEffect(() {
-      studyController.init(contentO);
-      studyController.analyze(context, contentO.content.content);
-    }, []);
-
     final textController =
-        useTextEditingController(text: contentO.content.content);
+        useTextEditingController(text: contentData.content.content);
+
+    useEffect(() {
+      studyController.init(contentData);
+      studyController.analyze(context, textController.text);
+    }, []);
 
     return Material(
       child: Column(
@@ -38,18 +38,10 @@ class StudyPage extends HookWidget {
                 Expanded(
                   // child: Text(textController.text),
                   // child: SingleChildScrollView(child: TextSelectable(text: text)),
-                  child: SingleChildScrollView(
-                    child: studyController.editMode.value
-                        ? TextField(
-                            controller: textController,
-                            minLines: 20,
-                            maxLines: 1000,
-                          )
-                        : Text(textController.text),
-                  ),
+                  child: contentView(studyController, textController),
                 ),
                 Expanded(
-                  child: wordOfContent(context, contentO.wordsSorted),
+                  child: wordOfContent(context, contentData.wordsSorted),
                 ),
               ],
             ),
@@ -59,13 +51,26 @@ class StudyPage extends HookWidget {
     );
   }
 
+  SingleChildScrollView contentView(
+      StudyController studyController, TextEditingController textController) {
+    return SingleChildScrollView(
+      child: studyController.editMode.value
+          ? TextField(
+              controller: textController,
+              minLines: 20,
+              maxLines: 1000,
+            )
+          : Text(textController.text),
+    );
+  }
+
   Widget wordOfContent(
     BuildContext context,
     Map<String, List<WordData>> wordsSorted,
   ) {
     return HookBuilder(
       builder: (context) {
-        useListenable(contentO.words);
+        useListenable(contentData.words);
 
         return SingleChildScrollView(
           child: Column(

@@ -12,70 +12,14 @@ class ContentView extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final hub = useProvider(hubProvider);
-    useListenable(hub.contents);
+    useListenable(hub.contentDatas);
 
     return Container(
-      child: contents2(context, hub.contents.value),
+      child: contents(context, hub.contentDatas.value),
     );
   }
 
-  Widget contents(BuildContext context) {
-    return Column(
-      children: [
-        Text('Content'),
-        Divider(),
-        Expanded(
-          child: GridView.builder(
-            itemCount: 0, //projects.length,
-            gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-              maxCrossAxisExtent: 300,
-            ),
-            itemBuilder: (context, index) {
-              // final project = projects[index];
-
-              return Card(
-                child: InkWell(
-                  onTap: () {
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(
-                    //     builder: (BuildContext context) => StudyPage(project),
-                    //   ),
-                    // );
-                  },
-                  child: Column(
-                    children: [
-                      Text(
-                        '',
-                        // '${project.title}',
-                        style: TextStyle(fontSize: 22),
-                      ),
-                      Divider(),
-                      Text('word count: 1654'),
-                      Text('undrestand: %80'),
-                      Spacer(),
-                      // Row(
-                      //   children: [
-                      //     IconButton(
-                      //       icon: Icon(Icons.delete),
-                      //       onPressed: () {
-                      //         project.delete();
-                      //       },
-                      //     ),
-                      //   ],
-                      // ),
-                    ],
-                  ),
-                ),
-              );
-            },
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget contents2(BuildContext context, List<ContentData> contents) {
+  Widget contents(BuildContext context, List<ContentData> contentDatas) {
     return Column(
       children: [
         Row(
@@ -98,7 +42,7 @@ class ContentView extends HookWidget {
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
-                      for (final content in contents)
+                      for (final content in contentDatas)
                         contentItem(context, content),
                     ],
                   ),
@@ -111,22 +55,22 @@ class ContentView extends HookWidget {
     );
   }
 
-  Widget contentItem(BuildContext context, ContentData contentO) {
+  Widget contentItem(BuildContext context, ContentData contentData) {
     return Card(
       child: InkWell(
         onTap: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (c) => StudyPage(contentO)),
+            MaterialPageRoute(builder: (c) => StudyPage(contentData)),
           );
         },
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Row(
             children: [
-              Text(contentO.content.title),
+              Text(contentData.content.title),
               Spacer(),
-              Text(contentO.awarnessPercent.toStringAsFixed(1) + '%'),
+              Text(contentData.awarnessPercent.toStringAsFixed(1) + '%'),
             ],
           ),
         ),

@@ -11,10 +11,17 @@ class LoadPage extends HookWidget {
   Widget build(BuildContext context) {
     final hub = useProvider(hubProvider);
 
-    Future.wait([hub.init()]).then((value) {
-      Navigator.pop(context);
-      Navigator.push(context, MaterialPageRoute(builder: (c) => HomePage()));
-    });
+    Future.delayed(Duration(seconds: 1)).then(
+      (value) => Future.wait([hub.init()]).then(
+        (value) {
+          Navigator.pop(context);
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (c) => HomePage()),
+          );
+        },
+      ),
+    );
 
     return Material(
       child: SafeArea(
