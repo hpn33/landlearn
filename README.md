@@ -125,5 +125,7 @@ https://flutterawesome.com/tag/editor/
 ## subject
 
 - [x] easy adding content
-- [ ] fix refresh on study page
+- [ ] fix refresh on every where
+- [ ] scope data for word view ( almost like study page )
+- [ ] 
 

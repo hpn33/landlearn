@@ -92,4 +92,9 @@ class Hub {
     alphaSort.notifyListeners();
     contentDatas.notifyListeners();
   }
+
+  void updateKnowWord(BuildContext context, Word word) {
+    final db = context.read(dbProvider);
+    db.wordDao.updating(word.copyWith(know: !word.know));
+  }
 }

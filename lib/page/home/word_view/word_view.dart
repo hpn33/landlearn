@@ -4,27 +4,22 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:landlearn/page/hub_provider.dart';
 import 'package:landlearn/service/db/database.dart';
 
-import '../dialog/add_word_dialog.dart';
+import '../../dialog/add_word_dialog.dart';
+import 'word_view_controller.dart';
 
 class WordView extends HookWidget {
   const WordView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final controller = useProvider(wordViewControllerProvider);
+
     final hub = useProvider(hubProvider);
     useListenable(hub.alphaSort);
-    useListenable(hub.words);
 
-    return Container(
-      child: wordsWidget(context, hub.words.value, hub.alphaSort.value),
-    );
-  }
+    final words = hub.words.value;
+    final sortedWord = hub.alphaSort.value;
 
-  Widget wordsWidget(
-    BuildContext context,
-    List<Word> words,
-    Map<String, List<Word>> sortedWord,
-  ) {
     return Column(
       children: [
         Row(
@@ -109,9 +104,7 @@ class WordView extends HookWidget {
       color: word.know ? Colors.green[100] : null,
       child: InkWell(
         onTap: () {
-          final db = context.read(dbProvider);
-
-          db.wordDao.updating(word.copyWith(know: !word.know));
+          context.read(hubProvider).updateKnowWord(context, word);
         },
         child: Padding(
           padding: const EdgeInsets.all(4.0),
