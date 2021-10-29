@@ -20,4 +20,8 @@ class ContentDao extends DatabaseAccessor<Database> with _$ContentDaoMixin {
   Future<bool> updateData(Content content, String json) {
     return update(contents).replace(content.copyWith(data: json));
   }
+
+  Future<bool> updateContent(Content content, String textContent) {
+    return update(contents).replace(content.copyWith(content: textContent));
+  }
 }

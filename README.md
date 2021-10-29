@@ -120,3 +120,10 @@ https://flutterawesome.com/tag/editor/
 * [ ] show awareness of content
 * [ ] show knowed word on study page
 * [ ] 
+
+
+## subject
+
+- [x] easy adding content
+- [ ] fix refresh on study page
+

@@ -2,12 +2,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:landlearn/service/db/database.dart';
 import 'package:landlearn/service/model/content_data.dart';
+import 'package:landlearn/service/repo/repository.dart';
 import 'package:landlearn/util/util.dart';
 
 final hubProvider = Provider((ref) => Hub(ref.read(dbProvider)));
 
 class Hub {
   final Database db;
+  final repo = Repository();
 
   Hub(this.db);
 

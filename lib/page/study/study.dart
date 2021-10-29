@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:landlearn/page/hub_provider.dart';
+import 'package:landlearn/page/study/study_controller.dart';
 import 'package:landlearn/service/db/database.dart';
 import 'package:landlearn/service/model/content_data.dart';
 
@@ -15,13 +15,22 @@ class StudyPage extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    // final textController =
-    //     useTextEditingController(text: contentO.content.content);
+    final studyController = useProvider(studyControllerProvider);
+
+    useListenable(studyController.editMode);
+
+    useEffect(() {
+      studyController.init(contentO);
+      studyController.analyze(context, contentO.content.content);
+    }, []);
+
+    final textController =
+        useTextEditingController(text: contentO.content.content);
 
     return Material(
       child: Column(
         children: [
-          topBar(context),
+          topBar(context, textController),
           Expanded(
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -30,12 +39,13 @@ class StudyPage extends HookWidget {
                   // child: Text(textController.text),
                   // child: SingleChildScrollView(child: TextSelectable(text: text)),
                   child: SingleChildScrollView(
-                    child: Text(contentO.content.content),
-                    // TextField(
-                    //   controller: textController,
-                    //   minLines: 20,
-                    //   maxLines: 1000,
-                    // ),
+                    child: studyController.editMode.value
+                        ? TextField(
+                            controller: textController,
+                            minLines: 20,
+                            maxLines: 1000,
+                          )
+                        : Text(textController.text),
                   ),
                 ),
                 Expanded(
@@ -102,28 +112,11 @@ class StudyPage extends HookWidget {
     );
   }
 
-  void analyze(BuildContext context, String input) async {
-    final mapMap = context.read(wordMapProvider)..clear();
-    final wordList = input.split(_regex);
-    final hub = context.read(hubProvider);
-
-    for (var word in wordList) {
-      if (word.isEmpty) {
-        continue;
-      }
-
-      mapMap.addWord(await hub.getOrAddWord(word));
-    }
-
-    hub.db.contentDao.updateData(contentO.content, mapMap.toJson());
-  }
-
-  final _regex = RegExp("(?:(?![a-zA-Z])'|'(?![a-zA-Z])|[^a-zA-Z'])+");
-
-  Widget topBar(BuildContext context) {
+  Widget topBar(BuildContext context, TextEditingController textController) {
     return HookBuilder(
       builder: (context) {
         final map = useProvider(wordMapProvider);
+        final controller = useProvider(studyControllerProvider);
 
         return Material(
           elevation: 6,
@@ -151,9 +144,14 @@ class StudyPage extends HookWidget {
               ),
               ElevatedButton(
                 child: Text('analyze'),
-                onPressed:
-                    // null
-                    () => analyze(context, contentO.content.content),
+                onPressed: () =>
+                    controller.analyze(context, textController.text),
+              ),
+
+              ElevatedButton(
+                child: Text(controller.editMode.value ? 'done' : 'edit'),
+                onPressed: () =>
+                    controller.toggleEditMode(context, textController),
               ),
             ],
           ),
