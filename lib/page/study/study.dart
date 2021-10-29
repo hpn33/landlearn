@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:landlearn/page/study/study_controller.dart';
-import 'package:landlearn/service/db/database.dart';
 import 'package:landlearn/service/model/content_data.dart';
 
 import '../../service/model/word_data.dart';
@@ -36,12 +35,10 @@ class StudyPage extends HookWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(
-                  // child: Text(textController.text),
-                  // child: SingleChildScrollView(child: TextSelectable(text: text)),
                   child: contentView(studyController, textController),
                 ),
                 Expanded(
-                  child: wordOfContent(context, contentData.wordsSorted),
+                  child: wordOfContent(context, studyController),
                 ),
               ],
             ),
@@ -66,45 +63,32 @@ class StudyPage extends HookWidget {
 
   Widget wordOfContent(
     BuildContext context,
-    Map<String, List<WordData>> wordsSorted,
+    StudyController studyController,
+    // Map<String, List<WordData>> wordsSorted,
   ) {
     return HookBuilder(
       builder: (context) {
-        useListenable(contentData.words);
+        // useListenable(contentData.words);
+        final wordsSorted = studyController.wordsSorted;
+        useListenable(wordsSorted);
+        print('notify');
 
         return SingleChildScrollView(
           child: Column(
             children: [
-              for (final wordsByChar in wordsSorted.entries)
+              for (final index
+                  in List.generate(wordsSorted.value.length, (index) => index))
                 Card(
                   child: Column(
                     children: [
-                      Text(wordsByChar.key),
+                      Text(wordsSorted.value.entries.elementAt(index).key),
                       Divider(),
                       Wrap(
                         children: [
-                          for (final wordRow in wordsByChar.value)
-                            Card(
-                              color:
-                                  wordRow.word.know ? Colors.green[100] : null,
-                              child: InkWell(
-                                onTap: () {
-                                  final db = context.read(dbProvider);
-
-                                  db.wordDao.updating(wordRow.word
-                                      .copyWith(know: !wordRow.word.know));
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.all(4.0),
-                                  child: Text(
-                                    '${wordRow.word.word}',
-                                    style: TextStyle(
-                                      fontSize: 12.0 + wordRow.count,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
+                          for (final wordRow in wordsSorted.value.entries
+                              .elementAt(index)
+                              .value)
+                            wordCard(context, wordRow, index),
                         ],
                       ),
                     ],
@@ -114,6 +98,26 @@ class StudyPage extends HookWidget {
           ),
         );
       },
+    );
+  }
+
+  Widget wordCard(BuildContext context, WordData wordRow, int index) {
+    return Card(
+      color: wordRow.word.know ? Colors.green[100] : null,
+      child: InkWell(
+        onTap: () => context
+            .read(studyControllerProvider)
+            .updateKnowWord(context, wordRow, index),
+        child: Padding(
+          padding: const EdgeInsets.all(4.0),
+          child: Text(
+            '${wordRow.word.word}',
+            style: TextStyle(
+              fontSize: 12.0 + wordRow.count,
+            ),
+          ),
+        ),
+      ),
     );
   }
 
