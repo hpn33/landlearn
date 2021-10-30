@@ -22,7 +22,7 @@ class StudyPage extends HookWidget {
         useTextEditingController(text: contentData.content.content);
 
     useEffect(() {
-      studyController.init(contentData);
+      studyController.init(context, contentData);
       studyController.analyze(context, textController.text);
     }, []);
 

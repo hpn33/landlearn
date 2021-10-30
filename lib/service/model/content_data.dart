@@ -11,10 +11,7 @@ class ContentData {
   final words = ValueNotifier(<WordData>[]);
 
   ContentData(Hub hub, this.content) {
-    hub.words.addListener(() {
-      words.value = [];
-      getWords(hub);
-    });
+    hub.words.addListener(() => getWords(hub));
 
     getWords(hub);
   }
@@ -35,6 +32,8 @@ class ContentData {
     if (!content.data.startsWith('[')) {
       return;
     }
+
+    words.value = [];
 
     final List decoded = json.decode(content.data);
     final tempList = <WordData>[];

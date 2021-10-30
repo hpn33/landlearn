@@ -14,6 +14,9 @@ class ContentDao extends DatabaseAccessor<Database> with _$ContentDaoMixin {
 
   Stream<List<Content>> watching() => select(contents).watch();
 
+  Stream<Content?> watchingSingleBy({required int id}) =>
+      (select(contents)..where((tbl) => tbl.id.equals(id))).watchSingleOrNull();
+
   Future<int> add(String title, String content) => into(contents)
       .insert(ContentsCompanion.insert(title: title, content: content));
 

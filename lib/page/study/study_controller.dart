@@ -13,13 +13,22 @@ final studyControllerProvider =
 class StudyController {
   late ContentData contentData;
 
+  final contentObject = ValueNotifier<Content?>(null);
+
   final editMode = ValueNotifier(false);
 
   late final wordsSorted = ValueNotifier(contentData.wordsSorted);
   void wordNotify() => wordsSorted.notifyListeners();
 
-  void init(ContentData contentO) {
-    this.contentData = contentO;
+  void init(BuildContext context, ContentData contentO) {
+    contentData = contentO;
+
+    // final db = context.read(dbProvider);
+    // db.contentDao
+    //     .watchingSingleBy(id: contentO.content.id)
+    //     .listen((event) => contentObject.value = event);
+
+    // db.wordDao.watchingThatIn(ids: contentO.content.data);
   }
 
   final _regex = RegExp("(?:(?![a-zA-Z])'|'(?![a-zA-Z])|[^a-zA-Z'])+");
