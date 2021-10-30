@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:landlearn/page/hub_provider.dart';
 import 'package:landlearn/service/db/database.dart';
 
 import '../../dialog/add_word_dialog.dart';
@@ -12,13 +11,8 @@ class WordView extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = useProvider(wordViewControllerProvider);
-
-    final hub = useProvider(hubProvider);
-    useListenable(hub.alphaSort);
-
-    final words = hub.words.value;
-    final sortedWord = hub.alphaSort.value;
+    final words = useProvider(wordsListProvider).state;
+    final sortedWords = useProvider(sortedWordProvider).state;
 
     return Column(
       children: [
@@ -70,7 +64,7 @@ class WordView extends HookWidget {
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
-                      for (final item in sortedWord.entries)
+                      for (final item in sortedWords.entries)
                         Column(
                           children: [
                             Card(
@@ -104,7 +98,9 @@ class WordView extends HookWidget {
       color: word.know ? Colors.green[100] : null,
       child: InkWell(
         onTap: () {
-          context.read(hubProvider).updateKnowWord(context, word);
+          final db = context.read(dbProvider);
+
+          db.wordDao.updating(word.copyWith(know: !word.know));
         },
         child: Padding(
           padding: const EdgeInsets.all(4.0),

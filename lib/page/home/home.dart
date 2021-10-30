@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:landlearn/page/hub_provider.dart';
 import 'package:landlearn/service/db/database.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'desk.dart';
 import 'mobile.dart';
@@ -17,9 +16,7 @@ class HomePage extends HookWidget {
             children: [
               TextButton(
                 child: Text('delete all'),
-                onPressed: () {
-                  context.read(hubProvider).resetAllTable();
-                },
+                onPressed: () => context.read(dbProvider).resetAllTable(),
               )
             ],
           ),

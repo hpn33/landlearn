@@ -2,24 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:landlearn/page/dialog/add_content_dialog.dart';
-import 'package:landlearn/page/hub_provider.dart';
-import 'package:landlearn/page/study/study.dart';
-import 'package:landlearn/service/model/content_data.dart';
+import 'package:landlearn/page/home/content_view/content_view_vm.dart';
+import 'package:landlearn/service/db/database.dart';
 
 class ContentView extends HookWidget {
   const ContentView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final hub = useProvider(hubProvider);
-    useListenable(hub.contentDatas);
+    // final vm = useProvider(contentViewVM);
 
-    return Container(
-      child: contents(context, hub.contentDatas.value),
-    );
-  }
+    // useListenable(vm.contentLists);
 
-  Widget contents(BuildContext context, List<ContentData> contentDatas) {
+    // useEffect(() {
+    //   vm.init();
+    // }, []);
+
+    final contentList = useProvider(contentsListProvider).state;
+
     return Column(
       children: [
         Row(
@@ -42,7 +42,7 @@ class ContentView extends HookWidget {
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
-                      for (final content in contentDatas)
+                      for (final content in contentList)
                         contentItem(context, content),
                     ],
                   ),
@@ -55,22 +55,22 @@ class ContentView extends HookWidget {
     );
   }
 
-  Widget contentItem(BuildContext context, ContentData contentData) {
+  Widget contentItem(BuildContext context, Content content) {
     return Card(
       child: InkWell(
         onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (c) => StudyPage(contentData)),
-          );
+          // Navigator.push(
+          //   context,
+          //   MaterialPageRoute(builder: (c) => StudyPage()),
+          // );
         },
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Row(
             children: [
-              Text(contentData.content.title),
-              Spacer(),
-              Text(contentData.awarnessPercent.toStringAsFixed(1) + '%'),
+              Text(content.title),
+              // Spacer(),
+              // Text(contentData.awarnessPercent.toStringAsFixed(1) + '%'),
             ],
           ),
         ),

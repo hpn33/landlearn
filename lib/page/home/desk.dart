@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'content_view.dart';
+import 'content_view/content_view.dart';
 import 'word_view/word_view.dart';
 
 class DeskHomePage extends StatelessWidget {

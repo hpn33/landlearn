@@ -18,21 +18,21 @@ class Hub {
   final contentDatas = ValueNotifier(<ContentData>[]);
 
   Future<void> init() async {
-    words.addListener(sortWord);
+    // words.addListener(sortWord);
 
-    db.wordDao.watching()
-      ..listen((event) {
-        words.value = event;
+    // db.wordDao.watching()
+    //   ..listen((event) {
+    //     words.value = event;
 
-        print('word watchin event');
-      });
+    //     print('word watchin event');
+    //   });
 
-    db.contentDao.watching()
-      ..listen((event) {
-        contentDatas.value = event.map((e) => ContentData(this, e)).toList();
+    // db.contentDao.watching()
+    //   ..listen((event) {
+    //     contentDatas.value = event.map((e) => ContentData(this, e)).toList();
 
-        print('content watching event');
-      });
+    //     print('content watching event');
+    //   });
   }
 
   void sortWord() {
