@@ -8,53 +8,60 @@ import 'package:landlearn/util/util.dart';
 
 class ContentData {
   late final Content content;
-  final words = ValueNotifier(<WordData>[]);
+  // final words = ValueNotifier(<WordData>[]);
+  final words = <int, int>{}; //id, count
 
-  ContentData(Hub hub, this.content) {
-    hub.words.addListener(() => getWords(hub));
+  ContentData(
+      // Hub hub,
+      this.content) {
+    // hub.words.addListener(() => getWords(hub));
 
-    getWords(hub);
+    // getWords(hub);
+    getWords();
   }
 
-  Map<String, List<WordData>> get wordsSorted => {
-        for (final char in alphabeta)
-          char: words.value
-              .where((element) => element.word.word.startsWith(char))
-              .toList()
-      };
+  // Map<String, List<WordData>> get wordsSorted => {
+  //       for (final char in alphabeta)
+  //         char: words.value
+  //             .where((element) => element.word.word.startsWith(char))
+  //             .toList()
+  //     };
 
-  double get awarnessPercent =>
-      ((words.value.where((element) => element.word.know).length /
-              words.value.length) *
-          100);
+  // double get awarnessPercent =>
+  //     ((words.value.where((element) => element.word.know).length /
+  //             words.value.length) *
+  //         100);
 
-  void getWords(Hub hub) {
+  void getWords() {
     if (!content.data.startsWith('[')) {
       return;
     }
 
-    words.value = [];
+    // words.value = [];
+    words.clear();
 
     final List decoded = json.decode(content.data);
-    final tempList = <WordData>[];
+    // final tempList = <WordData>[];
 
     decoded.forEach((item) {
       final id = item[0] as int;
       final count = item[1] as int;
 
-      final b = hub.words.value.where((e) => e.id == id);
+      words[id] = count;
 
-      if (b.isNotEmpty) {
-        tempList.add(
-          WordData()
-            ..word = b.first
-            ..count = count,
-        );
-      }
+      // final b = hub.words.value.where((e) => e.id == id);
+
+      // if (b.isNotEmpty) {
+      //   tempList.add(
+      //     WordData()
+      //       ..word = b.first
+      //       ..count = count,
+      //   );
+      // }
     });
 
-    tempList..sort((a, b) => a.word.word.compareTo(b.word.word));
+    // tempList..sort((a, b) => a.word.word.compareTo(b.word.word));
 
-    words.value = tempList;
+    // words.value = tempList;
   }
 }

@@ -19,4 +19,7 @@ class WordDao extends DatabaseAccessor<Database> with _$WordDaoMixin {
       .insertReturning(WordsCompanion.insert(word: word, know: false));
 
   Future<bool> updating(Word word) => (update(words).replace(word));
+
+  Stream<List<Word>> watchingIn({required Iterable<int> wordIds}) =>
+      (select(words)..where((tbl) => tbl.id.isIn(wordIds))).watch();
 }

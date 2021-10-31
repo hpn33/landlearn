@@ -2,43 +2,52 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:landlearn/page/study/study_controller.dart';
-import 'package:landlearn/service/model/content_data.dart';
+import 'package:landlearn/service/db/database.dart';
 
 import '../../service/model/word_data.dart';
 import 'word_map.dart';
 
 class StudyPage extends HookWidget {
-  final ContentData contentData;
+  // final ContentData contentData;
+  final int contentId;
 
-  StudyPage(this.contentData);
+  StudyPage(this.contentId);
 
   @override
   Widget build(BuildContext context) {
-    final studyController = useProvider(studyControllerProvider);
+    // final studyController = useProvider(studyControllerProvider);
 
-    useListenable(studyController.editMode);
+    // useListenable(studyController.editMode);
+    final editMode = useState(false);
+    // final contentData = useState<Content?>(null);
 
-    final textController =
-        useTextEditingController(text: contentData.content.content);
+    final contentData = useProvider(getContentProvider(contentId)).state;
+    final words = useProvider(getContentWordsProvider(contentId)).state;
+
+    final textController = useTextEditingController(text: '');
 
     useEffect(() {
-      studyController.init(context, contentData);
-      studyController.analyze(context, textController.text);
-    }, []);
+      if (contentData != null) {
+        textController.text = contentData.content.content;
+      }
+
+      // studyController.init(context, contentData);
+      // studyController.analyze(context, textController.text);
+    }, [contentData]);
 
     return Material(
       child: Column(
         children: [
-          topBar(context, textController),
+          topBar(context, textController, editMode),
           Expanded(
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(
-                  child: contentView(studyController, textController),
+                  child: contentView(editMode.value, textController),
                 ),
                 Expanded(
-                  child: wordOfContent(context, studyController),
+                  child: wordOfContent(context, words),
                 ),
               ],
             ),
@@ -48,10 +57,12 @@ class StudyPage extends HookWidget {
     );
   }
 
-  SingleChildScrollView contentView(
-      StudyController studyController, TextEditingController textController) {
+  Widget contentView(
+    bool editMode,
+    TextEditingController textController,
+  ) {
     return SingleChildScrollView(
-      child: studyController.editMode.value
+      child: editMode
           ? TextField(
               controller: textController,
               minLines: 20,
@@ -63,36 +74,37 @@ class StudyPage extends HookWidget {
 
   Widget wordOfContent(
     BuildContext context,
-    StudyController studyController,
+    // StudyController studyController,
     // Map<String, List<WordData>> wordsSorted,
+    List<Word> words,
   ) {
     return HookBuilder(
       builder: (context) {
         // useListenable(contentData.words);
-        final wordsSorted = studyController.wordsSorted;
-        useListenable(wordsSorted);
+        // final wordsSorted = studyController.wordsSorted;
+        // useListenable(wordsSorted);
 
         return SingleChildScrollView(
           child: Column(
             children: [
-              for (final index
-                  in List.generate(wordsSorted.value.length, (index) => index))
-                Card(
-                  child: Column(
-                    children: [
-                      Text(wordsSorted.value.entries.elementAt(index).key),
-                      Divider(),
-                      Wrap(
-                        children: [
-                          for (final wordRow in wordsSorted.value.entries
-                              .elementAt(index)
-                              .value)
-                            wordCard(context, wordRow, index),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
+              //     for (final index
+              //         in List.generate(wordsSorted.value.length, (index) => index))
+              //       Card(
+              //         child: Column(
+              //           children: [
+              //             Text(wordsSorted.value.entries.elementAt(index).key),
+              //             Divider(),
+              //             Wrap(
+              //               children: [
+              //                 for (final wordRow in wordsSorted.value.entries
+              //                     .elementAt(index)
+              //                     .value)
+              //                   wordCard(context, wordRow, index),
+              //               ],
+              //             ),
+              //           ],
+              //         ),
+              //       ),
             ],
           ),
         );
@@ -104,9 +116,10 @@ class StudyPage extends HookWidget {
     return Card(
       color: wordRow.word.know ? Colors.green[100] : null,
       child: InkWell(
-        onTap: () => context
-            .read(studyControllerProvider)
-            .updateKnowWord(context, wordRow, index),
+        onTap: null,
+        // () => context
+        //     .read(studyControllerProvider)
+        //     .updateKnowWord(context, wordRow, index),
         child: Padding(
           padding: const EdgeInsets.all(4.0),
           child: Text(
@@ -120,11 +133,15 @@ class StudyPage extends HookWidget {
     );
   }
 
-  Widget topBar(BuildContext context, TextEditingController textController) {
+  Widget topBar(
+    BuildContext context,
+    TextEditingController textController,
+    ValueNotifier<bool> editMode,
+  ) {
     return HookBuilder(
       builder: (context) {
         final map = useProvider(wordMapProvider);
-        final controller = useProvider(studyControllerProvider);
+        // final controller = useProvider(studyControllerProvider);
 
         return Material(
           elevation: 6,
@@ -150,16 +167,16 @@ class StudyPage extends HookWidget {
                 'word count\n${map.wordCount}',
                 textAlign: TextAlign.center,
               ),
-              ElevatedButton(
-                child: Text('analyze'),
-                onPressed: () =>
-                    controller.analyze(context, textController.text),
-              ),
+              // ElevatedButton(
+              //   child: Text('analyze'),
+              //   onPressed: () =>
+              //       controller.analyze(context, textController.text),
+              // ),
 
               ElevatedButton(
-                child: Text(controller.editMode.value ? 'done' : 'edit'),
-                onPressed: () =>
-                    controller.toggleEditMode(context, textController),
+                child: Text(editMode.value ? 'done' : 'edit'),
+                onPressed: () => editMode.value = !editMode.value,
+                // controller.toggleEditMode(context, textController),
               ),
             ],
           ),

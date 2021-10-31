@@ -3,6 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:landlearn/page/dialog/add_content_dialog.dart';
 import 'package:landlearn/page/home/content_view/content_view_vm.dart';
+import 'package:landlearn/page/study/study.dart';
 import 'package:landlearn/service/db/database.dart';
 
 class ContentView extends HookWidget {
@@ -59,10 +60,10 @@ class ContentView extends HookWidget {
     return Card(
       child: InkWell(
         onTap: () {
-          // Navigator.push(
-          //   context,
-          //   MaterialPageRoute(builder: (c) => StudyPage()),
-          // );
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (c) => StudyPage(content.id)),
+          );
         },
         child: Padding(
           padding: const EdgeInsets.all(8.0),
