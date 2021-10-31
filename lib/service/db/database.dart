@@ -61,12 +61,20 @@ class Database extends _$Database {
       );
 
   void resetAllTable() {
-    final migrator = createMigrator();
+    // final migrator = createMigrator();
 
-    for (final table in allTables) {
-      migrator.drop(table);
-    }
+// uture<void> deleteEverything() {
+    // return
+    transaction(() async {
+      for (final table in allTables) {
+        await delete(table).go();
+      }
+    });
+    // }
+    // for (final table in allTables) {
+    //   migrator.drop(table);
+    // }
 
-    migrator.createAll();
+    // migrator.createAll();
   }
 }

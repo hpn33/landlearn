@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:landlearn/service/db/database.dart';
+import 'package:landlearn/util/util.dart';
 
 import '../../dialog/add_word_dialog.dart';
 import 'word_view_controller.dart';
@@ -12,7 +13,6 @@ class WordView extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final words = useProvider(wordsListProvider).state;
-    final sortedWords = useProvider(sortedWordProvider).state;
 
     return Column(
       children: [
@@ -64,24 +64,9 @@ class WordView extends HookWidget {
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
-                      for (final item in sortedWords.entries)
-                        Column(
-                          children: [
-                            Card(
-                                child: Row(
-                              children: [
-                                Text(item.key),
-                              ],
-                            )),
-                            Wrap(
-                              children: [
-                                for (final word in item.value)
-                                  wordItem(context, word)
-                              ],
-                            ),
-                            SizedBox(height: 30),
-                          ],
-                        ),
+                      for (final item in alphabeta)
+                        // for (final item in sortedWords.entries)
+                        wordSectionCard(context, item),
                     ],
                   ),
                 ),
@@ -89,6 +74,29 @@ class WordView extends HookWidget {
             ],
           ),
         ),
+      ],
+    );
+  }
+
+  Column wordSectionCard(BuildContext context, String alphaChar) {
+    return Column(
+      children: [
+        Card(
+          child: Row(
+            children: [
+              Text(alphaChar),
+            ],
+          ),
+        ),
+        Consumer(builder: (context, watch, child) {
+          return Wrap(
+            children: [
+              for (final word in context.read(getWordWithProvider(alphaChar)))
+                wordItem(context, word)
+            ],
+          );
+        }),
+        SizedBox(height: 30),
       ],
     );
   }
