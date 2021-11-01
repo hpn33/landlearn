@@ -5,7 +5,6 @@ import 'package:landlearn/page/study/study_controller.dart';
 import 'package:landlearn/service/db/database.dart';
 import 'package:landlearn/util/util.dart';
 
-import '../../service/model/word_data.dart';
 import 'word_map.dart';
 
 class StudyPage extends HookWidget {
@@ -15,7 +14,6 @@ class StudyPage extends HookWidget {
 
     final contentData = useProvider(getContentProvider).state;
 
-    // final textController = useTextEditingController(text: '');
     final textController = useProvider(textControllerProvider);
 
     useEffect(() {
@@ -63,9 +61,6 @@ class StudyPage extends HookWidget {
     return HookBuilder(
       builder: (context) {
         final words = useProvider(getContentWordsProvider).state;
-        // useListenable(contentData.words);
-        // final wordsSorted = studyController.wordsSorted;
-        // useListenable(wordsSorted);
 
         return SingleChildScrollView(
           child: Column(
@@ -97,10 +92,7 @@ class StudyPage extends HookWidget {
     return Card(
       color: word.know ? Colors.green[100] : null,
       child: InkWell(
-        onTap: null,
-        // () => context
-        //     .read(studyControllerProvider)
-        //     .updateKnowWord(context, wordRow, index),
+        onTap: () => context.read(dbProvider).wordDao.updateKnow(word),
         child: Padding(
           padding: const EdgeInsets.all(4.0),
           child: Text(

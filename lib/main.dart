@@ -6,7 +6,7 @@ import 'app.dart';
 void main() async {
   runApp(ProviderScope(
     child: MyApp(),
-    observers: [Ob()],
+    // observers: [Ob()],
   ));
 }
 

@@ -26,4 +26,7 @@ class WordDao extends DatabaseAccessor<Database> with _$WordDaoMixin {
   Future<Word?> get(wordLowerCase) =>
       (select(words)..where((tbl) => tbl.word.equals(wordLowerCase)))
           .getSingleOrNull();
+
+  Future<bool> updateKnow(Word word) =>
+      (update(words).replace(word.copyWith(know: !word.know)));
 }

@@ -1,10 +1,6 @@
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
-import 'package:landlearn/page/hub_provider.dart';
-import 'package:landlearn/service/model/word_data.dart';
 import 'package:landlearn/service/db/database.dart';
-import 'package:landlearn/util/util.dart';
 
 class ContentData {
   late final Content content;
