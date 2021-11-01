@@ -8,32 +8,19 @@ import '../../service/model/word_data.dart';
 import 'word_map.dart';
 
 class StudyPage extends HookWidget {
-  // final ContentData contentData;
-  // final int contentId;
-
-  // StudyPage(this.contentId);
-
   @override
   Widget build(BuildContext context) {
-    // final studyController = useProvider(studyControllerProvider);
-
-    // useListenable(studyController.editMode);
     final editMode = useState(false);
-    // final contentData = useState<Content?>(null);
 
     final contentData = useProvider(getContentProvider).state;
     final words = useProvider(getContentWordsProvider).state;
 
-    final textController = useTextEditingController(text: '');
+    // final textController = useTextEditingController(text: '');
+    final textController = useProvider(textControllerProvider);
 
     useEffect(() {
-      if (contentData != null) {
-        textController.text = contentData.content.content;
-      }
-
-      // studyController.init(context, contentData);
-      // studyController.analyze(context, textController.text);
-    }, [contentData]);
+      analyze(context);
+    }, [contentData!.content.content]);
 
     return Material(
       child: Column(
@@ -141,24 +128,12 @@ class StudyPage extends HookWidget {
     return HookBuilder(
       builder: (context) {
         final map = useProvider(wordMapProvider);
-        // final controller = useProvider(studyControllerProvider);
 
         return Material(
           elevation: 6,
           child: Row(
             children: [
               BackButton(),
-              // TextButton(
-              //   child: Text('save'),
-              //   onPressed: () {
-              //     // project
-              //     //   ..text = textController.text
-              //     //   ..save();
-
-              //     // box.put(keyId, project..text = textController.text);
-              //     // box.get(keyId);
-              //   },
-              // ),
               Text(
                 'text word\n${map.allWordCount}',
                 textAlign: TextAlign.center,
@@ -168,38 +143,62 @@ class StudyPage extends HookWidget {
                 textAlign: TextAlign.center,
               ),
               ElevatedButton(
-                  child: Text('analyze'),
-                  onPressed: () {
-                    final db = context.read(dbProvider);
-
-                    final mapMap = context.read(wordMapProvider)..clear();
-                    final wordList = textController.text.split(_regex);
-                    // final hub = context.read(hubProvider);
-
-                    for (var word in wordList) {
-                      if (word.isEmpty) {
-                        continue;
-                      }
-
-                      // mapMap.addWord(await hub.getOrAddWord(word));
-                    }
-
-                    // hub.db.contentDao.updateData(contentData.content, mapMap.toJson());
-                  }
-
-                  // controller.analyze(context, textController.text),
-                  ),
-
+                child: Text('analyze'),
+                onPressed: () => analyze(context),
+              ),
               ElevatedButton(
                 child: Text(editMode.value ? 'done' : 'edit'),
-                onPressed: () => editMode.value = !editMode.value,
-                // controller.toggleEditMode(context, textController),
+                onPressed: () async {
+                  final contentData = context.read(getContentProvider).state;
+//TODO: is refresh auto???
+                  if (textController.text != contentData!.content.content) {
+                    await context.read(dbProvider).contentDao.updateContent(
+                          contentData.content,
+                          textController.text,
+                        );
+                  }
+
+                  editMode.value = !editMode.value;
+                },
               ),
             ],
           ),
         );
       },
     );
+  }
+
+  void analyze(BuildContext context) async {
+    final db = context.read(dbProvider);
+
+    final contentData = context.read(getContentProvider).state;
+
+    final mapMap = context.read(wordMapProvider)..clear();
+    final wordList = contentData!.content.content.split(_regex);
+
+    for (var word in wordList) {
+      if (word.isEmpty) {
+        continue;
+      }
+
+      mapMap.addWord(await getOrAddWord(context, word));
+    }
+
+    db.contentDao.updateData(contentData.content, mapMap.toJson());
+  }
+
+  Future<Word> getOrAddWord(BuildContext context, String word) async {
+    final db = context.read(dbProvider);
+
+    final wordLowerCase = word.toLowerCase();
+
+    var w = await db.wordDao.get(wordLowerCase);
+
+    if (w == null) {
+      return await db.wordDao.add(wordLowerCase);
+    }
+
+    return w;
   }
 }
 

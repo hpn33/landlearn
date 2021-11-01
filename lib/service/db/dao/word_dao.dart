@@ -22,4 +22,8 @@ class WordDao extends DatabaseAccessor<Database> with _$WordDaoMixin {
 
   Stream<List<Word>> watchingIn({required Iterable<int> wordIds}) =>
       (select(words)..where((tbl) => tbl.id.isIn(wordIds))).watch();
+
+  Future<Word?> get(wordLowerCase) =>
+      (select(words)..where((tbl) => tbl.word.equals(wordLowerCase)))
+          .getSingleOrNull();
 }

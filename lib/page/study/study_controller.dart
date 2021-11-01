@@ -94,6 +94,7 @@
 //   }
 // }
 
+import 'package:flutter/cupertino.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:landlearn/service/db/database.dart';
 import 'package:landlearn/service/model/content_data.dart';
@@ -130,3 +131,13 @@ final getContentWordsProvider = StateProvider.autoDispose<List<Word>>(
         error: (s, o) => [],
       ),
 );
+
+// final textController = useTextEditingController(text: '');
+
+final textControllerProvider = ChangeNotifierProvider.autoDispose((ref) {
+  final contentData = ref.watch(getContentProvider).state;
+
+  return TextEditingController(
+    text: contentData == null ? '' : contentData.content.content,
+  );
+});
