@@ -3,6 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:landlearn/page/study/study_controller.dart';
 import 'package:landlearn/service/db/database.dart';
+import 'package:landlearn/util/util.dart';
 
 import '../../service/model/word_data.dart';
 import 'word_map.dart';
@@ -13,7 +14,6 @@ class StudyPage extends HookWidget {
     final editMode = useState(false);
 
     final contentData = useProvider(getContentProvider).state;
-    final words = useProvider(getContentWordsProvider).state;
 
     // final textController = useTextEditingController(text: '');
     final textController = useProvider(textControllerProvider);
@@ -34,7 +34,7 @@ class StudyPage extends HookWidget {
                   child: contentView(editMode.value, textController),
                 ),
                 Expanded(
-                  child: wordOfContent(context, words),
+                  child: wordOfContent(context),
                 ),
               ],
             ),
@@ -59,14 +59,10 @@ class StudyPage extends HookWidget {
     );
   }
 
-  Widget wordOfContent(
-    BuildContext context,
-    // StudyController studyController,
-    // Map<String, List<WordData>> wordsSorted,
-    List<Word> words,
-  ) {
+  Widget wordOfContent(BuildContext context) {
     return HookBuilder(
       builder: (context) {
+        final words = useProvider(getContentWordsProvider).state;
         // useListenable(contentData.words);
         // final wordsSorted = studyController.wordsSorted;
         // useListenable(wordsSorted);
@@ -74,24 +70,22 @@ class StudyPage extends HookWidget {
         return SingleChildScrollView(
           child: Column(
             children: [
-              //     for (final index
-              //         in List.generate(wordsSorted.value.length, (index) => index))
-              //       Card(
-              //         child: Column(
-              //           children: [
-              //             Text(wordsSorted.value.entries.elementAt(index).key),
-              //             Divider(),
-              //             Wrap(
-              //               children: [
-              //                 for (final wordRow in wordsSorted.value.entries
-              //                     .elementAt(index)
-              //                     .value)
-              //                   wordCard(context, wordRow, index),
-              //               ],
-              //             ),
-              //           ],
-              //         ),
-              //       ),
+              for (final alphaChar in alphabeta)
+                Card(
+                  child: Column(
+                    children: [
+                      Text(alphaChar),
+                      Divider(),
+                      Wrap(
+                        children: [
+                          for (final wordRow in words.where(
+                              (element) => element.word.startsWith(alphaChar)))
+                            wordCard(context, wordRow),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
             ],
           ),
         );
@@ -99,9 +93,9 @@ class StudyPage extends HookWidget {
     );
   }
 
-  Widget wordCard(BuildContext context, WordData wordRow, int index) {
+  Widget wordCard(BuildContext context, Word word) {
     return Card(
-      color: wordRow.word.know ? Colors.green[100] : null,
+      color: word.know ? Colors.green[100] : null,
       child: InkWell(
         onTap: null,
         // () => context
@@ -110,9 +104,9 @@ class StudyPage extends HookWidget {
         child: Padding(
           padding: const EdgeInsets.all(4.0),
           child: Text(
-            '${wordRow.word.word}',
+            '${word.word}',
             style: TextStyle(
-              fontSize: 12.0 + wordRow.count,
+              fontSize: 12.0, //+ word.count,
             ),
           ),
         ),

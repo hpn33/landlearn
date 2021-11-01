@@ -132,8 +132,6 @@ final getContentWordsProvider = StateProvider.autoDispose<List<Word>>(
       ),
 );
 
-// final textController = useTextEditingController(text: '');
-
 final textControllerProvider = ChangeNotifierProvider.autoDispose((ref) {
   final contentData = ref.watch(getContentProvider).state;
 
