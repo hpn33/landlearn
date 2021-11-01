@@ -9,9 +9,9 @@ import 'word_map.dart';
 
 class StudyPage extends HookWidget {
   // final ContentData contentData;
-  final int contentId;
+  // final int contentId;
 
-  StudyPage(this.contentId);
+  // StudyPage(this.contentId);
 
   @override
   Widget build(BuildContext context) {
@@ -21,8 +21,8 @@ class StudyPage extends HookWidget {
     final editMode = useState(false);
     // final contentData = useState<Content?>(null);
 
-    final contentData = useProvider(getContentProvider(contentId)).state;
-    final words = useProvider(getContentWordsProvider(contentId)).state;
+    final contentData = useProvider(getContentProvider).state;
+    final words = useProvider(getContentWordsProvider).state;
 
     final textController = useTextEditingController(text: '');
 
@@ -167,11 +167,28 @@ class StudyPage extends HookWidget {
                 'word count\n${map.wordCount}',
                 textAlign: TextAlign.center,
               ),
-              // ElevatedButton(
-              //   child: Text('analyze'),
-              //   onPressed: () =>
-              //       controller.analyze(context, textController.text),
-              // ),
+              ElevatedButton(
+                  child: Text('analyze'),
+                  onPressed: () {
+                    final db = context.read(dbProvider);
+
+                    final mapMap = context.read(wordMapProvider)..clear();
+                    final wordList = textController.text.split(_regex);
+                    // final hub = context.read(hubProvider);
+
+                    for (var word in wordList) {
+                      if (word.isEmpty) {
+                        continue;
+                      }
+
+                      // mapMap.addWord(await hub.getOrAddWord(word));
+                    }
+
+                    // hub.db.contentDao.updateData(contentData.content, mapMap.toJson());
+                  }
+
+                  // controller.analyze(context, textController.text),
+                  ),
 
               ElevatedButton(
                 child: Text(editMode.value ? 'done' : 'edit'),
@@ -185,3 +202,5 @@ class StudyPage extends HookWidget {
     );
   }
 }
+
+final _regex = RegExp("(?:(?![a-zA-Z])'|'(?![a-zA-Z])|[^a-zA-Z'])+");

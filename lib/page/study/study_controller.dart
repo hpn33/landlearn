@@ -98,36 +98,35 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:landlearn/service/db/database.dart';
 import 'package:landlearn/service/model/content_data.dart';
 
-final _getContentStreamProvider =
-    StreamProvider.autoDispose.family<Content?, int>((ref, id) {
-  final db = ref.read(dbProvider);
+final selectedContentProvider = StateProvider<int>((ref) => -1);
 
-  return db.contentDao.watchingSingleBy(id: id);
+final _getContentStreamProvider = StreamProvider.autoDispose<Content?>((ref) {
+  final db = ref.read(dbProvider);
+  final selectedContent = ref.watch(selectedContentProvider).state;
+
+  return db.contentDao.watchingSingleBy(id: selectedContent);
 });
 
-final getContentProvider =
-    StateProvider.autoDispose.family<ContentData?, int>((ref, id) {
-  return ref.watch(_getContentStreamProvider(id)).when(
+final getContentProvider = StateProvider.autoDispose<ContentData?>(
+  (ref) => ref.watch(_getContentStreamProvider).when(
         data: (data) => data == null ? null : ContentData(data),
         loading: () => null,
         error: (s, o) => null,
-      );
-});
+      ),
+);
 
 final _getContentWordsStreamProvider =
-    StreamProvider.autoDispose.family<List<Word>, int>((ref, id) {
+    StreamProvider.autoDispose<List<Word>>((ref) {
   final db = ref.read(dbProvider);
-
-  final content = ref.watch(getContentProvider(id)).state;
+  final content = ref.watch(getContentProvider).state;
 
   return db.wordDao.watchingIn(wordIds: content!.words.keys);
 });
 
-final getContentWordsProvider =
-    StateProvider.autoDispose.family<List<Word>, int>((ref, id) {
-  return ref.watch(_getContentWordsStreamProvider(id)).when(
+final getContentWordsProvider = StateProvider.autoDispose<List<Word>>(
+  (ref) => ref.watch(_getContentWordsStreamProvider).when(
         data: (data) => data,
         loading: () => [],
         error: (s, o) => [],
-      );
-});
+      ),
+);
