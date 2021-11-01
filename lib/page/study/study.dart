@@ -136,7 +136,6 @@ class StudyPage extends HookWidget {
                 child: Text(editMode.value ? 'done' : 'edit'),
                 onPressed: () async {
                   final contentData = context.read(getContentProvider).state;
-//TODO: is refresh auto???
                   if (textController.text != contentData!.content.content) {
                     await context.read(dbProvider).contentDao.updateContent(
                           contentData.content,
