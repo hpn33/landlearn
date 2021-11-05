@@ -51,7 +51,7 @@ class WordMap extends ChangeNotifier {
   String toJson() {
     final m = map.values
         .expand((element) => element)
-        .map((e) => [e.word.id, e.count])
+        .map((e) => [e.word.id, e.count, e.word.know])
         .toList();
 
     return jsonEncode(m);

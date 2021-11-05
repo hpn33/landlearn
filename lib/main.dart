@@ -6,13 +6,14 @@ import 'app.dart';
 void main() async {
   runApp(ProviderScope(
     child: MyApp(),
-    // observers: [Ob()],
+    observers: [Ob()],
   ));
 }
 
 class Ob extends ProviderObserver {
   void didAddProvider(ProviderBase provider, Object? value) {
-    print('didAddProvider: $provider :: $value');
+    print('didAddProvider: $provider');
+    // print('didAddProvider: $provider :: $value');
   }
 
   void mayHaveChanged(ProviderBase provider) {
@@ -20,7 +21,8 @@ class Ob extends ProviderObserver {
   }
 
   void didUpdateProvider(ProviderBase provider, Object? newValue) {
-    print('didUpdateProvider: $provider :: $newValue');
+    print('didUpdateProvider: $provider');
+    // print('didUpdateProvider: $provider :: $newValue');
   }
 
   void didDisposeProvider(ProviderBase provider) {

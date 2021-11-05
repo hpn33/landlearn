@@ -99,16 +99,16 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:landlearn/service/db/database.dart';
 import 'package:landlearn/service/model/content_data.dart';
 
-final selectedContentProvider = StateProvider<int>((ref) => -1);
+final selectedContentIdProvider = StateProvider<int>((ref) => -1);
 
 final _getContentStreamProvider = StreamProvider.autoDispose<Content?>((ref) {
   final db = ref.read(dbProvider);
-  final selectedContent = ref.watch(selectedContentProvider).state;
+  final selectedContent = ref.watch(selectedContentIdProvider).state;
 
   return db.contentDao.watchingSingleBy(id: selectedContent);
 });
 
-final getContentProvider = StateProvider.autoDispose<ContentData?>(
+final getContentDataProvider = StateProvider.autoDispose<ContentData?>(
   (ref) => ref.watch(_getContentStreamProvider).when(
         data: (data) => data == null ? null : ContentData(data),
         loading: () => null,
@@ -116,13 +116,14 @@ final getContentProvider = StateProvider.autoDispose<ContentData?>(
       ),
 );
 
-final _getContentWordsStreamProvider =
-    StreamProvider.autoDispose<List<Word>>((ref) {
-  final db = ref.read(dbProvider);
-  final content = ref.watch(getContentProvider).state;
+final _getContentWordsStreamProvider = StreamProvider.autoDispose<List<Word>>(
+  (ref) {
+    final db = ref.read(dbProvider);
+    final content = ref.watch(getContentDataProvider).state;
 
-  return db.wordDao.watchingIn(wordIds: content!.words.keys);
-});
+    return db.wordDao.watchingIn(wordIds: content!.wordIds);
+  },
+);
 
 final getContentWordsProvider = StateProvider.autoDispose<List<Word>>(
   (ref) => ref.watch(_getContentWordsStreamProvider).when(
@@ -133,7 +134,7 @@ final getContentWordsProvider = StateProvider.autoDispose<List<Word>>(
 );
 
 final textControllerProvider = ChangeNotifierProvider.autoDispose((ref) {
-  final contentData = ref.watch(getContentProvider).state;
+  final contentData = ref.watch(getContentDataProvider).state;
 
   return TextEditingController(
     text: contentData == null ? '' : contentData.content.content,

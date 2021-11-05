@@ -5,23 +5,13 @@ import 'package:landlearn/page/dialog/add_content_dialog.dart';
 import 'package:landlearn/page/home/content_view/content_view_vm.dart';
 import 'package:landlearn/page/study/study.dart';
 import 'package:landlearn/page/study/study_controller.dart';
-import 'package:landlearn/service/db/database.dart';
+import 'package:landlearn/service/model/content_data.dart';
 
 class ContentView extends HookWidget {
   const ContentView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    // final vm = useProvider(contentViewVM);
-
-    // useListenable(vm.contentLists);
-
-    // useEffect(() {
-    //   vm.init();
-    // }, []);
-
-    final contentList = useProvider(contentsListProvider).state;
-
     return Column(
       children: [
         Row(
@@ -38,30 +28,42 @@ class ContentView extends HookWidget {
           ],
         ),
         Expanded(
-          child: Row(
-            children: [
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      for (final content in contentList)
-                        contentItem(context, content),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
+          child: contentListWidget(context),
         ),
       ],
     );
   }
 
-  Widget contentItem(BuildContext context, Content content) {
+  Widget contentListWidget(BuildContext context) {
+    return Consumer(builder: (context, watch, child) {
+      final contentDataList = watch(contentDatasListProvider).state;
+
+      return Row(
+        children: [
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  for (final content in contentDataList)
+                    contentItem(context, content),
+                ],
+              ),
+            ),
+          ),
+        ],
+      );
+    });
+  }
+
+  Widget contentItem(BuildContext context, ContentData contentData) {
+    print('contentItem');
+    // print('$contentData');
     return Card(
       child: InkWell(
         onTap: () {
-          context.read(selectedContentProvider).state = content.id;
+          context.read(selectedContentIdProvider).state =
+              contentData.content.id;
+
           Navigator.push(
             context,
             MaterialPageRoute(builder: (c) => StudyPage()),
@@ -71,9 +73,23 @@ class ContentView extends HookWidget {
           padding: const EdgeInsets.all(8.0),
           child: Row(
             children: [
-              Text(content.title),
-              // Spacer(),
-              // Text(contentData.awarnessPercent.toStringAsFixed(1) + '%'),
+              Text(contentData.content.title),
+              Spacer(),
+              HookBuilder(
+                builder: (context) {
+                  // print('hook build');
+                  final awarnessPercent = 0.0;
+                  // useProvider(awarnessPercentProvider(contentData.wordIds))
+                  //     .state;
+
+                  // print(awarnessPercent);
+
+                  return Text(
+                    // contentData.awarnessPercent.toStringAsFixed(1) + '%'
+                    awarnessPercent.toStringAsFixed(1) + '%',
+                  );
+                },
+              ),
             ],
           ),
         ),

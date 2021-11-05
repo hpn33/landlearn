@@ -12,7 +12,7 @@ class StudyPage extends HookWidget {
   Widget build(BuildContext context) {
     final editMode = useState(false);
 
-    final contentData = useProvider(getContentProvider).state;
+    final contentData = useProvider(getContentDataProvider).state;
 
     final textController = useProvider(textControllerProvider);
 
@@ -135,7 +135,8 @@ class StudyPage extends HookWidget {
               ElevatedButton(
                 child: Text(editMode.value ? 'done' : 'edit'),
                 onPressed: () async {
-                  final contentData = context.read(getContentProvider).state;
+                  final contentData =
+                      context.read(getContentDataProvider).state;
                   if (textController.text != contentData!.content.content) {
                     await context.read(dbProvider).contentDao.updateContent(
                           contentData.content,
@@ -156,7 +157,7 @@ class StudyPage extends HookWidget {
   void analyze(BuildContext context) async {
     final db = context.read(dbProvider);
 
-    final contentData = context.read(getContentProvider).state;
+    final contentData = context.read(getContentDataProvider).state;
 
     final mapMap = context.read(wordMapProvider)..clear();
     final wordList = contentData!.content.content.split(_regex);

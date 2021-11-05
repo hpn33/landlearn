@@ -4,15 +4,15 @@ import 'package:landlearn/service/db/database.dart';
 
 class ContentData {
   late final Content content;
-  // final words = ValueNotifier(<WordData>[]);
-  final words = <int, int>{}; //id, count
+  final _wordsInContent = <int, int>{}; //id, count
+  // final _wordDatas = <WordData>[];
+  final words = <WordO>[];
 
-  ContentData(
-      // Hub hub,
-      this.content) {
-    // hub.words.addListener(() => getWords(hub));
+  List<int> get wordIds =>
+      // [];
+      _wordsInContent.keys.toList();
 
-    // getWords(hub);
+  ContentData(this.content) {
     getWords();
   }
 
@@ -28,36 +28,41 @@ class ContentData {
   //             words.value.length) *
   //         100);
 
+  // double get awarnessPercent =>
+  //     (words.where((element) => element.know).length / words.length) * 100;
+
   void getWords() {
     if (!content.data.startsWith('[')) {
       return;
     }
 
-    // words.value = [];
+    _wordsInContent.clear();
     words.clear();
 
     final List decoded = json.decode(content.data);
-    // final tempList = <WordData>[];
 
-    decoded.forEach((item) {
-      final id = item[0] as int;
-      final count = item[1] as int;
+    decoded.forEach(
+      (item) {
+        final id = item[0] as int;
+        final count = item[1] as int;
 
-      words[id] = count;
+        bool know = false;
+        if (item.length >= 3) {
+          know = item[2] as bool;
+        }
 
-      // final b = hub.words.value.where((e) => e.id == id);
+        _wordsInContent[id] = count;
 
-      // if (b.isNotEmpty) {
-      //   tempList.add(
-      //     WordData()
-      //       ..word = b.first
-      //       ..count = count,
-      //   );
-      // }
-    });
-
-    // tempList..sort((a, b) => a.word.word.compareTo(b.word.word));
-
-    // words.value = tempList;
+        words.add(WordO(id, count, know));
+      },
+    );
   }
+}
+
+class WordO {
+  final int id;
+  int count = 0;
+  bool know = false;
+
+  WordO(this.id, this.count, this.know);
 }

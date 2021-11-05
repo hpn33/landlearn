@@ -6,20 +6,24 @@ graph TD;
 
 
 dbProvider --> _getContentStreamProvider ;
-selectedContentProvider --> _getContentStreamProvider ;
+selectedContentIdProvider --> _getContentStreamProvider ;
 
-_getContentStreamProvider --> getContentProvider ;
+_getContentStreamProvider --> getContentDataProvider ;
 
 dbProvider --> _getContentWordsStreamProvider ;
-getContentProvider --> _getContentWordsStreamProvider ;
+getContentDataProvider --> _getContentWordsStreamProvider ;
 
 _getContentWordsStreamProvider --> getContentWordsProvider ;
 
-getContentProvider --> textControllerProvider ;
+getContentDataProvider --> textControllerProvider ;
 
 dbProvider --> contentsStreamProvider ;
 
-contentsStreamProvider --> contentsListProvider ;
+contentsStreamProvider --> contentDatasListProvider ;
+
+dbProvider --> getWordInStreamProvider ;
+
+getWordInStreamProvider --> awarnessPercentProvider ;
 
 
 dbProvider --> wordsStreamProvider ;
