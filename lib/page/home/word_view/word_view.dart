@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:landlearn/service/db/database.dart';
 import 'package:landlearn/util/util.dart';
@@ -7,13 +6,11 @@ import 'package:landlearn/util/util.dart';
 import '../../dialog/add_word_dialog.dart';
 import 'word_view_controller.dart';
 
-class WordView extends HookWidget {
+class WordView extends StatelessWidget {
   const WordView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final words = useProvider(wordsListProvider).state;
-
     return Column(
       children: [
         Row(
@@ -27,9 +24,39 @@ class WordView extends HookWidget {
                 );
               },
             ),
+            Spacer(),
+            statusOfWord(),
           ],
         ),
-        Row(
+        Expanded(
+          child: listViewWidget(),
+        ),
+      ],
+    );
+  }
+
+  Widget listViewWidget() {
+    return Row(
+      children: [
+        Expanded(
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                for (final item in alphabeta) wordSectionCard(item),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget statusOfWord() {
+    return Consumer(
+      builder: (context, watch, child) {
+        final words = watch(wordsListProvider).state;
+
+        return Row(
           children: [
             Card(
               child: Padding(
@@ -56,29 +83,12 @@ class WordView extends HookWidget {
               ),
             ),
           ],
-        ),
-        Expanded(
-          child: Row(
-            children: [
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      for (final item in alphabeta)
-                        // for (final item in sortedWords.entries)
-                        wordSectionCard(context, item),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
+        );
+      },
     );
   }
 
-  Column wordSectionCard(BuildContext context, String alphaChar) {
+  Column wordSectionCard(String alphaChar) {
     return Column(
       children: [
         Card(
@@ -89,10 +99,11 @@ class WordView extends HookWidget {
           ),
         ),
         Consumer(builder: (context, watch, child) {
+          final words = watch(getWordWithProvider(alphaChar));
+
           return Wrap(
             children: [
-              for (final word in context.read(getWordWithProvider(alphaChar)))
-                wordItem(context, word)
+              for (final word in words) wordItem(context, word),
             ],
           );
         }),

@@ -28,8 +28,8 @@ class ContentData {
   //             words.value.length) *
   //         100);
 
-  // double get awarnessPercent =>
-  //     (words.where((element) => element.know).length / words.length) * 100;
+  double get awarnessPercent =>
+      (words.where((element) => element.know).length / words.length) * 100;
 
   void getWords() {
     if (!content.data.startsWith('[')) {

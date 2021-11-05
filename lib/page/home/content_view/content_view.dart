@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:landlearn/page/dialog/add_content_dialog.dart';
 import 'package:landlearn/page/home/content_view/content_view_vm.dart';
@@ -7,7 +6,7 @@ import 'package:landlearn/page/study/study.dart';
 import 'package:landlearn/page/study/study_controller.dart';
 import 'package:landlearn/service/model/content_data.dart';
 
-class ContentView extends HookWidget {
+class ContentView extends StatelessWidget {
   const ContentView({Key? key}) : super(key: key);
 
   @override
@@ -56,8 +55,6 @@ class ContentView extends HookWidget {
   }
 
   Widget contentItem(BuildContext context, ContentData contentData) {
-    print('contentItem');
-    // print('$contentData');
     return Card(
       child: InkWell(
         onTap: () {
@@ -75,21 +72,7 @@ class ContentView extends HookWidget {
             children: [
               Text(contentData.content.title),
               Spacer(),
-              HookBuilder(
-                builder: (context) {
-                  // print('hook build');
-                  final awarnessPercent = 0.0;
-                  // useProvider(awarnessPercentProvider(contentData.wordIds))
-                  //     .state;
-
-                  // print(awarnessPercent);
-
-                  return Text(
-                    // contentData.awarnessPercent.toStringAsFixed(1) + '%'
-                    awarnessPercent.toStringAsFixed(1) + '%',
-                  );
-                },
-              ),
+              Text(contentData.awarnessPercent.toStringAsFixed(1) + '%'),
             ],
           ),
         ),
