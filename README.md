@@ -113,19 +113,21 @@ https://flutterawesome.com/tag/editor/
 
 
 
+## Material
+https://easystoriesinenglish.com/
+http://www.english-for-students.com/Simple-Short-Stories.html
+
 
 ## TODO
 * [ ] import .srt convert to content
 * [x] analyze content and export words
 * [ ] show awareness of content
-* [ ] show knowed word on study page
+* [x] show knowed word on study page
 * [ ] 
 
 
 ## subject
 
 - [x] easy adding content
-- [ ] fix refresh on every where
-- [ ] scope data for word view ( almost like study page )
-- [ ] 
+- [ ] show knowing work on text content ( word by word )
 
