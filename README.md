@@ -121,7 +121,7 @@ http://www.english-for-students.com/Simple-Short-Stories.html
 ## TODO
 * [ ] import .srt convert to content
 * [x] analyze content and export words
-* [ ] show awareness of content
+* [x] show awareness of content
 * [x] show knowed word on study page
 * [ ] 
 
