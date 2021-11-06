@@ -18,7 +18,7 @@ class StudyPage extends HookWidget {
 
     useEffect(() {
       analyze(context);
-    }, [contentData!.content.content]);
+    }, [contentData?.content.content]);
 
     return Material(
       child: Column(
@@ -29,7 +29,7 @@ class StudyPage extends HookWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(
-                  child: contentView(editMode.value, textController),
+                  child: contentView(context, editMode.value, textController),
                 ),
                 Expanded(
                   child: wordOfContent(context),
@@ -43,9 +43,12 @@ class StudyPage extends HookWidget {
   }
 
   Widget contentView(
+    BuildContext context,
     bool editMode,
     TextEditingController textController,
   ) {
+    final wordMap = context.read(wordMapProvider);
+
     return SingleChildScrollView(
       child: editMode
           ? TextField(
@@ -53,7 +56,26 @@ class StudyPage extends HookWidget {
               minLines: 20,
               maxLines: 1000,
             )
-          : Text(textController.text),
+          // : Text(textController.text),
+          : RichText(
+              text: TextSpan(
+                children: [
+                  for (final w in textController.text.split(_regex))
+                    () {
+                      final isKnow = wordMap.isKnow(w);
+
+                      return TextSpan(
+                        // recognizer: ,
+                        text: w + ' ',
+                        style: TextStyle(
+                          color: isKnow ? Colors.green : Colors.black,
+                          decoration: isKnow ? TextDecoration.underline : null,
+                        ),
+                      );
+                    }(),
+                ],
+              ),
+            ),
     );
   }
 

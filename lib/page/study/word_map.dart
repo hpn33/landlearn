@@ -35,13 +35,18 @@ class WordMap extends ChangeNotifier {
   }
 
   void addWord(Word word) {
-    final w = word.word.toLowerCase();
-    final firstC = w.substring(0, 1);
+    final lowerCaseWord = word.word.toLowerCase();
+    final firstChar = lowerCaseWord.substring(0, 1);
 
-    if (!map.containsKey(firstC)) map[firstC] = [];
+    if (!map.containsKey(firstChar)) {
+      map[firstChar] = [];
+    }
 
-    final tempW = map[firstC]!.where((element) => element.word.word == w);
-    if (tempW.isEmpty) map[firstC]!.add(WordData()..word = word);
+    final tempW =
+        map[firstChar]!.where((element) => element.word.word == lowerCaseWord);
+    if (tempW.isEmpty) {
+      map[firstChar]!.add(WordData()..word = word);
+    }
 
     tempW.first.count++;
 
@@ -55,5 +60,26 @@ class WordMap extends ChangeNotifier {
         .toList();
 
     return jsonEncode(m);
+  }
+
+  bool isKnow(String w) {
+    if (w == ' ' || w.isEmpty) {
+      return false;
+    }
+
+    final lowerCaseWord = w.toLowerCase();
+    final list = map[w.toLowerCase().substring(0, 1)];
+
+    if (list == null) {
+      return false;
+    }
+
+    final item = list.where((element) => element.word.word == lowerCaseWord);
+
+    if (item.isEmpty) {
+      return false;
+    }
+
+    return item.first.word.know;
   }
 }
