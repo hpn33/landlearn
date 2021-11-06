@@ -82,4 +82,25 @@ class WordMap extends ChangeNotifier {
 
     return item.first.word.know;
   }
+
+  Word? get(String w) {
+    if (w == ' ' || w.isEmpty) {
+      return null;
+    }
+
+    final lowerCaseWord = w.toLowerCase();
+    final list = map[w.toLowerCase().substring(0, 1)];
+
+    if (list == null) {
+      return null;
+    }
+
+    final item = list.where((element) => element.word.word == lowerCaseWord);
+
+    if (item.isEmpty) {
+      return null;
+    }
+
+    return item.first.word;
+  }
 }

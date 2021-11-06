@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -47,36 +48,50 @@ class StudyPage extends HookWidget {
     bool editMode,
     TextEditingController textController,
   ) {
-    final wordMap = context.read(wordMapProvider);
+    return HookBuilder(builder: (context) {
+      final wordMap = useProvider(wordMapProvider);
 
-    return SingleChildScrollView(
-      child: editMode
-          ? TextField(
-              controller: textController,
-              minLines: 20,
-              maxLines: 1000,
-            )
-          // : Text(textController.text),
-          : RichText(
-              text: TextSpan(
-                children: [
-                  for (final w in textController.text.split(_regex))
-                    () {
-                      final isKnow = wordMap.isKnow(w);
+      return SingleChildScrollView(
+        child: editMode
+            ? TextField(
+                controller: textController,
+                minLines: 20,
+                maxLines: 1000,
+              )
+            // : Text(textController.text),
+            : RichText(
+                text: TextSpan(
+                  children: [
+                    for (final w in textController.text.split(_regex))
+                      () {
+                        final isKnow = wordMap.isKnow(w);
 
-                      return TextSpan(
-                        // recognizer: ,
-                        text: w + ' ',
-                        style: TextStyle(
-                          color: isKnow ? Colors.green : Colors.black,
-                          decoration: isKnow ? TextDecoration.underline : null,
-                        ),
-                      );
-                    }(),
-                ],
+                        return TextSpan(
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () {
+                              final db = context.read(dbProvider);
+                              final word = wordMap.get(w);
+
+                              if (word != null) {
+                                db.wordDao
+                                    .updating(word.copyWith(know: !word.know));
+                              }
+
+                              analyze(context);
+                            },
+                          text: w + ' ',
+                          style: TextStyle(
+                            color: isKnow ? Colors.green : Colors.black,
+                            decoration:
+                                isKnow ? TextDecoration.underline : null,
+                          ),
+                        );
+                      }(),
+                  ],
+                ),
               ),
-            ),
-    );
+      );
+    });
   }
 
   Widget wordOfContent(BuildContext context) {
@@ -114,7 +129,11 @@ class StudyPage extends HookWidget {
     return Card(
       color: word.know ? Colors.green[100] : null,
       child: InkWell(
-        onTap: () => context.read(dbProvider).wordDao.updateKnow(word),
+        onTap: () {
+          context.read(dbProvider).wordDao.updateKnow(word);
+
+          analyze(context);
+        },
         child: Padding(
           padding: const EdgeInsets.all(4.0),
           child: Text(
