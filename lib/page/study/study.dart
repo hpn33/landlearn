@@ -8,32 +8,37 @@ import 'package:landlearn/util/util.dart';
 
 import 'word_map.dart';
 
+/// TODO:  goal: improve data flow in study page
+/// refactor
+///
+/// better refresh
+/// faster load
+///
+/// when change content and remove word
+/// the word not remove from word of content (wordmap maybe)
+
 class StudyPage extends HookWidget {
+  static final editModeProvider = StateProvider((ref) => false);
+
   @override
   Widget build(BuildContext context) {
-    final editMode = useState(false);
-
-    final contentData = useProvider(getContentDataProvider).state;
-
-    final textController = useProvider(textControllerProvider);
-
     useEffect(() {
       analyze(context);
-    }, [contentData?.content.content]);
+    }, []);
 
     return Material(
       child: Column(
         children: [
-          topBar(context, textController, editMode),
+          topBar(),
           Expanded(
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(
-                  child: contentView(context, editMode.value, textController),
+                  child: contentView(),
                 ),
                 Expanded(
-                  child: wordOfContent(context),
+                  child: wordOfContent(),
                 ),
               ],
             ),
@@ -43,13 +48,11 @@ class StudyPage extends HookWidget {
     );
   }
 
-  Widget contentView(
-    BuildContext context,
-    bool editMode,
-    TextEditingController textController,
-  ) {
+  Widget contentView() {
     return HookBuilder(builder: (context) {
       final wordMap = useProvider(wordMapProvider);
+      final textController = useProvider(textControllerProvider);
+      final editMode = useProvider(editModeProvider).state;
 
       return SingleChildScrollView(
         child: editMode
@@ -94,7 +97,7 @@ class StudyPage extends HookWidget {
     });
   }
 
-  Widget wordOfContent(BuildContext context) {
+  Widget wordOfContent() {
     return HookBuilder(
       builder: (context) {
         final words = useProvider(getContentWordsProvider).state;
@@ -147,14 +150,11 @@ class StudyPage extends HookWidget {
     );
   }
 
-  Widget topBar(
-    BuildContext context,
-    TextEditingController textController,
-    ValueNotifier<bool> editMode,
-  ) {
+  Widget topBar() {
     return HookBuilder(
       builder: (context) {
         final map = useProvider(wordMapProvider);
+        final editMode = useProvider(editModeProvider);
 
         return Material(
           elevation: 6,
@@ -174,10 +174,13 @@ class StudyPage extends HookWidget {
                 onPressed: () => analyze(context),
               ),
               ElevatedButton(
-                child: Text(editMode.value ? 'done' : 'edit'),
+                child: Text(editMode.state ? 'done' : 'edit'),
                 onPressed: () async {
                   final contentData =
                       context.read(getContentDataProvider).state;
+
+                  final textController = context.read(textControllerProvider);
+
                   if (textController.text != contentData!.content.content) {
                     await context.read(dbProvider).contentDao.updateContent(
                           contentData.content,
@@ -185,7 +188,7 @@ class StudyPage extends HookWidget {
                         );
                   }
 
-                  editMode.value = !editMode.value;
+                  editMode.state = !editMode.state;
                 },
               ),
             ],
@@ -199,11 +202,17 @@ class StudyPage extends HookWidget {
     final db = context.read(dbProvider);
 
     final contentData = context.read(getContentDataProvider).state;
+    // final contentWords = context.read(getContentWordsProvider).state;
 
-    final mapMap = context.read(wordMapProvider)..clear();
-    final wordList = contentData!.content.content.split(_regex);
+    if (contentData == null) {
+      return;
+    }
 
-    for (var word in wordList) {
+    final wordList = contentData.content.content.split(_regex);
+
+    final mapMap = context.read(wordMapProvider)..map.clear();
+
+    for (final word in wordList) {
       if (word.isEmpty) {
         continue;
       }
@@ -211,7 +220,15 @@ class StudyPage extends HookWidget {
       mapMap.addWord(await getOrAddWord(context, word));
     }
 
-    db.contentDao.updateData(contentData.content, mapMap.toJson());
+    final newData = mapMap.toJson();
+    if (contentData.content.data != newData) {
+      await db.contentDao.updateData(contentData.content, newData);
+
+      mapMap.notify();
+      return;
+    }
+
+    mapMap.notify();
   }
 
   Future<Word> getOrAddWord(BuildContext context, String word) async {

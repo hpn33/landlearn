@@ -137,6 +137,6 @@ final textControllerProvider = ChangeNotifierProvider.autoDispose((ref) {
   final contentData = ref.watch(getContentDataProvider).state;
 
   return TextEditingController(
-    text: contentData == null ? '' : contentData.content.content,
+    text: contentData == null ? 'something Wrong' : contentData.content.content,
   );
 });

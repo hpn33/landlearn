@@ -28,11 +28,11 @@ class WordMap extends ChangeNotifier {
     return sum.toString();
   }
 
-  void clear() {
-    map.clear();
+  // void clear() {
+  //   map.clear();
 
-    notifyListeners();
-  }
+  //   notifyListeners();
+  // }
 
   void addWord(Word word) {
     final lowerCaseWord = word.word.toLowerCase();
@@ -44,14 +44,17 @@ class WordMap extends ChangeNotifier {
 
     final tempW =
         map[firstChar]!.where((element) => element.word.word == lowerCaseWord);
+
     if (tempW.isEmpty) {
       map[firstChar]!.add(WordData()..word = word);
     }
 
     tempW.first.count++;
 
-    notifyListeners();
+    // notifyListeners();
   }
+
+  void notify() => notifyListeners();
 
   String toJson() {
     final m = map.values
