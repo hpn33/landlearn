@@ -98,6 +98,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:landlearn/service/db/database.dart';
 import 'package:landlearn/service/model/content_data.dart';
+import 'package:landlearn/util/util.dart';
 
 final selectedContentIdProvider = StateProvider<int>((ref) => -1);
 
@@ -134,9 +135,51 @@ final getContentWordsProvider = StateProvider.autoDispose<List<Word>>(
 );
 
 final textControllerProvider = ChangeNotifierProvider.autoDispose((ref) {
-  final contentData = ref.watch(getContentDataProvider).state;
+  final contentData = ref.watch(studyControllerProvider).contentData;
 
   return TextEditingController(
     text: contentData == null ? 'something Wrong' : contentData.content.content,
   );
 });
+
+// final getWordsByAlphaCharProvider =
+//     StateProvider.autoDispose.family<List<Word>, String>(
+//   (ref, alphaChar) {
+//     final words = ref.watch(studyControllerProvider).words;
+
+//     return words
+//         .where((element) => element.word.startsWith(alphaChar))
+//         .toList();
+//   },
+// );
+
+final studyControllerProvider = Provider.autoDispose((ref) {
+  final contentData = ref.watch(getContentDataProvider).state;
+  final words = ref.watch(getContentWordsProvider).state;
+
+  return StudyController(contentData: contentData, words: words);
+});
+
+class StudyController {
+  final ContentData? contentData;
+  final List<Word> words;
+  final Map<String, List<Word>> sortedWord = {
+    for (final alphaChar in alphabeta) alphaChar: []
+  };
+
+  StudyController({this.contentData, this.words = const []}) {
+    sortingWord();
+  }
+
+  void sortingWord() {
+    for (final word in words) {
+      final firstChar = word.word.substring(0, 1);
+
+      sortedWord[firstChar]!.add(word);
+    }
+
+    sortedWord.forEach(
+      (key, value) => value.sort((a, b) => a.word.compareTo(b.word)),
+    );
+  }
+}

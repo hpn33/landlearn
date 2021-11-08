@@ -11,15 +11,16 @@ graph TD;
 13[[getContentDataProvider]] --> 4((StudyPage)) ;
 15[[getContentWordsProvider]] --> 4((StudyPage)) ;
 16[[textControllerProvider]] --> 4((StudyPage)) ;
+17(studyControllerProvider) --> 4((StudyPage)) ;
 
 
 
 9(dbProvider) --> 7((WordView)) ;
-23[[wordsListProvider]] --> 7((WordView)) ;
-24(getWordWithProvider) --> 7((WordView)) ;
+24[[wordsListProvider]] --> 7((WordView)) ;
+25(getWordWithProvider) --> 7((WordView)) ;
 
 11[[selectedContentIdProvider]] --> 8((ContentView)) ;
-18[[contentDatasListProvider]] --> 8((ContentView)) ;
+19[[contentDatasListProvider]] --> 8((ContentView)) ;
 
 
 
@@ -34,22 +35,25 @@ graph TD;
 
 14>_getContentWordsStreamProvider] --> 15[[getContentWordsProvider]] ;
 
-13[[getContentDataProvider]] --> 16[[textControllerProvider]] ;
+17(studyControllerProvider) --> 16[[textControllerProvider]] ;
 
-9(dbProvider) --> 17>contentsStreamProvider] ;
+13[[getContentDataProvider]] --> 17(studyControllerProvider) ;
+15[[getContentWordsProvider]] --> 17(studyControllerProvider) ;
 
-17>contentsStreamProvider] --> 18[[contentDatasListProvider]] ;
+9(dbProvider) --> 18>contentsStreamProvider] ;
 
-9(dbProvider) --> 19>getWordInStreamProvider] ;
+18>contentsStreamProvider] --> 19[[contentDatasListProvider]] ;
 
-19>getWordInStreamProvider] --> 20[[awarnessPercentProvider]] ;
+9(dbProvider) --> 20>getWordInStreamProvider] ;
+
+20>getWordInStreamProvider] --> 21[[awarnessPercentProvider]] ;
 
 
-9(dbProvider) --> 22>wordsStreamProvider] ;
+9(dbProvider) --> 23>wordsStreamProvider] ;
 
-22>wordsStreamProvider] --> 23[[wordsListProvider]] ;
+23>wordsStreamProvider] --> 24[[wordsListProvider]] ;
 
-23[[wordsListProvider]] --> 24(getWordWithProvider) ;
+24[[wordsListProvider]] --> 25(getWordWithProvider) ;
 
 
 ```

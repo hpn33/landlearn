@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:landlearn/service/db/database.dart';
+import 'package:landlearn/util/util.dart';
 
 import '../../service/model/word_data.dart';
 
@@ -10,7 +11,9 @@ final wordMapProvider = ChangeNotifierProvider.autoDispose((ref) => WordMap());
 
 class WordMap extends ChangeNotifier {
   // { char: map { word , word data }}
-  final map = <String, List<WordData>>{};
+  final map = <String, List<WordData>>{
+    for (final alphaChar in alphabeta) alphaChar: []
+  };
 
   String get wordCount {
     var sum = 0;
@@ -34,22 +37,31 @@ class WordMap extends ChangeNotifier {
   //   notifyListeners();
   // }
 
+  void resetMap() {
+    map.clear();
+    map.addAll({for (final alphaChar in alphabeta) alphaChar: []});
+  }
+
   void addWord(Word word) {
     final lowerCaseWord = word.word.toLowerCase();
     final firstChar = lowerCaseWord.substring(0, 1);
 
-    if (!map.containsKey(firstChar)) {
-      map[firstChar] = [];
-    }
+    // if (!map.containsKey(firstChar)) {
+    //   map[firstChar] = [];
+    // }
 
     final tempW =
-        map[firstChar]!.where((element) => element.word.word == lowerCaseWord);
+        map[firstChar]!.where((element) => element.word.word == word.word);
 
     if (tempW.isEmpty) {
       map[firstChar]!.add(WordData()..word = word);
     }
 
-    tempW.first.count++;
+    map[firstChar]!
+        .where((element) => element.word.word == lowerCaseWord)
+        .first
+        .count++;
+    // tempW.first.count++;
 
     // notifyListeners();
   }

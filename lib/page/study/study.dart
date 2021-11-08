@@ -11,20 +11,30 @@ import 'word_map.dart';
 /// TODO:  goal: improve data flow in study page
 /// refactor
 ///
+/// first load all needed data - content and words
+///
 /// better refresh
 /// faster load
 ///
 /// when change content and remove word
 /// the word not remove from word of content (wordmap maybe)
+///
+/// get all word and check with saved word
+/// any that not was there add to add list
+/// and add to database
+///
+/// study managment
+/// manager content text and word of content
+/// on edit
+/// update word
 
 class StudyPage extends HookWidget {
   static final editModeProvider = StateProvider((ref) => false);
 
   @override
   Widget build(BuildContext context) {
-    useEffect(() {
-      analyze(context);
-    }, []);
+    // load data
+    context.read(studyControllerProvider);
 
     return Material(
       child: Column(
@@ -52,6 +62,7 @@ class StudyPage extends HookWidget {
     return HookBuilder(builder: (context) {
       final wordMap = useProvider(wordMapProvider);
       final textController = useProvider(textControllerProvider);
+
       final editMode = useProvider(editModeProvider).state;
 
       return SingleChildScrollView(
@@ -98,34 +109,33 @@ class StudyPage extends HookWidget {
   }
 
   Widget wordOfContent() {
-    return HookBuilder(
-      builder: (context) {
-        final words = useProvider(getContentWordsProvider).state;
+    // TODO: refresh word by word
+    // or section section
+    return HookBuilder(builder: (context) {
+      final sortedWord = useProvider(studyControllerProvider).sortedWord;
 
-        return SingleChildScrollView(
-          child: Column(
-            children: [
-              for (final alphaChar in alphabeta)
-                Card(
-                  child: Column(
-                    children: [
-                      Text(alphaChar),
-                      Divider(),
-                      Wrap(
-                        children: [
-                          for (final wordRow in words.where(
-                              (element) => element.word.startsWith(alphaChar)))
-                            wordCard(context, wordRow),
-                        ],
-                      ),
-                    ],
-                  ),
+      return SingleChildScrollView(
+        child: Column(
+          children: [
+            for (final alphaChar in alphabeta)
+              Card(
+                child: Column(
+                  children: [
+                    Text(alphaChar),
+                    Divider(),
+                    Wrap(
+                      children: [
+                        for (final wordRow in sortedWord[alphaChar]!)
+                          wordCard(context, wordRow),
+                      ],
+                    ),
+                  ],
                 ),
-            ],
-          ),
-        );
-      },
-    );
+              ),
+          ],
+        ),
+      );
+    });
   }
 
   Widget wordCard(BuildContext context, Word word) {
@@ -202,22 +212,39 @@ class StudyPage extends HookWidget {
     final db = context.read(dbProvider);
 
     final contentData = context.read(getContentDataProvider).state;
-    // final contentWords = context.read(getContentWordsProvider).state;
 
     if (contentData == null) {
       return;
     }
 
+    final contentWords = context.read(getContentWordsProvider).state;
+
     final wordList = contentData.content.content.split(_regex);
 
-    final mapMap = context.read(wordMapProvider)..map.clear();
+    final addList = [];
 
     for (final word in wordList) {
       if (word.isEmpty) {
         continue;
       }
 
-      mapMap.addWord(await getOrAddWord(context, word));
+      if (contentWords.where((element) => element.word == word).isEmpty) {
+        addList.add(word);
+      }
+
+      // mapMap.addWord(await getOrAddWord(context, word));
+    }
+
+    for (final item in addList) {
+      await db.wordDao.add(item);
+    }
+
+    final mapMap = context.read(wordMapProvider)..resetMap();
+
+    final wordFromDB = await db.wordDao.getAllByWord(wordList);
+
+    for (final w in wordFromDB) {
+      mapMap.addWord(w);
     }
 
     final newData = mapMap.toJson();
