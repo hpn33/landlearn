@@ -4,6 +4,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:landlearn/page/study/study_controller.dart';
 import 'package:landlearn/service/db/database.dart';
+import 'package:landlearn/service/model/content_data.dart';
 import 'package:landlearn/util/util.dart';
 
 import 'word_map.dart';
@@ -112,7 +113,39 @@ class StudyPage extends HookWidget {
     // TODO: refresh word by word
     // or section section
     return HookBuilder(builder: (context) {
-      final sortedWord = useProvider(studyControllerProvider).sortedWord;
+      final sortedWord = useState(<String, WordCategoryNotifier>{
+        for (final alphaChar in alphabeta) alphaChar: WordCategoryNotifier()
+      });
+      // final sortedWord = context.read(studyControllerProvider).sortedWord;
+
+      useEffect(() {
+        final db = context.read(dbProvider);
+        final contentId = context.read(selectedContentIdProvider).state;
+
+        db.contentDao.getSingleBy(id: contentId).then((content) {
+          final contentData = ContentData(content!);
+          db.wordDao.getIn(wordIds: contentData.wordIds).then((words) {
+            final temp = <String, WordCategoryNotifier>{
+              for (final alphaChar in alphabeta)
+                alphaChar: WordCategoryNotifier()
+            };
+
+            for (final word in words) {
+              final firstChar = word.word.substring(0, 1);
+
+              temp[firstChar]!.add(word);
+            }
+
+            temp.forEach(
+              (key, value) => value.list.sort(
+                (a, b) => a.word.compareTo(b.word),
+              ),
+            );
+
+            sortedWord.value = temp;
+          });
+        });
+      }, []);
 
       return SingleChildScrollView(
         child: Column(
@@ -125,8 +158,8 @@ class StudyPage extends HookWidget {
                     Divider(),
                     Wrap(
                       children: [
-                        for (final wordRow in sortedWord[alphaChar]!)
-                          wordCard(context, wordRow),
+                        for (final wordRow in sortedWord.value[alphaChar]!.list)
+                          wordCard(sortedWord.value[alphaChar]!, wordRow),
                       ],
                     ),
                   ],
@@ -138,25 +171,35 @@ class StudyPage extends HookWidget {
     });
   }
 
-  Widget wordCard(BuildContext context, Word word) {
-    return Card(
-      color: word.know ? Colors.green[100] : null,
-      child: InkWell(
-        onTap: () {
-          context.read(dbProvider).wordDao.updateKnow(word);
+  Widget wordCard(
+      WordCategoryNotifier wordCategory, WordNotifier wordNotifier) {
+    return HookBuilder(
+      builder: (context) {
+        useListenable(wordNotifier);
 
-          analyze(context);
-        },
-        child: Padding(
-          padding: const EdgeInsets.all(4.0),
-          child: Text(
-            '${word.word}',
-            style: TextStyle(
-              fontSize: 12.0, //+ word.count,
+        return Card(
+          color: wordNotifier.know ? Colors.green[100] : null,
+          child: InkWell(
+            onTap: () async {
+              await context
+                  .read(dbProvider)
+                  .wordDao
+                  .updateKnow(wordNotifier.wordObject);
+
+              wordNotifier.toggleKnow();
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(4.0),
+              child: Text(
+                '${wordNotifier.word}',
+                style: TextStyle(
+                  fontSize: 12.0, //+ word.count,
+                ),
+              ),
             ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 

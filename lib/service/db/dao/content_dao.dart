@@ -27,4 +27,9 @@ class ContentDao extends DatabaseAccessor<Database> with _$ContentDaoMixin {
   Future<bool> updateContent(Content content, String textContent) {
     return update(contents).replace(content.copyWith(content: textContent));
   }
+
+  Future<Content?> getSingleBy({required int id}) {
+    return (select(contents)..where((tbl) => tbl.id.equals(id)))
+        .getSingleOrNull();
+  }
 }

@@ -163,8 +163,8 @@ final studyControllerProvider = Provider.autoDispose((ref) {
 class StudyController {
   final ContentData? contentData;
   final List<Word> words;
-  final Map<String, List<Word>> sortedWord = {
-    for (final alphaChar in alphabeta) alphaChar: []
+  final Map<String, WordCategoryNotifier> sortedWord = {
+    for (final alphaChar in alphabeta) alphaChar: WordCategoryNotifier()
   };
 
   StudyController({this.contentData, this.words = const []}) {
@@ -179,7 +179,36 @@ class StudyController {
     }
 
     sortedWord.forEach(
-      (key, value) => value.sort((a, b) => a.word.compareTo(b.word)),
+      (key, value) => value.list.sort(
+        (a, b) => a.word.compareTo(b.word),
+      ),
     );
+  }
+}
+
+class WordCategoryNotifier extends ChangeNotifier {
+  final List<WordNotifier> list = [];
+
+  WordCategoryNotifier();
+
+  void add(Word word) => list.add(WordNotifier(word));
+}
+
+class WordNotifier extends ChangeNotifier {
+  final Word wordObject;
+
+  final int id;
+  final String word;
+  bool know;
+
+  WordNotifier(this.wordObject)
+      : id = wordObject.id,
+        word = wordObject.word,
+        know = wordObject.know;
+
+  void toggleKnow() {
+    know = !know;
+
+    notifyListeners();
   }
 }

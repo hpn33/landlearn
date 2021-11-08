@@ -33,4 +33,8 @@ class WordDao extends DatabaseAccessor<Database> with _$WordDaoMixin {
   Future<List<Word>> getAllByWord(List<String> wordList) {
     return (select(words)..where((tbl) => tbl.word.isIn(wordList))).get();
   }
+
+  Future<List<Word>> getIn({required List<int> wordIds}) {
+    return (select(words)..where((tbl) => tbl.id.isIn(wordIds))).get();
+  }
 }
