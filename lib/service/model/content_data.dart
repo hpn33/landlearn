@@ -5,7 +5,6 @@ import 'package:landlearn/service/db/database.dart';
 class ContentData {
   late final Content content;
   final _wordsInContent = <int, int>{}; //id, count
-  // final _wordDatas = <WordData>[];
   final words = <WordObject>[];
 
   List<int> get wordIds =>
