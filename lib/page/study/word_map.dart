@@ -1,125 +1,124 @@
-import 'dart:convert';
+// import 'dart:convert';
 
-import 'package:flutter/material.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:landlearn/page/study/study_controller.dart';
-import 'package:landlearn/service/db/database.dart';
-import 'package:landlearn/util/util.dart';
+// import 'package:flutter/material.dart';
+// import 'package:landlearn/page/study/study_controller.dart';
+// import 'package:landlearn/service/db/database.dart';
+// import 'package:landlearn/util/util.dart';
 
-final wordMapProvider = ChangeNotifierProvider.autoDispose((ref) => WordMap());
+// // final wordMapProvider = ChangeNotifierProvider.autoDispose((ref) => WordMap());
 
-class WordMap extends ChangeNotifier {
-  // { char: map { word , word data }}
-  final map = <String, WordCategoryNotifier>{
-    for (final alphaChar in alphabeta) alphaChar: WordCategoryNotifier()
-  };
+// class WordMap extends ChangeNotifier {
+//   // { char: map { word , word data }}
+//   final map = <String, WordCategoryNotifier>{
+//     for (final alphaChar in alphabeta) alphaChar: WordCategoryNotifier()
+//   };
 
-  String get wordCount {
-    var sum = 0;
+//   String get wordCount {
+//     var sum = 0;
 
-    for (var c in map.entries) sum += c.value.list.length;
+//     for (var c in map.entries) sum += c.value.list.length;
 
-    return sum.toString();
-  }
+//     return sum.toString();
+//   }
 
-  String get allWordCount {
-    var sum = 0;
+//   String get allWordCount {
+//     var sum = 0;
 
-    for (var c in map.entries) for (var w in c.value.list) sum += w.count;
+//     for (var c in map.entries) for (var w in c.value.list) sum += w.count;
 
-    return sum.toString();
-  }
+//     return sum.toString();
+//   }
 
-  // void clear() {
-  //   map.clear();
+//   // void clear() {
+//   //   map.clear();
 
-  //   notifyListeners();
-  // }
+//   //   notifyListeners();
+//   // }
 
-  void resetMap() {
-    map.clear();
-    map.addAll(
-      {for (final alphaChar in alphabeta) alphaChar: WordCategoryNotifier()},
-    );
-  }
+//   void resetMap() {
+//     map.clear();
+//     map.addAll(
+//       {for (final alphaChar in alphabeta) alphaChar: WordCategoryNotifier()},
+//     );
+//   }
 
-  void addWord(Word word) {
-    final lowerCaseWord = word.word.toLowerCase();
-    final firstChar = lowerCaseWord.substring(0, 1);
+//   void addWord(Word word) {
+//     final lowerCaseWord = word.word.toLowerCase();
+//     final firstChar = lowerCaseWord.substring(0, 1);
 
-    // if (!map.containsKey(firstChar)) {
-    //   map[firstChar] = [];
-    // }
+//     // if (!map.containsKey(firstChar)) {
+//     //   map[firstChar] = [];
+//     // }
 
-    final tempW =
-        map[firstChar]!.list.where((element) => element.word == word.word);
+//     final tempW =
+//         map[firstChar]!.list.where((element) => element.word == word.word);
 
-    if (tempW.isEmpty) {
-      map[firstChar]!.add(word);
-    }
+//     if (tempW.isEmpty) {
+//       map[firstChar]!.add(word);
+//     }
 
-    map[firstChar]!
-        .list
-        .where((element) => element.word == lowerCaseWord)
-        .first
-        .count++;
-    // tempW.first.count++;
+//     map[firstChar]!
+//         .list
+//         .where((element) => element.word == lowerCaseWord)
+//         .first
+//         .count++;
+//     // tempW.first.count++;
 
-    // notifyListeners();
-  }
+//     // notifyListeners();
+//   }
 
-  void notify() => notifyListeners();
+//   void notify() => notifyListeners();
 
-  String toJson() {
-    final m = map.values
-        .expand((element) => element.list)
-        .map((e) => [e.id, e.count, e.know])
-        .toList();
+//   String toJson() {
+//     final m = map.values
+//         .expand((element) => element.list)
+//         .map((e) => [e.id, e.count, e.know])
+//         .toList();
 
-    return jsonEncode(m);
-  }
+//     return jsonEncode(m);
+//   }
 
-  bool isKnow(String w) {
-    if (w == ' ' || w.isEmpty) {
-      return false;
-    }
+//   bool isKnow(String w) {
+//     if (w == ' ' || w.isEmpty) {
+//       return false;
+//     }
 
-    final lowerCaseWord = w.toLowerCase();
-    final wordCategory = map[w.toLowerCase().substring(0, 1)];
+//     final lowerCaseWord = w.toLowerCase();
+//     final wordCategory = map[w.toLowerCase().substring(0, 1)];
 
-    if (wordCategory == null) {
-      return false;
-    }
+//     if (wordCategory == null) {
+//       return false;
+//     }
 
-    final item =
-        wordCategory.list.where((element) => element.word == lowerCaseWord);
+//     final item =
+//         wordCategory.list.where((element) => element.word == lowerCaseWord);
 
-    if (item.isEmpty) {
-      return false;
-    }
+//     if (item.isEmpty) {
+//       return false;
+//     }
 
-    return item.first.know;
-  }
+//     return item.first.know;
+//   }
 
-  Word? get(String w) {
-    if (w == ' ' || w.isEmpty) {
-      return null;
-    }
+//   Word? get(String w) {
+//     if (w == ' ' || w.isEmpty) {
+//       return null;
+//     }
 
-    final lowerCaseWord = w.toLowerCase();
-    final wordCategory = map[w.toLowerCase().substring(0, 1)];
+//     final lowerCaseWord = w.toLowerCase();
+//     final wordCategory = map[w.toLowerCase().substring(0, 1)];
 
-    if (wordCategory == null) {
-      return null;
-    }
+//     if (wordCategory == null) {
+//       return null;
+//     }
 
-    final item =
-        wordCategory.list.where((element) => element.word == lowerCaseWord);
+//     final item =
+//         wordCategory.list.where((element) => element.word == lowerCaseWord);
 
-    if (item.isEmpty) {
-      return null;
-    }
+//     if (item.isEmpty) {
+//       return null;
+//     }
 
-    return item.first.value;
-  }
-}
+//     return item.first.value;
+//   }
+// }

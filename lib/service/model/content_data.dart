@@ -4,12 +4,9 @@ import 'package:landlearn/service/db/database.dart';
 
 class ContentData {
   late final Content content;
-  final _wordsInContent = <int, int>{}; //id, count
   final words = <WordObject>[];
 
-  List<int> get wordIds =>
-      // [];
-      _wordsInContent.keys.toList();
+  List<int> get wordIds => words.map((e) => e.id).toList();
 
   ContentData(this.content) {
     getWords();
@@ -35,7 +32,6 @@ class ContentData {
       return;
     }
 
-    _wordsInContent.clear();
     words.clear();
 
     final List decoded = json.decode(content.data);
@@ -49,8 +45,6 @@ class ContentData {
         if (item.length >= 3) {
           know = item[2] as bool;
         }
-
-        _wordsInContent[id] = count;
 
         words.add(WordObject(id, count, know));
       },

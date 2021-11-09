@@ -6,7 +6,7 @@ import 'package:landlearn/page/study/study_controller.dart';
 import 'package:landlearn/service/db/database.dart';
 import 'package:landlearn/util/util.dart';
 
-import 'word_map.dart';
+import 'models.dart';
 
 /// TODO:  goal: improve data flow in study page
 /// refactor
@@ -62,10 +62,13 @@ class StudyPage extends HookWidget {
 
   Widget contentView() {
     return HookBuilder(builder: (context) {
-      final wordMap = useProvider(wordMapProvider);
+      // final wordMap = useProvider(wordMapProvider);
       final textController = useProvider(textControllerProvider);
 
       final editMode = useProvider(editModeProvider).state;
+
+      final contentNotifier =
+          useProvider(studyControllerProvider).contentNotifier;
 
       return SingleChildScrollView(
         child: editMode
@@ -80,13 +83,17 @@ class StudyPage extends HookWidget {
                   children: [
                     for (final w in textController.text.split(_regex))
                       () {
-                        final isKnow = wordMap.isKnow(w);
+                        final isKnow = contentNotifier!
+                            // wordMap
+                            .isKnow(w);
 
                         return TextSpan(
                           recognizer: TapGestureRecognizer()
                             ..onTap = () {
                               final db = context.read(dbProvider);
-                              final word = wordMap.get(w);
+                              final word = contentNotifier
+                                  // wordMap
+                                  .get(w);
 
                               if (word != null) {
                                 db.wordDao
@@ -177,8 +184,10 @@ class StudyPage extends HookWidget {
   Widget topBar() {
     return HookBuilder(
       builder: (context) {
-        final map = useProvider(wordMapProvider);
+        // final map = useProvider(wordMapProvider);
         final editMode = useProvider(editModeProvider);
+        final contentNotifier =
+            useProvider(studyControllerProvider).contentNotifier;
 
         return Material(
           elevation: 6,
@@ -186,11 +195,11 @@ class StudyPage extends HookWidget {
             children: [
               BackButton(),
               Text(
-                'text word\n${map.allWordCount}',
+                'text word\n${contentNotifier?.allWordCount}',
                 textAlign: TextAlign.center,
               ),
               Text(
-                'word count\n${map.wordCount}',
+                'word count\n${contentNotifier?.wordCount}',
                 textAlign: TextAlign.center,
               ),
               ElevatedButton(
@@ -201,15 +210,15 @@ class StudyPage extends HookWidget {
                 child: Text(editMode.state ? 'done' : 'edit'),
                 onPressed: () async {
                   final contentData =
-                      context.read(studyControllerProvider).contentData;
+                      context.read(studyControllerProvider).contentNotifier;
 
                   final textController = context.read(textControllerProvider);
 
-                  if (textController.text != contentData!.content.content) {
-                    await context.read(dbProvider).contentDao.updateContent(
-                          contentData.content,
-                          textController.text,
-                        );
+                  if (textController.text != contentData!.content) {
+                    await context
+                        .read(dbProvider)
+                        .contentDao
+                        .updateContent(contentData.value, textController.text);
                   }
 
                   editMode.state = !editMode.state;
@@ -224,18 +233,16 @@ class StudyPage extends HookWidget {
 
   void analyze(BuildContext context) async {
     final db = context.read(dbProvider);
-
     final studyController = context.read(studyControllerProvider);
 
-    final contentData = studyController.contentData;
-
-    if (contentData == null) {
+    final contentNotifier = studyController.contentNotifier;
+    if (contentNotifier == null) {
       return;
     }
 
     final contentWords = studyController.words;
 
-    final wordList = contentData.content.content.split(_regex);
+    final wordList = contentNotifier.content.split(_regex);
 
     final addList = [];
 
@@ -255,23 +262,26 @@ class StudyPage extends HookWidget {
       await db.wordDao.add(item);
     }
 
-    final mapMap = context.read(wordMapProvider)..resetMap();
+    // final mapMap = context.read(wordMapProvider)..resetMap();
 
     final wordFromDB = await db.wordDao.getAllByWord(wordList);
 
     for (final w in wordFromDB) {
-      mapMap.addWord(w);
+      contentNotifier.addWord(w);
+      // mapMap.addWord(w);
     }
 
-    final newData = mapMap.toJson();
-    if (contentData.content.data != newData) {
-      await db.contentDao.updateData(contentData.content, newData);
+    final newData = contentNotifier
+        // mapMap
+        .toJson();
+    if (contentNotifier.data != newData) {
+      await db.contentDao.updateData(contentNotifier.value, newData);
 
-      mapMap.notify();
+      // mapMap.notify();
       return;
     }
 
-    mapMap.notify();
+    // mapMap.notify();
   }
 
   Future<Word> getOrAddWord(BuildContext context, String word) async {
