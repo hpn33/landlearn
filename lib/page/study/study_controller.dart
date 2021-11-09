@@ -199,6 +199,8 @@ class WordNotifier extends ValueNotifier {
   String get word => value.word;
   bool get know => value.know;
 
+  int count = 0;
+
   WordNotifier(Word wordObject) : super(wordObject);
 
   void toggleKnow() {

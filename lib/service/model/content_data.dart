@@ -6,7 +6,7 @@ class ContentData {
   late final Content content;
   final _wordsInContent = <int, int>{}; //id, count
   // final _wordDatas = <WordData>[];
-  final words = <WordO>[];
+  final words = <WordObject>[];
 
   List<int> get wordIds =>
       // [];
@@ -53,16 +53,16 @@ class ContentData {
 
         _wordsInContent[id] = count;
 
-        words.add(WordO(id, count, know));
+        words.add(WordObject(id, count, know));
       },
     );
   }
 }
 
-class WordO {
+class WordObject {
   final int id;
   int count = 0;
   bool know = false;
 
-  WordO(this.id, this.count, this.know);
+  WordObject(this.id, this.count, this.know);
 }

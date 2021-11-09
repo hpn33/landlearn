@@ -2,23 +2,22 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:landlearn/page/study/study_controller.dart';
 import 'package:landlearn/service/db/database.dart';
 import 'package:landlearn/util/util.dart';
-
-import '../../service/model/word_data.dart';
 
 final wordMapProvider = ChangeNotifierProvider.autoDispose((ref) => WordMap());
 
 class WordMap extends ChangeNotifier {
   // { char: map { word , word data }}
-  final map = <String, List<WordData>>{
-    for (final alphaChar in alphabeta) alphaChar: []
+  final map = <String, WordCategoryNotifier>{
+    for (final alphaChar in alphabeta) alphaChar: WordCategoryNotifier()
   };
 
   String get wordCount {
     var sum = 0;
 
-    for (var c in map.entries) sum += c.value.length;
+    for (var c in map.entries) sum += c.value.list.length;
 
     return sum.toString();
   }
@@ -26,7 +25,7 @@ class WordMap extends ChangeNotifier {
   String get allWordCount {
     var sum = 0;
 
-    for (var c in map.entries) for (var w in c.value) sum += w.count;
+    for (var c in map.entries) for (var w in c.value.list) sum += w.count;
 
     return sum.toString();
   }
@@ -39,7 +38,9 @@ class WordMap extends ChangeNotifier {
 
   void resetMap() {
     map.clear();
-    map.addAll({for (final alphaChar in alphabeta) alphaChar: []});
+    map.addAll(
+      {for (final alphaChar in alphabeta) alphaChar: WordCategoryNotifier()},
+    );
   }
 
   void addWord(Word word) {
@@ -51,14 +52,15 @@ class WordMap extends ChangeNotifier {
     // }
 
     final tempW =
-        map[firstChar]!.where((element) => element.word.word == word.word);
+        map[firstChar]!.list.where((element) => element.word == word.word);
 
     if (tempW.isEmpty) {
-      map[firstChar]!.add(WordData()..word = word);
+      map[firstChar]!.add(word);
     }
 
     map[firstChar]!
-        .where((element) => element.word.word == lowerCaseWord)
+        .list
+        .where((element) => element.word == lowerCaseWord)
         .first
         .count++;
     // tempW.first.count++;
@@ -70,8 +72,8 @@ class WordMap extends ChangeNotifier {
 
   String toJson() {
     final m = map.values
-        .expand((element) => element)
-        .map((e) => [e.word.id, e.count, e.word.know])
+        .expand((element) => element.list)
+        .map((e) => [e.id, e.count, e.know])
         .toList();
 
     return jsonEncode(m);
@@ -83,19 +85,20 @@ class WordMap extends ChangeNotifier {
     }
 
     final lowerCaseWord = w.toLowerCase();
-    final list = map[w.toLowerCase().substring(0, 1)];
+    final wordCategory = map[w.toLowerCase().substring(0, 1)];
 
-    if (list == null) {
+    if (wordCategory == null) {
       return false;
     }
 
-    final item = list.where((element) => element.word.word == lowerCaseWord);
+    final item =
+        wordCategory.list.where((element) => element.word == lowerCaseWord);
 
     if (item.isEmpty) {
       return false;
     }
 
-    return item.first.word.know;
+    return item.first.know;
   }
 
   Word? get(String w) {
@@ -104,18 +107,19 @@ class WordMap extends ChangeNotifier {
     }
 
     final lowerCaseWord = w.toLowerCase();
-    final list = map[w.toLowerCase().substring(0, 1)];
+    final wordCategory = map[w.toLowerCase().substring(0, 1)];
 
-    if (list == null) {
+    if (wordCategory == null) {
       return null;
     }
 
-    final item = list.where((element) => element.word.word == lowerCaseWord);
+    final item =
+        wordCategory.list.where((element) => element.word == lowerCaseWord);
 
     if (item.isEmpty) {
       return null;
     }
 
-    return item.first.word;
+    return item.first.value;
   }
 }
