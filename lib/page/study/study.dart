@@ -4,7 +4,6 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:landlearn/page/study/study_controller.dart';
 import 'package:landlearn/service/db/database.dart';
-import 'package:landlearn/service/model/content_data.dart';
 import 'package:landlearn/util/util.dart';
 
 import 'word_map.dart';
@@ -156,7 +155,7 @@ class StudyPage extends HookWidget {
               await context
                   .read(dbProvider)
                   .wordDao
-                  .updateKnow(wordNotifier.wordObject);
+                  .updateKnow(wordNotifier.value);
 
               wordNotifier.toggleKnow();
             },
@@ -202,7 +201,7 @@ class StudyPage extends HookWidget {
                 child: Text(editMode.state ? 'done' : 'edit'),
                 onPressed: () async {
                   final contentData =
-                      context.read(getContentDataProvider).state;
+                      context.read(studyControllerProvider).contentData;
 
                   final textController = context.read(textControllerProvider);
 
@@ -226,13 +225,15 @@ class StudyPage extends HookWidget {
   void analyze(BuildContext context) async {
     final db = context.read(dbProvider);
 
-    final contentData = context.read(getContentDataProvider).state;
+    final studyController = context.read(studyControllerProvider);
+
+    final contentData = studyController.contentData;
 
     if (contentData == null) {
       return;
     }
 
-    final contentWords = context.read(getContentWordsProvider).state;
+    final contentWords = studyController.words;
 
     final wordList = contentData.content.content.split(_regex);
 

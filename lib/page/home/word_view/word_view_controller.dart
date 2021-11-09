@@ -6,24 +6,24 @@ final wordViewControllerProvider =
 
 class WordViewController {}
 
-final wordsStreamProvider =
-    StreamProvider((ref) => ref.read(dbProvider).wordDao.watching());
+final getAllWordsFutureProvider =
+    FutureProvider((ref) => ref.read(dbProvider).wordDao.getAll());
 
-final wordsListProvider = StateProvider<List<Word>>(
-  (ref) => ref.watch(wordsStreamProvider).when(
+final getAllWordsProvider = StateProvider<List<Word>>(
+  (ref) => ref.watch(getAllWordsFutureProvider).when(
         data: (data) => data,
         loading: () => [],
         error: (s, o) => [],
       ),
 );
 
-final getWordWithProvider =
-    Provider.family<List<Word>, String>((ref, alphaChar) {
-  final words = ref.watch(wordsListProvider).state;
+// final getWordWithProvider =
+//     Provider.family<List<Word>, String>((ref, alphaChar) {
+//   final words = ref.watch(getAllWordsProvider).state;
 
-  return (words.where((element) => element.word.startsWith(alphaChar)).toList()
-    ..sort((a, b) => a.word.compareTo(b.word)));
-});
+//   return (words.where((element) => element.word.startsWith(alphaChar)).toList()
+//     ..sort((a, b) => a.word.compareTo(b.word)));
+// });
 
 // final sortedWordProvider = StateProvider((ref) {
 //   final words = ref.watch(wordsListProvider).state;

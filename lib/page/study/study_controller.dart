@@ -194,20 +194,15 @@ class WordCategoryNotifier extends ChangeNotifier {
   void add(Word word) => list.add(WordNotifier(word));
 }
 
-class WordNotifier extends ChangeNotifier {
-  final Word wordObject;
+class WordNotifier extends ValueNotifier {
+  int get id => value.id;
+  String get word => value.word;
+  bool get know => value.know;
 
-  final int id;
-  final String word;
-  bool know;
-
-  WordNotifier(this.wordObject)
-      : id = wordObject.id,
-        word = wordObject.word,
-        know = wordObject.know;
+  WordNotifier(Word wordObject) : super(wordObject);
 
   void toggleKnow() {
-    know = !know;
+    value = value.copyWith(know: !know);
 
     notifyListeners();
   }

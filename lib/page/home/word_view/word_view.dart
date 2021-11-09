@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:landlearn/page/study/study_controller.dart';
 import 'package:landlearn/service/db/database.dart';
 import 'package:landlearn/util/util.dart';
 
@@ -54,7 +56,7 @@ class WordView extends StatelessWidget {
   Widget statusOfWord() {
     return Consumer(
       builder: (context, watch, child) {
-        final words = watch(wordsListProvider).state;
+        final words = watch(getAllWordsProvider).state;
 
         return Row(
           children: [
@@ -99,11 +101,13 @@ class WordView extends StatelessWidget {
           ),
         ),
         Consumer(builder: (context, watch, child) {
-          final words = watch(getWordWithProvider(alphaChar));
+          final allWords = watch(getAllWordsProvider).state;
+          final wordByAlphaChar =
+              allWords.where((element) => element.word.startsWith(alphaChar));
 
           return Wrap(
             children: [
-              for (final word in words) wordItem(context, word),
+              for (final word in wordByAlphaChar) wordItem(WordNotifier(word)),
             ],
           );
         }),
@@ -112,20 +116,26 @@ class WordView extends StatelessWidget {
     );
   }
 
-  Widget wordItem(BuildContext context, Word word) {
-    return Card(
-      color: word.know ? Colors.green[100] : null,
-      child: InkWell(
-        onTap: () {
-          final db = context.read(dbProvider);
+  Widget wordItem(WordNotifier wordNotifier) {
+    return HookBuilder(builder: (context) {
+      useListenable(wordNotifier);
 
-          db.wordDao.updating(word.copyWith(know: !word.know));
-        },
-        child: Padding(
-          padding: const EdgeInsets.all(4.0),
-          child: Text(word.word),
+      return Card(
+        color: wordNotifier.know ? Colors.green[100] : null,
+        child: InkWell(
+          onTap: () async {
+            final db = context.read(dbProvider);
+
+            await db.wordDao.updateKnow(wordNotifier.value);
+
+            wordNotifier.toggleKnow();
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(4.0),
+            child: Text(wordNotifier.word),
+          ),
         ),
-      ),
-    );
+      );
+    });
   }
 }

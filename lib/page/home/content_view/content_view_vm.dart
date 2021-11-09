@@ -13,21 +13,21 @@ final contentDatasListProvider = StateProvider<List<ContentData>>(
       ),
 );
 
-final getWordInStreamProvider = StreamProvider.family<List<Word>, List<int>>(
-  (ref, ids) => ref.read(dbProvider).wordDao.watchingIn(wordIds: ids),
-);
+// final getWordInStreamProvider = StreamProvider.family<List<Word>, List<int>>(
+//   (ref, ids) => ref.read(dbProvider).wordDao.watchingIn(wordIds: ids),
+// );
 
-final awarnessPercentProvider =
-    StateProvider.family<double, List<int>>((ref, ids) {
-  // print(ids);
-  final words = ref.watch(getWordInStreamProvider(ids));
+// final awarnessPercentProvider =
+//     StateProvider.family<double, List<int>>((ref, ids) {
+//   // print(ids);
+//   final words = ref.watch(getWordInStreamProvider(ids));
 
-  return words.when(
-    data: (data) {
-      // print(data);
-      return (data.where((element) => element.know).length / data.length) * 100;
-    },
-    loading: () => 0.0,
-    error: (s, o) => 0.0,
-  );
-});
+//   return words.when(
+//     data: (data) {
+//       // print(data);
+//       return (data.where((element) => element.know).length / data.length) * 100;
+//     },
+//     loading: () => 0.0,
+//     error: (s, o) => 0.0,
+//   );
+// });
