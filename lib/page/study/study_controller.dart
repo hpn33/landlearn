@@ -102,11 +102,11 @@ import 'package:landlearn/util/util.dart';
 
 final selectedContentIdProvider = StateProvider<int>((ref) => -1);
 
-final _getContentStreamProvider = StreamProvider.autoDispose<Content?>((ref) {
+final _getContentStreamProvider = FutureProvider.autoDispose<Content?>((ref) {
   final db = ref.read(dbProvider);
   final selectedContent = ref.watch(selectedContentIdProvider).state;
 
-  return db.contentDao.watchingSingleBy(id: selectedContent);
+  return db.contentDao.getSingleBy(id: selectedContent);
 });
 
 final getContentDataProvider = StateProvider.autoDispose<ContentData?>(
@@ -117,12 +117,12 @@ final getContentDataProvider = StateProvider.autoDispose<ContentData?>(
       ),
 );
 
-final _getContentWordsStreamProvider = StreamProvider.autoDispose<List<Word>>(
+final _getContentWordsStreamProvider = FutureProvider.autoDispose<List<Word>>(
   (ref) {
     final db = ref.read(dbProvider);
     final content = ref.watch(getContentDataProvider).state;
 
-    return db.wordDao.watchingIn(wordIds: content!.wordIds);
+    return db.wordDao.getIn(wordIds: content!.wordIds);
   },
 );
 

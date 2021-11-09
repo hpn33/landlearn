@@ -35,7 +35,9 @@ class StudyPage extends HookWidget {
   @override
   Widget build(BuildContext context) {
     // load data
-    context.read(studyControllerProvider);
+    useEffect(() {
+      context.read(studyControllerProvider);
+    }, []);
 
     return Material(
       child: Column(
@@ -112,40 +114,10 @@ class StudyPage extends HookWidget {
   Widget wordOfContent() {
     // TODO: refresh word by word
     // or section section
+    // - [x] update word know state
+    // - [ ] remove on update
     return HookBuilder(builder: (context) {
-      final sortedWord = useState(<String, WordCategoryNotifier>{
-        for (final alphaChar in alphabeta) alphaChar: WordCategoryNotifier()
-      });
-      // final sortedWord = context.read(studyControllerProvider).sortedWord;
-
-      useEffect(() {
-        final db = context.read(dbProvider);
-        final contentId = context.read(selectedContentIdProvider).state;
-
-        db.contentDao.getSingleBy(id: contentId).then((content) {
-          final contentData = ContentData(content!);
-          db.wordDao.getIn(wordIds: contentData.wordIds).then((words) {
-            final temp = <String, WordCategoryNotifier>{
-              for (final alphaChar in alphabeta)
-                alphaChar: WordCategoryNotifier()
-            };
-
-            for (final word in words) {
-              final firstChar = word.word.substring(0, 1);
-
-              temp[firstChar]!.add(word);
-            }
-
-            temp.forEach(
-              (key, value) => value.list.sort(
-                (a, b) => a.word.compareTo(b.word),
-              ),
-            );
-
-            sortedWord.value = temp;
-          });
-        });
-      }, []);
+      final sortedWord = useProvider(studyControllerProvider).sortedWord;
 
       return SingleChildScrollView(
         child: Column(
@@ -158,8 +130,8 @@ class StudyPage extends HookWidget {
                     Divider(),
                     Wrap(
                       children: [
-                        for (final wordRow in sortedWord.value[alphaChar]!.list)
-                          wordCard(sortedWord.value[alphaChar]!, wordRow),
+                        for (final wordRow in sortedWord[alphaChar]!.list)
+                          wordCard(sortedWord[alphaChar]!, wordRow),
                       ],
                     ),
                   ],
