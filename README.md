@@ -123,7 +123,8 @@ http://www.english-for-students.com/Simple-Short-Stories.html
 * [x] analyze content and export words
 * [x] show awareness of content
 * [x] show knowed word on study page
-* [ ] 
+
+* [ ] many thing broken - fix analyze
 
 
 ## subject

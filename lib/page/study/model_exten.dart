@@ -67,28 +67,10 @@ extension Util on ContentNotifier {
   }
 
   void addWord(Word word) {
-    final lowerCaseWord = word.word.toLowerCase();
-    final firstChar = lowerCaseWord.substring(0, 1);
+    words.add(WordNotifier(word));
 
-    // if (!map.containsKey(firstChar)) {
-    //   map[firstChar] = [];
-    // }
+    final firstChar = word.word.toLowerCase().substring(0, 1);
 
-    final tempW = wordCategoris[firstChar]!
-        .list
-        .where((element) => element.word == word.word);
-
-    if (tempW.isEmpty) {
-      wordCategoris[firstChar]!.add(word);
-    }
-
-    wordCategoris[firstChar]!
-        .list
-        .where((element) => element.word == lowerCaseWord)
-        .first
-        .count++;
-    // tempW.first.count++;
-
-    // notifyListeners();
+    wordCategoris[firstChar]!.add(word);
   }
 }

@@ -11,8 +11,25 @@ class WordCategoryNotifier extends ChangeNotifier {
 
   WordCategoryNotifier();
 
-  void add(Word word) => list.add(WordNotifier(word));
-  void addNotifier(WordNotifier word) => list.add(word);
+  void add(Word word) {
+    final tempW = list.where((element) => element.word == word.word);
+
+    if (tempW.isEmpty) {
+      list.add(WordNotifier(word));
+    }
+
+    list.where((element) => element.word == word.word).first.count++;
+  }
+
+  void addNotifier(WordNotifier word) {
+    final tempW = list.where((element) => element.word == word.word);
+
+    if (tempW.isEmpty) {
+      list.add(word);
+    }
+
+    list.where((element) => element.word == word.word).first.count++;
+  }
 }
 
 class WordNotifier extends ValueNotifier<Word> {
@@ -98,7 +115,7 @@ class ContentNotifier extends ValueNotifier<Content> {
     words.addAll(wordsIn.map((e) => WordNotifier(e)));
 
     for (final word in words) {
-      wordCategoris[word.word.substring(0, 1)]!.addNotifier(word);
+      wordCategoris[word.word.toLowerCase().substring(0, 1)]!.addNotifier(word);
     }
   }
 }

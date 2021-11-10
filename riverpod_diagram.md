@@ -3,48 +3,39 @@
 graph TD;
 
 
+9(dbProvider) --> 2((HomePage)) ;
 
-9(dbProvider) --> 3((HomePage)) ;
 
-9(dbProvider) --> 4((StudyPage)) ;
-10[[wordMapProvider]] --> 4((StudyPage)) ;
-16[[textControllerProvider]] --> 4((StudyPage)) ;
-17(studyControllerProvider) --> 4((StudyPage)) ;
 
+9(dbProvider) --> 5((StudyPage)) ;
+12[[getContentNotifierProvider]] --> 5((StudyPage)) ;
+13[[textControllerProvider]] --> 5((StudyPage)) ;
 
 
 9(dbProvider) --> 7((WordView)) ;
-22[[getAllWordsProvider]] --> 7((WordView)) ;
+18[[getAllWordsProvider]] --> 7((WordView)) ;
 
-11[[selectedContentIdProvider]] --> 8((ContentView)) ;
-19[[contentDatasListProvider]] --> 8((ContentView)) ;
-
-
+10[[selectedContentIdProvider]] --> 8((ContentView)) ;
+15[[contentDatasListProvider]] --> 8((ContentView)) ;
 
 
-9(dbProvider) --> 12>_getContentStreamProvider] ;
-11[[selectedContentIdProvider]] --> 12>_getContentStreamProvider] ;
 
-12>_getContentStreamProvider] --> 13[[getContentDataProvider]] ;
+9(dbProvider) --> 11>_getContentStreamProvider] ;
+10[[selectedContentIdProvider]] --> 11>_getContentStreamProvider] ;
 
-9(dbProvider) --> 14>_getContentWordsStreamProvider] ;
-13[[getContentDataProvider]] --> 14>_getContentWordsStreamProvider] ;
+9(dbProvider) --> 12[[getContentNotifierProvider]] ;
+11>_getContentStreamProvider] --> 12[[getContentNotifierProvider]] ;
 
-14>_getContentWordsStreamProvider] --> 15[[getContentWordsProvider]] ;
+12[[getContentNotifierProvider]] --> 13[[textControllerProvider]] ;
 
-17(studyControllerProvider) --> 16[[textControllerProvider]] ;
+9(dbProvider) --> 14>contentsStreamProvider] ;
 
-13[[getContentDataProvider]] --> 17(studyControllerProvider) ;
-15[[getContentWordsProvider]] --> 17(studyControllerProvider) ;
-
-9(dbProvider) --> 18>contentsStreamProvider] ;
-
-18>contentsStreamProvider] --> 19[[contentDatasListProvider]] ;
+14>contentsStreamProvider] --> 15[[contentDatasListProvider]] ;
 
 
-9(dbProvider) --> 21>getAllWordsFutureProvider] ;
+9(dbProvider) --> 17>getAllWordsFutureProvider] ;
 
-21>getAllWordsFutureProvider] --> 22[[getAllWordsProvider]] ;
+17>getAllWordsFutureProvider] --> 18[[getAllWordsProvider]] ;
 
 
 ```

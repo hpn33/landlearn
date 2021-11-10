@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:landlearn/service/db/database.dart';
-import 'package:landlearn/util/util.dart';
 
 import 'models.dart';
 
@@ -17,36 +16,42 @@ final _getContentStreamProvider = FutureProvider.autoDispose<Content?>((ref) {
 final getContentNotifierProvider = StateProvider.autoDispose<ContentNotifier?>(
   (ref) => ref.watch(_getContentStreamProvider).when(
         data: (data) {
-          return (data == null ? null : ContentNotifier(data))!
-            ..getWordsFromDB(ref.read(dbProvider));
+          final contentNotifier = data == null ? null : ContentNotifier(data);
+
+          if (contentNotifier != null) {
+            contentNotifier.getWordsFromDB(ref.read(dbProvider));
+          }
+
+          return contentNotifier;
         },
         loading: () => null,
         error: (s, o) => null,
       ),
 );
 
-final _getContentWordsStreamProvider = FutureProvider.autoDispose<List<Word>>(
-  (ref) {
-    final db = ref.read(dbProvider);
-    final contentNotifier = ref.watch(getContentNotifierProvider).state;
+// final _getContentWordsStreamProvider = FutureProvider.autoDispose<List<Word>>(
+//   (ref) {
+//     final db = ref.read(dbProvider);
+//     final contentNotifier = ref.watch(getContentNotifierProvider).state;
 
-    return db.wordDao.getIn(wordIds: contentNotifier!.wordIds);
-  },
-);
+//     return db.wordDao.getIn(wordIds: contentNotifier!.wordIds);
+//   },
+// );
 
-final getContentWordsProvider = StateProvider.autoDispose<List<Word>>(
-  (ref) => ref.watch(_getContentWordsStreamProvider).when(
-        data: (data) => data,
-        loading: () => [],
-        error: (s, o) => [],
-      ),
-);
+// final getContentWordsProvider = StateProvider.autoDispose<List<Word>>(
+//   (ref) => ref.watch(_getContentWordsStreamProvider).when(
+//         data: (data) => data,
+//         loading: () => [],
+//         error: (s, o) => [],
+//       ),
+// );
 
 final textControllerProvider = ChangeNotifierProvider.autoDispose((ref) {
-  final contentData = ref.watch(studyControllerProvider).contentNotifier;
+  // final contentData = ref.watch(studyControllerProvider).contentNotifier;
+  final contentNotifier = ref.watch(getContentNotifierProvider).state;
 
   return TextEditingController(
-    text: contentData == null ? 'something Wrong' : contentData.content,
+    text: contentNotifier == null ? 'something Wrong' : contentNotifier.content,
   );
 });
 
@@ -61,35 +66,40 @@ final textControllerProvider = ChangeNotifierProvider.autoDispose((ref) {
 //   },
 // );
 
-final studyControllerProvider = Provider.autoDispose((ref) {
-  final contentData = ref.watch(getContentNotifierProvider).state;
-  final words = ref.watch(getContentWordsProvider).state;
+// final studyControllerProvider = Provider.autoDispose((ref) {
+//   final contentData = ref.watch(getContentNotifierProvider).state;
+//   // final words = ref.watch(getContentWordsProvider).state;
 
-  return StudyController(contentNotifier: contentData, words: words);
-});
+//   return StudyController(
+//     contentNotifier: contentData,
+//     // words: words
+//   );
+// });
 
-class StudyController {
-  final ContentNotifier? contentNotifier;
-  final List<Word> words;
-  final Map<String, WordCategoryNotifier> sortedWord = {
-    for (final alphaChar in alphabeta) alphaChar: WordCategoryNotifier()
-  };
+// class StudyController {
+//   final ContentNotifier? contentNotifier;
+//   // final List<Word> words;
+//   // final Map<String, WordCategoryNotifier> sortedWord = {
+//   //   for (final alphaChar in alphabeta) alphaChar: WordCategoryNotifier()
+//   // };
 
-  StudyController({this.contentNotifier, this.words = const []}) {
-    sortingWord();
-  }
+//   StudyController({this.contentNotifier
+//       // , this.words = const []
+//       }) {
+//     // sortingWord();
+//   }
 
-  void sortingWord() {
-    for (final word in words) {
-      final firstChar = word.word.substring(0, 1);
+//   // void sortingWord() {
+//   //   for (final word in words) {
+//   //     final firstChar = word.word.substring(0, 1);
 
-      sortedWord[firstChar]!.add(word);
-    }
+//   //     sortedWord[firstChar]!.add(word);
+//   //   }
 
-    sortedWord.forEach(
-      (key, value) => value.list.sort(
-        (a, b) => a.word.compareTo(b.word),
-      ),
-    );
-  }
-}
+//   //   sortedWord.forEach(
+//   //     (key, value) => value.list.sort(
+//   //       (a, b) => a.word.compareTo(b.word),
+//   //     ),
+//   //   );
+//   // }
+// }
