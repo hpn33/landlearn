@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:landlearn/page/home/word_view/word_view_controller.dart';
+import 'package:landlearn/page/home/word_hub.dart';
 import 'package:landlearn/page/study/models/model_exten.dart';
 import 'package:landlearn/page/study/study_controller.dart';
 import 'package:landlearn/service/db/database.dart';
@@ -299,13 +299,13 @@ class StudyPage extends HookWidget {
     }
 
     // check for add or get from db
-    final allWordOnDB = context.read(getAllWordsStateProvider).state;
+    final allWordOnDB = context.read(wordHubProvider).wordNotifiers;
 
     for (final word
         in wordMap.values.expand((element) => element).map((e) => e.word)) {
-      final w = await getOrAddWord(db, allWordOnDB, word);
+      final wordNotifier = await getOrAddWord(db, allWordOnDB, word);
 
-      contentNotifier.addWord(w);
+      contentNotifier.addWordNotifier(wordNotifier);
     }
 
     // load word
@@ -313,23 +313,23 @@ class StudyPage extends HookWidget {
 
     if (contentNotifier.data != newData) {
       await db.contentDao.updateData(contentNotifier.value, newData);
-      contentNotifier.updateData(newData);
+      contentNotifier.updateData();
     }
 
-    contentNotifier.getWordsFromDB(db);
-    contentNotifier.notify();
+    contentNotifier.getWordsFromDB(allWordOnDB);
+    // contentNotifier.notify();
   }
 
-  Future<Word> getOrAddWord(
+  Future<WordNotifier> getOrAddWord(
     Database db,
-    List<Word> allWordInDB,
+    List<WordNotifier> allWordInDB,
     String word,
   ) async {
     final selection =
         allWordInDB.where((element) => element.word == word).toList();
 
     if (selection.isEmpty) {
-      return await db.wordDao.add(word);
+      return WordNotifier(await db.wordDao.add(word));
     }
 
     return selection.first;

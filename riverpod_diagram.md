@@ -3,40 +3,41 @@
 graph TD;
 
 
-9(dbProvider) --> 2((HomePage)) ;
+
+10(dbProvider) --> 3((HomePage)) ;
+
+9(wordHubProvider) --> 4((StudyPage)) ;
+10(dbProvider) --> 4((StudyPage)) ;
+13[[getContentNotifierProvider]] --> 4((StudyPage)) ;
+14[[textControllerProvider]] --> 4((StudyPage)) ;
 
 
 
-9(dbProvider) --> 5((StudyPage)) ;
-12[[getContentNotifierProvider]] --> 5((StudyPage)) ;
-13[[textControllerProvider]] --> 5((StudyPage)) ;
-18[[getAllWordsProvider]] --> 5((StudyPage)) ;
+9(wordHubProvider) --> 7((WordView)) ;
+10(dbProvider) --> 7((WordView)) ;
 
+11[[selectedContentIdProvider]] --> 8((ContentView)) ;
+16[[contentDatasListProvider]] --> 8((ContentView)) ;
 
-9(dbProvider) --> 7((WordView)) ;
-18[[getAllWordsProvider]] --> 7((WordView)) ;
-
-10[[selectedContentIdProvider]] --> 8((ContentView)) ;
-15[[contentDatasListProvider]] --> 8((ContentView)) ;
+18[[getAllWordsStateProvider]] --> 9(wordHubProvider) ;
 
 
 
-9(dbProvider) --> 11>_getContentStreamProvider] ;
-10[[selectedContentIdProvider]] --> 11>_getContentStreamProvider] ;
+10(dbProvider) --> 12>_getContentStreamProvider] ;
+11[[selectedContentIdProvider]] --> 12>_getContentStreamProvider] ;
 
-9(dbProvider) --> 12[[getContentNotifierProvider]] ;
-11>_getContentStreamProvider] --> 12[[getContentNotifierProvider]] ;
+9(wordHubProvider) --> 13[[getContentNotifierProvider]] ;
+12>_getContentStreamProvider] --> 13[[getContentNotifierProvider]] ;
 
-12[[getContentNotifierProvider]] --> 13[[textControllerProvider]] ;
+13[[getContentNotifierProvider]] --> 14[[textControllerProvider]] ;
 
-9(dbProvider) --> 14>contentsStreamProvider] ;
+10(dbProvider) --> 15>contentsStreamProvider] ;
 
-14>contentsStreamProvider] --> 15[[contentDatasListProvider]] ;
+15>contentsStreamProvider] --> 16[[contentDatasListProvider]] ;
 
+10(dbProvider) --> 17>getAllWordsFutureProvider] ;
 
-9(dbProvider) --> 17>getAllWordsFutureProvider] ;
-
-17>getAllWordsFutureProvider] --> 18[[getAllWordsProvider]] ;
+17>getAllWordsFutureProvider] --> 18[[getAllWordsStateProvider]] ;
 
 
 ```

@@ -49,11 +49,13 @@ extension Util on ContentNotifier {
     return jsonEncode(m);
   }
 
-  void addWord(Word word) {
-    wordNotifiers.add(WordNotifier(word));
+  void addWord(Word word) => addWordNotifier(WordNotifier(word));
 
-    final firstChar = word.word.toLowerCase().substring(0, 1);
+  void addWordNotifier(WordNotifier wordNotifier) {
+    wordNotifiers.add(wordNotifier);
 
-    wordCategoris[firstChar]!.add(word);
+    final firstChar = wordNotifier.word.toLowerCase().substring(0, 1);
+
+    wordCategoris[firstChar]!.addNotifier(wordNotifier);
   }
 }

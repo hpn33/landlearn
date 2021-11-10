@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
+import 'package:landlearn/page/study/models/model_exten.dart';
 import 'package:landlearn/service/db/database.dart';
 import 'package:landlearn/util/util.dart';
 
@@ -72,14 +73,19 @@ class ContentNotifier extends ValueNotifier<Content> {
     );
   }
 
-  Future<void> getWordsFromDB(Database db) async {
-    final wordsIn = await db.wordDao.getIn(wordIds: wordIds);
-
+  Future<void> getWordsFromDB(List<WordNotifier> wordOfDB) async {
     wordNotifiers.clear();
-    wordNotifiers.addAll(wordsIn.map((e) => WordNotifier(e)));
+
+    for (final id in wordIds) {
+      final selection = wordOfDB.where((element) => element.id == id);
+
+      if (selection.isNotEmpty) {
+        wordNotifiers.add(selection.first);
+      }
+    }
 
     for (final wordNotifier in wordNotifiers) {
-      final firstChar = wordNotifier.word.toLowerCase().substring(0, 1);
+      final firstChar = wordNotifier.word.substring(0, 1);
 
       wordCategoris[firstChar]!.addNotifier(wordNotifier);
     }
@@ -89,9 +95,20 @@ class ContentNotifier extends ValueNotifier<Content> {
 
   void notify() => notifyListeners();
 
-  void updateData(String newData) {
-    value = value.copyWith(data: newData);
+  void updateData() {
+    value = value.copyWith(data: this.toJson());
 
     exportData();
   }
 }
+
+// extension DBUtil on ContentNotifier {
+
+//   Future<void> updateDataToDB(Database db) async {
+//     await db.contentDao.updateData(value, toJson());
+
+//     value = value.copyWith(data: this.toJson());
+
+//     exportData();
+//   }
+// }

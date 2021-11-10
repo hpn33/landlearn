@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:landlearn/page/home/word_hub.dart';
 import 'package:landlearn/service/db/database.dart';
 
 import 'models/content_notifier.dart';
@@ -19,7 +20,9 @@ final getContentNotifierProvider = StateProvider.autoDispose<ContentNotifier?>(
           final contentNotifier = data == null ? null : ContentNotifier(data);
 
           if (contentNotifier != null) {
-            contentNotifier.getWordsFromDB(ref.read(dbProvider));
+            final allWords = ref.read(wordHubProvider).wordNotifiers;
+
+            contentNotifier.getWordsFromDB(allWords);
           }
 
           return contentNotifier;

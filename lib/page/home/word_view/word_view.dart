@@ -7,7 +7,6 @@ import 'package:landlearn/page/study/models/word_notifier.dart';
 import 'package:landlearn/service/db/database.dart';
 
 import '../../dialog/add_word_dialog.dart';
-import 'word_view_controller.dart';
 
 class WordView extends StatelessWidget {
   const WordView({Key? key}) : super(key: key);
@@ -62,7 +61,7 @@ class WordView extends StatelessWidget {
   Widget statusOfWord() {
     return Consumer(
       builder: (context, watch, child) {
-        final words = watch(getAllWordsStateProvider).state;
+        final words = watch(wordHubProvider).words;
 
         return Row(
           children: [
