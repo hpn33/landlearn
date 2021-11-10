@@ -51,7 +51,8 @@ extension Util on ContentNotifier {
 
   WordNotifier? getNotifier(String word) {
     final lowerCase = word.toLowerCase();
-    final findedWord = words.where((element) => element.word == lowerCase);
+    final findedWord =
+        wordNotifiers.where((element) => element.word == lowerCase);
 
     if (findedWord.isEmpty) {
       return null;
@@ -61,13 +62,13 @@ extension Util on ContentNotifier {
   }
 
   String toJson() {
-    final m = words.map((e) => [e.id, e.count, e.know]).toList();
+    final m = wordNotifiers.map((e) => [e.id, e.count, e.know]).toList();
 
     return jsonEncode(m);
   }
 
   void addWord(Word word) {
-    words.add(WordNotifier(word));
+    wordNotifiers.add(WordNotifier(word));
 
     final firstChar = word.word.toLowerCase().substring(0, 1);
 

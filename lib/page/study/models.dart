@@ -61,8 +61,7 @@ class ContentNotifier extends ValueNotifier<Content> {
   List<WordData> wordDatas = [];
   List<int> get wordIds => wordDatas.map((e) => e.id).toList();
 
-  List<WordNotifier> words = [];
-  // Map<String, WordCategoryNotifier> sortedWords = {};
+  List<WordNotifier> wordNotifiers = [];
 
   final Map<String, WordCategoryNotifier> wordCategoris = {
     for (final alphaChar in alphabeta) alphaChar: WordCategoryNotifier()
@@ -109,14 +108,25 @@ class ContentNotifier extends ValueNotifier<Content> {
     );
   }
 
-  void getWordsFromDB(Database db) async {
+  Future<void> getWordsFromDB(Database db) async {
     final wordsIn = await db.wordDao.getIn(wordIds: wordIds);
 
-    words.addAll(wordsIn.map((e) => WordNotifier(e)));
+    wordNotifiers.clear();
+    wordNotifiers.addAll(wordsIn.map((e) => WordNotifier(e)));
 
-    for (final word in words) {
-      wordCategoris[word.word.toLowerCase().substring(0, 1)]!.addNotifier(word);
+    for (final wordNotifier in wordNotifiers) {
+      final firstChar = wordNotifier.word.toLowerCase().substring(0, 1);
+
+      wordCategoris[firstChar]!.addNotifier(wordNotifier);
     }
+  }
+
+  void notify() => notifyListeners();
+
+  void updateData(String newData) {
+    value = value.copyWith(data: newData);
+
+    exportData();
   }
 }
 

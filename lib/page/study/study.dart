@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:landlearn/page/home/word_view/word_view_controller.dart';
 import 'package:landlearn/page/study/study_controller.dart';
 import 'package:landlearn/service/db/database.dart';
 import 'package:landlearn/util/util.dart';
@@ -67,6 +68,8 @@ class StudyPage extends HookWidget {
 
       final contentNotifier = useProvider(getContentNotifierProvider).state;
 
+      useListenable(contentNotifier ?? ChangeNotifier());
+
       return SingleChildScrollView(
         child: editMode
             ? TextField(
@@ -127,6 +130,7 @@ class StudyPage extends HookWidget {
     // - [ ] remove on update
     return HookBuilder(builder: (context) {
       final contentNotifier = useProvider(getContentNotifierProvider).state;
+      useListenable(contentNotifier ?? ChangeNotifier());
 
       if (contentNotifier == null) {
         return Center(child: Text('wait'));
@@ -239,6 +243,14 @@ class StudyPage extends HookWidget {
     );
   }
 
+  /// extract work from content text
+  /// remove dub
+  ///
+  /// check for add or get
+  ///
+  /// update
+  ///
+  /// ready to use
   void analyze(BuildContext context) async {
     final db = context.read(dbProvider);
     final contentNotifier = context.read(getContentNotifierProvider).state;
@@ -247,50 +259,73 @@ class StudyPage extends HookWidget {
       return;
     }
 
-    final wordInContent = contentNotifier.content.split(_regex);
+    final wordExtractedFromContentText = contentNotifier.content
+        .split(_regex)
+        .map((e) => e.toLowerCase())
+        .toList();
 
-    final addList = <String>[];
+    // removing
+    final removeList = [];
 
-    // check if not was added
-    for (final word in wordInContent) {
-      if (word.isEmpty) {
+    for (final word in wordExtractedFromContentText) {
+      // remove empty word
+      if (word.isEmpty || word == '') {
+        removeList.add(word);
         continue;
       }
 
-      if (contentNotifier.words
-          .where((element) => element.word == word)
-          .isEmpty) {
-        addList.add(word);
+      // remove dub
+      int counter = 0;
+
+      for (final wordCheck in wordExtractedFromContentText) {
+        if (word == wordCheck) {
+          counter++;
+        }
+      }
+
+      if (counter > 1) {
+        removeList.add(word);
       }
     }
 
-    for (final item in addList) {
-      final word = await db.wordDao.add(item);
-      print(word.word);
-      contentNotifier.addWord(word);
+    removeList
+      ..forEach((word) => wordExtractedFromContentText.remove(word))
+      ..clear();
+
+    // check for add or get from db
+    final allWordOnDB = context.read(getAllWordsProvider).state;
+
+    for (final word in wordExtractedFromContentText) {
+      final w = await getOrAddWord(db, allWordOnDB, word);
+
+      contentNotifier.addWord(w);
     }
 
+    // load word
     final newData = contentNotifier.toJson();
 
     if (contentNotifier.data != newData) {
       await db.contentDao.updateData(contentNotifier.value, newData);
+      contentNotifier.updateData(newData);
     }
 
     contentNotifier.getWordsFromDB(db);
+    contentNotifier.notify();
   }
 
-  Future<Word> getOrAddWord(BuildContext context, String word) async {
-    final db = context.read(dbProvider);
+  Future<Word> getOrAddWord(
+    Database db,
+    List<Word> allWordInDB,
+    String word,
+  ) async {
+    final selection =
+        allWordInDB.where((element) => element.word == word).toList();
 
-    final wordLowerCase = word.toLowerCase();
-
-    var w = await db.wordDao.get(wordLowerCase);
-
-    if (w == null) {
-      return await db.wordDao.add(wordLowerCase);
+    if (selection.isEmpty) {
+      return await db.wordDao.add(word);
     }
 
-    return w;
+    return selection.first;
   }
 }
 
