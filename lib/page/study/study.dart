@@ -2,11 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:landlearn/page/home/word_view/word_view_controller.dart';
+import 'package:landlearn/page/study/models/model_exten.dart';
 import 'package:landlearn/page/study/study_controller.dart';
 import 'package:landlearn/service/db/database.dart';
 import 'package:landlearn/util/util.dart';
 
-import 'models.dart';
+import 'models/word_category_notifier.dart';
+import 'models/word_data.dart';
+import 'models/word_notifier.dart';
 
 /// TODO:  goal: improve data flow in study page
 /// refactor

@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:landlearn/service/db/database.dart';
 
-import 'models.dart';
+import 'models/content_notifier.dart';
 
 final selectedContentIdProvider = StateProvider<int>((ref) => -1);
 

@@ -4,49 +4,10 @@ import 'package:flutter/foundation.dart';
 import 'package:landlearn/service/db/database.dart';
 import 'package:landlearn/util/util.dart';
 
+import 'word_category_notifier.dart';
+import 'word_notifier.dart';
+
 export 'model_exten.dart' show Util;
-
-class WordCategoryNotifier extends ChangeNotifier {
-  final List<WordNotifier> list = [];
-
-  WordCategoryNotifier();
-
-  void add(Word word) {
-    final tempW = list.where((element) => element.word == word.word);
-
-    if (tempW.isEmpty) {
-      list.add(WordNotifier(word));
-    }
-
-    list.where((element) => element.word == word.word).first.count++;
-  }
-
-  void addNotifier(WordNotifier word) {
-    final tempW = list.where((element) => element.word == word.word);
-
-    if (tempW.isEmpty) {
-      list.add(word);
-    }
-
-    list.where((element) => element.word == word.word).first.count++;
-  }
-}
-
-class WordNotifier extends ValueNotifier<Word> {
-  int get id => value.id;
-  String get word => value.word;
-  bool get know => value.know;
-
-  int count = 0;
-
-  WordNotifier(Word wordObject) : super(wordObject);
-
-  void toggleKnow() {
-    value = value.copyWith(know: !know);
-
-    notifyListeners();
-  }
-}
 
 class ContentNotifier extends ValueNotifier<Content> {
   ContentNotifier(Content content) : super(content) {
@@ -133,13 +94,4 @@ class ContentNotifier extends ValueNotifier<Content> {
 
     exportData();
   }
-}
-
-class WordData {
-  int id = -1;
-  int count = 0;
-  bool know = false;
-  String word = '';
-
-  WordData({this.id = -1, this.count = 0, this.know = false, this.word = ''});
 }

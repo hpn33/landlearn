@@ -10,6 +10,7 @@ graph TD;
 9(dbProvider) --> 5((StudyPage)) ;
 12[[getContentNotifierProvider]] --> 5((StudyPage)) ;
 13[[textControllerProvider]] --> 5((StudyPage)) ;
+18[[getAllWordsProvider]] --> 5((StudyPage)) ;
 
 
 9(dbProvider) --> 7((WordView)) ;
