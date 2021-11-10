@@ -123,7 +123,8 @@ class StudyPage extends HookWidget {
     // - [x] update word know state
     // - [ ] remove on update
     return HookBuilder(builder: (context) {
-      final sortedWord = useProvider(studyControllerProvider).sortedWord;
+      final wordCategoris =
+          useProvider(studyControllerProvider).contentNotifier?.wordCategoris;
 
       return SingleChildScrollView(
         child: Column(
@@ -136,8 +137,8 @@ class StudyPage extends HookWidget {
                     Divider(),
                     Wrap(
                       children: [
-                        for (final wordRow in sortedWord[alphaChar]!.list)
-                          wordCard(sortedWord[alphaChar]!, wordRow),
+                        for (final wordRow in wordCategoris![alphaChar]!.list)
+                          wordCard(wordCategoris[alphaChar]!, wordRow),
                       ],
                     ),
                   ],
