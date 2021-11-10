@@ -262,50 +262,44 @@ class StudyPage extends HookWidget {
   ///
   /// ready to use
   void analyze(BuildContext context) async {
-    final db = context.read(dbProvider);
     final contentNotifier = context.read(getContentNotifierProvider).state;
 
     if (contentNotifier == null) {
       return;
     }
 
+    final db = context.read(dbProvider);
+    final wordMap = <String, List<WordData>>{
+      for (final alpha in alphabeta) alpha: [],
+    };
+
     final wordExtractedFromContentText = contentNotifier.content
         .split(_regex)
         .map((e) => e.toLowerCase())
         .toList();
 
-    // removing
-    final removeList = [];
-
+    // by default remove empty and dublicat word
     for (final word in wordExtractedFromContentText) {
-      // remove empty word
-      if (word.isEmpty || word == '') {
-        removeList.add(word);
+      if (word.isEmpty) {
         continue;
       }
 
-      // remove dub
-      int counter = 0;
+      final category = wordMap[word.substring(0, 1)]!;
 
-      for (final wordCheck in wordExtractedFromContentText) {
-        if (word == wordCheck) {
-          counter++;
-        }
+      final selection = category.where((element) => element.word == word);
+
+      if (selection.isEmpty) {
+        category.add(WordData(word: word));
       }
 
-      if (counter > 1) {
-        removeList.add(word);
-      }
+      category.where((element) => element.word == word).first.count++;
     }
-
-    removeList
-      ..forEach((word) => wordExtractedFromContentText.remove(word))
-      ..clear();
 
     // check for add or get from db
     final allWordOnDB = context.read(getAllWordsProvider).state;
 
-    for (final word in wordExtractedFromContentText) {
+    for (final word
+        in wordMap.values.expand((element) => element).map((e) => e.word)) {
       final w = await getOrAddWord(db, allWordOnDB, word);
 
       contentNotifier.addWord(w);

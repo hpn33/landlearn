@@ -58,8 +58,9 @@ class ContentNotifier extends ValueNotifier<Content> {
   String get content => value.content;
   String get data => value.data;
 
-  List<WordData> wordDatas = [];
-  List<int> get wordIds => wordDatas.map((e) => e.id).toList();
+  // List<WordData> wordDatas = [];
+  // List<int> get wordIds => wordDatas.map((e) => e.id).toList();
+  List<int> wordIds = [];
 
   List<WordNotifier> wordNotifiers = [];
 
@@ -89,7 +90,8 @@ class ContentNotifier extends ValueNotifier<Content> {
       return;
     }
 
-    wordDatas.clear();
+    // wordDatas.clear();
+    wordIds.clear();
 
     final List decoded = json.decode(data);
 
@@ -103,7 +105,8 @@ class ContentNotifier extends ValueNotifier<Content> {
         //   know = item[2] as bool;
         // }
 
-        wordDatas.add(WordData(id));
+        wordIds.add(id);
+        // wordDatas.add(WordData(id: id));
       },
     );
   }
@@ -133,9 +136,10 @@ class ContentNotifier extends ValueNotifier<Content> {
 }
 
 class WordData {
-  final int id;
+  int id = -1;
   int count = 0;
   bool know = false;
+  String word = '';
 
-  WordData(this.id, {this.count = 0, this.know = false});
+  WordData({this.id = -1, this.count = 0, this.know = false, this.word = ''});
 }
