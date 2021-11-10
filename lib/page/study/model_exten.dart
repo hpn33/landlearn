@@ -49,6 +49,17 @@ extension Util on ContentNotifier {
     return item.first.value;
   }
 
+  WordNotifier? getNotifier(String word) {
+    final lowerCase = word.toLowerCase();
+    final findedWord = words.where((element) => element.word == lowerCase);
+
+    if (findedWord.isEmpty) {
+      return null;
+    }
+
+    return findedWord.first;
+  }
+
   String toJson() {
     final m = words.map((e) => [e.id, e.count, e.know]).toList();
 

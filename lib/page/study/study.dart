@@ -1,4 +1,3 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -62,7 +61,6 @@ class StudyPage extends HookWidget {
 
   Widget contentView() {
     return HookBuilder(builder: (context) {
-      // final wordMap = useProvider(wordMapProvider);
       final textController = useProvider(textControllerProvider);
 
       final editMode = useProvider(editModeProvider).state;
@@ -81,35 +79,37 @@ class StudyPage extends HookWidget {
             : RichText(
                 text: TextSpan(
                   children: [
-                    for (final w in textController.text.split(_regex))
-                      () {
-                        final isKnow = contentNotifier!
-                            // wordMap
-                            .isKnow(w);
+                    for (final word in textController.text.split(_regex))
+                      WidgetSpan(
+                        child: HookBuilder(
+                          builder: (context) {
+                            final w = contentNotifier!.getNotifier(word);
 
-                        return TextSpan(
-                          recognizer: TapGestureRecognizer()
-                            ..onTap = () {
-                              final db = context.read(dbProvider);
-                              final word = contentNotifier
-                                  // wordMap
-                                  .get(w);
+                            useListenable(w ?? ChangeNotifier());
 
-                              if (word != null) {
-                                db.wordDao
-                                    .updating(word.copyWith(know: !word.know));
-                              }
+                            if (w == null) {
+                              return Text('(xxx)');
+                            }
 
-                              analyze(context);
-                            },
-                          text: w + ' ',
-                          style: TextStyle(
-                            color: isKnow ? Colors.green : Colors.black,
-                            decoration:
-                                isKnow ? TextDecoration.underline : null,
-                          ),
-                        );
-                      }(),
+                            return InkWell(
+                              onTap: () async {
+                                final db = context.read(dbProvider);
+
+                                await db.wordDao.updateKnow(w.value);
+                                w.toggleKnow();
+                              },
+                              child: Text(
+                                word + ' ',
+                                style: TextStyle(
+                                  color: w.know ? Colors.green : Colors.black,
+                                  decoration:
+                                      w.know ? TextDecoration.underline : null,
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
                   ],
                 ),
               ),
