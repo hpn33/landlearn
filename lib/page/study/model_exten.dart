@@ -50,9 +50,14 @@ extension Util on ContentNotifier {
   }
 
   WordNotifier? getNotifier(String word) {
+    if (word.isEmpty) {
+      return null;
+    }
+
     final lowerCase = word.toLowerCase();
-    final findedWord =
-        wordNotifiers.where((element) => element.word == lowerCase);
+    final findedWord = wordCategoris[lowerCase.substring(0, 1)]!
+        .list
+        .where((element) => element.word == lowerCase);
 
     if (findedWord.isEmpty) {
       return null;

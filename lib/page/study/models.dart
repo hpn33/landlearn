@@ -119,6 +119,8 @@ class ContentNotifier extends ValueNotifier<Content> {
 
       wordCategoris[firstChar]!.addNotifier(wordNotifier);
     }
+
+    notify();
   }
 
   void notify() => notifyListeners();

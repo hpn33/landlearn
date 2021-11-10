@@ -83,39 +83,49 @@ class StudyPage extends HookWidget {
                 : RichText(
                     text: TextSpan(
                       children: [
-                        for (final word in textController.text.split(_regex))
-                          WidgetSpan(
-                            child: HookBuilder(
-                              builder: (context) {
-                                final w = contentNotifier.getNotifier(word);
+                        for (final paragh
+                            in textController.text.split('\n')) ...[
+                          TextSpan(
+                            children: [
+                              for (final word in paragh.split(_regex))
+                                WidgetSpan(
+                                  child: HookBuilder(
+                                    builder: (context) {
+                                      final w =
+                                          contentNotifier.getNotifier(word);
 
-                                useListenable(w ?? ChangeNotifier());
+                                      useListenable(w ?? ChangeNotifier());
 
-                                if (w == null) {
-                                  return Text('(xxx)');
-                                }
+                                      if (w == null) {
+                                        return Text('($word)');
+                                      }
 
-                                return InkWell(
-                                  onTap: () async {
-                                    final db = context.read(dbProvider);
+                                      return InkWell(
+                                        onTap: () async {
+                                          final db = context.read(dbProvider);
 
-                                    await db.wordDao.updateKnow(w.value);
-                                    w.toggleKnow();
-                                  },
-                                  child: Text(
-                                    word + ' ',
-                                    style: TextStyle(
-                                      color:
-                                          w.know ? Colors.green : Colors.black,
-                                      decoration: w.know
-                                          ? TextDecoration.underline
-                                          : null,
-                                    ),
+                                          await db.wordDao.updateKnow(w.value);
+                                          w.toggleKnow();
+                                        },
+                                        child: Text(
+                                          word + ' ',
+                                          style: TextStyle(
+                                            color: w.know
+                                                ? Colors.green
+                                                : Colors.black,
+                                            decoration: w.know
+                                                ? TextDecoration.underline
+                                                : null,
+                                          ),
+                                        ),
+                                      );
+                                    },
                                   ),
-                                );
-                              },
-                            ),
+                                ),
+                            ],
                           ),
+                          TextSpan(text: '\n'),
+                        ],
                       ],
                     ),
                   ),
