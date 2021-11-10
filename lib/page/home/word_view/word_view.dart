@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:landlearn/page/home/word_hub.dart';
+import 'package:landlearn/page/study/models/word_category_notifier.dart';
 import 'package:landlearn/page/study/models/word_notifier.dart';
 import 'package:landlearn/service/db/database.dart';
-import 'package:landlearn/util/util.dart';
 
 import '../../dialog/add_word_dialog.dart';
 import 'word_view_controller.dart';
@@ -41,13 +42,18 @@ class WordView extends StatelessWidget {
     return Row(
       children: [
         Expanded(
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                for (final item in alphabeta) wordSectionCard(item),
-              ],
-            ),
-          ),
+          child: HookBuilder(builder: (context) {
+            final wordHub = useProvider(wordHubProvider);
+
+            return SingleChildScrollView(
+              child: Column(
+                children: [
+                  for (final row in wordHub.wordCategories.entries)
+                    wordSectionCard(row.key, row.value),
+                ],
+              ),
+            );
+          }),
         ),
       ],
     );
@@ -56,7 +62,7 @@ class WordView extends StatelessWidget {
   Widget statusOfWord() {
     return Consumer(
       builder: (context, watch, child) {
-        final words = watch(getAllWordsProvider).state;
+        final words = watch(getAllWordsStateProvider).state;
 
         return Row(
           children: [
@@ -90,7 +96,10 @@ class WordView extends StatelessWidget {
     );
   }
 
-  Column wordSectionCard(String alphaChar) {
+  Column wordSectionCard(
+    String alphaChar,
+    WordCategoryNotifier wordCategoryNotifier,
+  ) {
     return Column(
       children: [
         Card(
@@ -100,14 +109,12 @@ class WordView extends StatelessWidget {
             ],
           ),
         ),
-        Consumer(builder: (context, watch, child) {
-          final allWords = watch(getAllWordsProvider).state;
-          final wordByAlphaChar =
-              allWords.where((element) => element.word.startsWith(alphaChar));
+        HookBuilder(builder: (context) {
+          useListenable(wordCategoryNotifier);
 
           return Wrap(
             children: [
-              for (final word in wordByAlphaChar) wordItem(WordNotifier(word)),
+              for (final word in wordCategoryNotifier.list) wordItem(word),
             ],
           );
         }),

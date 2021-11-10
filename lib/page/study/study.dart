@@ -299,7 +299,7 @@ class StudyPage extends HookWidget {
     }
 
     // check for add or get from db
-    final allWordOnDB = context.read(getAllWordsProvider).state;
+    final allWordOnDB = context.read(getAllWordsStateProvider).state;
 
     for (final word
         in wordMap.values.expand((element) => element).map((e) => e.word)) {

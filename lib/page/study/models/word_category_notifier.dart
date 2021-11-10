@@ -6,17 +6,7 @@ import 'word_notifier.dart';
 class WordCategoryNotifier extends ChangeNotifier {
   final List<WordNotifier> list = [];
 
-  WordCategoryNotifier();
-
-  void add(Word word) {
-    final tempW = list.where((element) => element.word == word.word);
-
-    if (tempW.isEmpty) {
-      list.add(WordNotifier(word));
-    }
-
-    list.where((element) => element.word == word.word).first.count++;
-  }
+  void add(Word word) => addNotifier(WordNotifier(word));
 
   void addNotifier(WordNotifier word) {
     final tempW = list.where((element) => element.word == word.word);
@@ -26,5 +16,7 @@ class WordCategoryNotifier extends ChangeNotifier {
     }
 
     list.where((element) => element.word == word.word).first.count++;
+
+    notifyListeners();
   }
 }
