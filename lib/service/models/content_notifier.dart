@@ -26,23 +26,6 @@ class ContentNotifier extends ValueNotifier<Content> {
     for (final alphaChar in alphabeta) alphaChar: WordCategoryNotifier()
   };
 
-  String get wordCount {
-    var sum = 0;
-
-    for (var category in wordCategoris.values) sum += category.list.length;
-
-    return sum.toString();
-  }
-
-  String get allWordCount {
-    var sum = 0;
-
-    for (var category in wordCategoris.values)
-      for (var wordNotifier in category.list) sum += wordNotifier.count;
-
-    return sum.toString();
-  }
-
   void exportData() {
     if (!data.startsWith('[')) {
       return;
@@ -75,7 +58,9 @@ class ContentNotifier extends ValueNotifier<Content> {
           wordHub.wordNotifiers.where((element) => element.id == id);
 
       if (selection.isNotEmpty) {
-        wordNotifiers.add(selection.first);
+        wordNotifiers.add(
+          selection.first..addListener(() => this.notifyListeners()),
+        );
       }
     }
 
@@ -86,6 +71,40 @@ class ContentNotifier extends ValueNotifier<Content> {
     }
 
     notifyListeners();
+  }
+
+  void updateContent(String newContent) {
+    value = value.copyWith(content: newContent);
+  }
+}
+
+extension Get on ContentNotifier {
+  String get wordCount {
+    var sum = 0;
+
+    for (var category in wordCategoris.values) sum += category.list.length;
+
+    return sum.toString();
+  }
+
+  String get allWordCount {
+    var sum = 0;
+
+    for (var category in wordCategoris.values)
+      for (var wordNotifier in category.list) sum += wordNotifier.count;
+
+    return sum.toString();
+  }
+
+  double get awarnessPercent {
+    final ratio = (wordNotifiers.where((element) => element.know).length /
+        wordNotifiers.length);
+
+    if (ratio == 0) {
+      return 0;
+    }
+
+    return ratio * 100;
   }
 }
 
@@ -141,18 +160,5 @@ extension Util on ContentNotifier {
     final firstChar = wordNotifier.word.toLowerCase().substring(0, 1);
 
     wordCategoris[firstChar]!.addNotifier(wordNotifier);
-  }
-}
-
-extension Extra on ContentNotifier {
-  double get awarnessPercent {
-    final ratio = (wordNotifiers.where((element) => element.know).length /
-        wordNotifiers.length);
-
-    if (ratio == 0) {
-      return 0;
-    }
-
-    return ratio * 100;
   }
 }

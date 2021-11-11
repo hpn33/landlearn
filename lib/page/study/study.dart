@@ -231,6 +231,8 @@ class StudyPage extends HookWidget {
                           contentNotifier.value,
                           textController.text,
                         );
+
+                    contentNotifier.updateContent(textController.text);
                   }
 
                   editMode.state = !editMode.state;

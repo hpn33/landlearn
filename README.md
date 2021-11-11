@@ -125,11 +125,14 @@ http://www.english-for-students.com/Simple-Short-Stories.html
 * [x] show knowed word on study page
 
 * [x] many thing broken - fix analyze
-* [ ] sync awarness on content view - when work know update on wordview
+* [x] sync awarness on content view - when work know update on wordview
 
 
 ## subject
 
 - [x] easy adding content
 - [x] show knowing work on text content ( word by word )
+- [ ] study page good edit flow ( !!! ) (research plz )
+- [ ] improve analyze (can collect all word)
+
 
