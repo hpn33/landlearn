@@ -1,14 +1,12 @@
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
-import 'package:landlearn/page/study/models/model_exten.dart';
+import 'package:landlearn/page/home/word_hub.dart';
 import 'package:landlearn/service/db/database.dart';
 import 'package:landlearn/util/util.dart';
 
 import 'word_category_notifier.dart';
 import 'word_notifier.dart';
-
-export 'model_exten.dart' show Util;
 
 class ContentNotifier extends ValueNotifier<Content> {
   ContentNotifier(Content content) : super(content) {
@@ -20,8 +18,6 @@ class ContentNotifier extends ValueNotifier<Content> {
   String get content => value.content;
   String get data => value.data;
 
-  // List<WordData> wordDatas = [];
-  // List<int> get wordIds => wordDatas.map((e) => e.id).toList();
   List<int> wordIds = [];
 
   List<WordNotifier> wordNotifiers = [];
@@ -52,7 +48,6 @@ class ContentNotifier extends ValueNotifier<Content> {
       return;
     }
 
-    // wordDatas.clear();
     wordIds.clear();
 
     final List decoded = json.decode(data);
@@ -60,24 +55,24 @@ class ContentNotifier extends ValueNotifier<Content> {
     decoded.forEach(
       (item) {
         final id = item[0] as int;
-        // final count = item[1] as int;
-
-        // bool know = false;
-        // if (item.length >= 3) {
-        //   know = item[2] as bool;
-        // }
 
         wordIds.add(id);
-        // wordDatas.add(WordData(id: id));
       },
     );
   }
 
-  Future<void> getWordsFromDB(List<WordNotifier> wordOfDB) async {
+  void updateData() {
+    value = value.copyWith(data: this.toJson());
+
+    exportData();
+  }
+
+  void loadData(WordHub wordHub) {
     wordNotifiers.clear();
 
     for (final id in wordIds) {
-      final selection = wordOfDB.where((element) => element.id == id);
+      final selection =
+          wordHub.wordNotifiers.where((element) => element.id == id);
 
       if (selection.isNotEmpty) {
         wordNotifiers.add(selection.first);
@@ -90,25 +85,68 @@ class ContentNotifier extends ValueNotifier<Content> {
       wordCategoris[firstChar]!.addNotifier(wordNotifier);
     }
 
-    notify();
-  }
-
-  void notify() => notifyListeners();
-
-  void updateData() {
-    value = value.copyWith(data: this.toJson());
-
-    exportData();
+    notifyListeners();
   }
 }
 
-// extension DBUtil on ContentNotifier {
+extension Util on ContentNotifier {
+  bool isKnow(String w) {
+    final word = get(w);
 
-//   Future<void> updateDataToDB(Database db) async {
-//     await db.contentDao.updateData(value, toJson());
+    if (word == null) {
+      return false;
+    }
 
-//     value = value.copyWith(data: this.toJson());
+    return word.know;
+  }
 
-//     exportData();
-//   }
-// }
+  Word? get(String word) {
+    final wordNotifiers = getNotifier(word);
+
+    if (wordNotifiers == null) {
+      return null;
+    }
+
+    return wordNotifiers.value;
+  }
+
+  WordNotifier? getNotifier(String word) {
+    if (word.isEmpty) {
+      return null;
+    }
+
+    final lowerCase = word.toLowerCase();
+    final selection = wordCategoris[lowerCase.substring(0, 1)]!
+        .list
+        .where((element) => element.word == lowerCase);
+
+    if (selection.isEmpty) {
+      return null;
+    }
+
+    return selection.first;
+  }
+
+  String toJson() {
+    final m = wordNotifiers.map((e) => [e.id, e.count, e.know]).toList();
+
+    return jsonEncode(m);
+  }
+
+  void addWord(Word word) => addWordNotifier(WordNotifier(word));
+
+  void addWordNotifier(WordNotifier wordNotifier) {
+    wordNotifiers.add(wordNotifier);
+
+    final firstChar = wordNotifier.word.toLowerCase().substring(0, 1);
+
+    wordCategoris[firstChar]!.addNotifier(wordNotifier);
+  }
+}
+
+extension Extra on ContentNotifier {
+  double get awarnessPercent =>
+      ((wordNotifiers.where((element) => element.know).length /
+              wordNotifiers.length) *
+          100);
+}

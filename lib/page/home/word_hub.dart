@@ -1,8 +1,8 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:landlearn/page/home/word_view/word_view_controller.dart';
-import 'package:landlearn/page/study/models/word_category_notifier.dart';
-import 'package:landlearn/page/study/models/word_notifier.dart';
 import 'package:landlearn/service/db/database.dart';
+import 'package:landlearn/service/models/word_category_notifier.dart';
+import 'package:landlearn/service/models/word_notifier.dart';
 import 'package:landlearn/util/util.dart';
 
 final wordHubProvider = Provider.autoDispose((ref) {

@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:landlearn/page/dialog/add_content_dialog.dart';
 import 'package:landlearn/page/home/content_view/content_view_vm.dart';
+import 'package:landlearn/page/home/word_hub.dart';
 import 'package:landlearn/page/study/study.dart';
 import 'package:landlearn/page/study/study_controller.dart';
-import 'package:landlearn/service/model/content_data.dart';
+import 'package:landlearn/service/models/content_notifier.dart';
 
 class ContentView extends StatelessWidget {
   const ContentView({Key? key}) : super(key: key);
@@ -35,7 +36,7 @@ class ContentView extends StatelessWidget {
 
   Widget contentListWidget(BuildContext context) {
     return Consumer(builder: (context, watch, child) {
-      final contentDataList = watch(contentDatasListProvider).state;
+      final contentNotifiers = watch(getContentNotifiersStateProvider).state;
 
       return Row(
         children: [
@@ -43,8 +44,8 @@ class ContentView extends StatelessWidget {
             child: SingleChildScrollView(
               child: Column(
                 children: [
-                  for (final content in contentDataList)
-                    contentItem(context, content),
+                  for (final contentNotifier in contentNotifiers)
+                    contentItem(context, contentNotifier),
                 ],
               ),
             ),
@@ -54,12 +55,13 @@ class ContentView extends StatelessWidget {
     });
   }
 
-  Widget contentItem(BuildContext context, ContentData contentData) {
+  Widget contentItem(BuildContext context, ContentNotifier contentNotifier) {
     return Card(
       child: InkWell(
         onTap: () {
-          context.read(selectedContentIdProvider).state =
-              contentData.content.id;
+          contentNotifier.loadData(context.read(wordHubProvider));
+
+          context.read(selectedContentStateProvider).state = contentNotifier;
 
           Navigator.push(
             context,
@@ -70,9 +72,9 @@ class ContentView extends StatelessWidget {
           padding: const EdgeInsets.all(8.0),
           child: Row(
             children: [
-              Text(contentData.content.title),
+              Text(contentNotifier.title),
               Spacer(),
-              Text(contentData.awarnessPercent.toStringAsFixed(1) + '%'),
+              Text(contentNotifier.awarnessPercent.toStringAsFixed(1) + '%'),
             ],
           ),
         ),

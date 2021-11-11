@@ -3,41 +3,36 @@
 graph TD;
 
 
+10(dbProvider) --> 2((HomePage)) ;
 
-10(dbProvider) --> 3((HomePage)) ;
 
 9(wordHubProvider) --> 4((StudyPage)) ;
 10(dbProvider) --> 4((StudyPage)) ;
-13[[getContentNotifierProvider]] --> 4((StudyPage)) ;
-14[[textControllerProvider]] --> 4((StudyPage)) ;
+11[[selectedContentStateProvider]] --> 4((StudyPage)) ;
+12[[textControllerProvider]] --> 4((StudyPage)) ;
 
 
 
 9(wordHubProvider) --> 7((WordView)) ;
 10(dbProvider) --> 7((WordView)) ;
 
-11[[selectedContentIdProvider]] --> 8((ContentView)) ;
-16[[contentDatasListProvider]] --> 8((ContentView)) ;
+9(wordHubProvider) --> 8((ContentView)) ;
+11[[selectedContentStateProvider]] --> 8((ContentView)) ;
+14[[getContentNotifiersStateProvider]] --> 8((ContentView)) ;
 
-18[[getAllWordsStateProvider]] --> 9(wordHubProvider) ;
+16[[getAllWordsStateProvider]] --> 9(wordHubProvider) ;
 
 
 
-10(dbProvider) --> 12>_getContentStreamProvider] ;
-11[[selectedContentIdProvider]] --> 12>_getContentStreamProvider] ;
+11[[selectedContentStateProvider]] --> 12[[textControllerProvider]] ;
 
-9(wordHubProvider) --> 13[[getContentNotifierProvider]] ;
-12>_getContentStreamProvider] --> 13[[getContentNotifierProvider]] ;
+10(dbProvider) --> 13>watchContentsProvider] ;
 
-13[[getContentNotifierProvider]] --> 14[[textControllerProvider]] ;
+13>watchContentsProvider] --> 14[[getContentNotifiersStateProvider]] ;
 
-10(dbProvider) --> 15>contentsStreamProvider] ;
+10(dbProvider) --> 15>getAllWordsFutureProvider] ;
 
-15>contentsStreamProvider] --> 16[[contentDatasListProvider]] ;
-
-10(dbProvider) --> 17>getAllWordsFutureProvider] ;
-
-17>getAllWordsFutureProvider] --> 18[[getAllWordsStateProvider]] ;
+15>getAllWordsFutureProvider] --> 16[[getAllWordsStateProvider]] ;
 
 
 ```

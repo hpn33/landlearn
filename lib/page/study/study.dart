@@ -2,14 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:landlearn/page/home/word_hub.dart';
-import 'package:landlearn/page/study/models/model_exten.dart';
 import 'package:landlearn/page/study/study_controller.dart';
 import 'package:landlearn/service/db/database.dart';
+import 'package:landlearn/service/models/word_category_notifier.dart';
+import 'package:landlearn/service/models/word_data.dart';
+import 'package:landlearn/service/models/word_notifier.dart';
+import 'package:landlearn/service/models/content_notifier.dart';
 import 'package:landlearn/util/util.dart';
-
-import 'models/word_category_notifier.dart';
-import 'models/word_data.dart';
-import 'models/word_notifier.dart';
 
 /// TODO:  goal: improve data flow in study page
 /// refactor
@@ -36,11 +35,6 @@ class StudyPage extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    // load data
-    useEffect(() {
-      context.read(getContentNotifierProvider);
-    }, []);
-
     return Material(
       child: Column(
         children: [
@@ -66,12 +60,10 @@ class StudyPage extends HookWidget {
   Widget contentView() {
     return HookBuilder(builder: (context) {
       final textController = useProvider(textControllerProvider);
-
       final editMode = useProvider(editModeProvider).state;
+      final contentNotifier = useProvider(selectedContentStateProvider).state!;
 
-      final contentNotifier = useProvider(getContentNotifierProvider).state;
-
-      useListenable(contentNotifier ?? ChangeNotifier());
+      useListenable(contentNotifier);
 
       return SingleChildScrollView(
         child: editMode
@@ -81,57 +73,56 @@ class StudyPage extends HookWidget {
                 maxLines: 1000,
               )
             // : Text(textController.text),
-            : contentNotifier == null
-                ? Text('- - - -')
-                : RichText(
-                    text: TextSpan(
-                      children: [
-                        for (final paragh
-                            in textController.text.split('\n')) ...[
-                          TextSpan(
-                            children: [
-                              for (final word in paragh.split(_regex))
-                                WidgetSpan(
-                                  child: HookBuilder(
-                                    builder: (context) {
-                                      final w =
-                                          contentNotifier.getNotifier(word);
+            : RichText(
+                text: TextSpan(
+                  children: [
+                    for (final paragh in textController.text.split('\n')) ...[
+                      TextSpan(
+                        children: [
+                          for (final word in paragh.split(_regex))
+                            WidgetSpan(
+                              child: HookBuilder(
+                                builder: (context) {
+                                  final wordNotifier =
+                                      contentNotifier.getNotifier(word);
 
-                                      useListenable(w ?? ChangeNotifier());
+                                  useListenable(
+                                      wordNotifier ?? ChangeNotifier());
 
-                                      if (w == null) {
-                                        return Text('($word)');
-                                      }
+                                  if (wordNotifier == null) {
+                                    return Text('($word)');
+                                  }
 
-                                      return InkWell(
-                                        onTap: () async {
-                                          final db = context.read(dbProvider);
+                                  return InkWell(
+                                    onTap: () async {
+                                      final db = context.read(dbProvider);
 
-                                          await db.wordDao.updateKnow(w.value);
-                                          w.toggleKnow();
-                                        },
-                                        child: Text(
-                                          word + ' ',
-                                          style: TextStyle(
-                                            color: w.know
-                                                ? Colors.green
-                                                : Colors.black,
-                                            decoration: w.know
-                                                ? TextDecoration.underline
-                                                : null,
-                                          ),
-                                        ),
-                                      );
+                                      await db.wordDao
+                                          .updateKnow(wordNotifier.value);
+                                      wordNotifier.toggleKnow();
                                     },
-                                  ),
-                                ),
-                            ],
-                          ),
-                          TextSpan(text: '\n'),
+                                    child: Text(
+                                      word + ' ',
+                                      style: TextStyle(
+                                        color: wordNotifier.know
+                                            ? Colors.green
+                                            : Colors.black,
+                                        decoration: wordNotifier.know
+                                            ? TextDecoration.underline
+                                            : null,
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
                         ],
-                      ],
-                    ),
-                  ),
+                      ),
+                      TextSpan(text: '\n'),
+                    ],
+                  ],
+                ),
+              ),
       );
     });
   }
@@ -142,12 +133,8 @@ class StudyPage extends HookWidget {
     // - [x] update word know state
     // - [ ] remove on update
     return HookBuilder(builder: (context) {
-      final contentNotifier = useProvider(getContentNotifierProvider).state;
-      useListenable(contentNotifier ?? ChangeNotifier());
-
-      if (contentNotifier == null) {
-        return Center(child: Text('wait'));
-      }
+      final contentNotifier = useProvider(selectedContentStateProvider).state!;
+      useListenable(contentNotifier);
 
       final wordCategoris = contentNotifier.wordCategoris;
 
@@ -210,9 +197,9 @@ class StudyPage extends HookWidget {
   Widget topBar() {
     return HookBuilder(
       builder: (context) {
-        // final map = useProvider(wordMapProvider);
         final editMode = useProvider(editModeProvider);
-        final contentNotifier = useProvider(getContentNotifierProvider).state;
+        final contentNotifier =
+            useProvider(selectedContentStateProvider).state!;
 
         return Material(
           elevation: 6,
@@ -220,11 +207,11 @@ class StudyPage extends HookWidget {
             children: [
               BackButton(),
               Text(
-                'text word\n${contentNotifier?.allWordCount}',
+                'text word\n${contentNotifier.allWordCount}',
                 textAlign: TextAlign.center,
               ),
               Text(
-                'word count\n${contentNotifier?.wordCount}',
+                'word count\n${contentNotifier.wordCount}',
                 textAlign: TextAlign.center,
               ),
               ElevatedButton(
@@ -234,16 +221,16 @@ class StudyPage extends HookWidget {
               ElevatedButton(
                 child: Text(editMode.state ? 'done' : 'edit'),
                 onPressed: () async {
-                  final contentData =
-                      context.read(getContentNotifierProvider).state;
+                  final contentNotifier =
+                      context.read(selectedContentStateProvider).state!;
 
                   final textController = context.read(textControllerProvider);
 
-                  if (textController.text != contentData!.content) {
-                    await context
-                        .read(dbProvider)
-                        .contentDao
-                        .updateContent(contentData.value, textController.text);
+                  if (textController.text != contentNotifier.content) {
+                    await context.read(dbProvider).contentDao.updateContent(
+                          contentNotifier.value,
+                          textController.text,
+                        );
                   }
 
                   editMode.state = !editMode.state;
@@ -265,11 +252,7 @@ class StudyPage extends HookWidget {
   ///
   /// ready to use
   void analyze(BuildContext context) async {
-    final contentNotifier = context.read(getContentNotifierProvider).state;
-
-    if (contentNotifier == null) {
-      return;
-    }
+    final contentNotifier = context.read(selectedContentStateProvider).state!;
 
     final db = context.read(dbProvider);
     final wordMap = <String, List<WordData>>{
@@ -316,8 +299,7 @@ class StudyPage extends HookWidget {
       contentNotifier.updateData();
     }
 
-    contentNotifier.getWordsFromDB(allWordOnDB);
-    // contentNotifier.notify();
+    contentNotifier.loadData(context.read(wordHubProvider));
   }
 
   Future<WordNotifier> getOrAddWord(
