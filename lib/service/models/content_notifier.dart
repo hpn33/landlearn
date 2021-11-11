@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:landlearn/page/home/word_hub.dart';
 import 'package:landlearn/service/db/database.dart';
+import 'package:landlearn/service/models/word_data.dart';
 import 'package:landlearn/util/util.dart';
 
 import 'word_category_notifier.dart';
@@ -18,11 +19,9 @@ class ContentNotifier extends ValueNotifier<Content> {
   String get content => value.content;
   String get data => value.data;
 
-  List<int> wordIds = [];
-
-  List<WordNotifier> wordNotifiers = [];
-
-  final Map<String, WordCategoryNotifier> wordCategoris = {
+  final wordDatas = <WordData>[];
+  final wordNotifiers = <WordNotifier>[];
+  final wordCategoris = <String, WordCategoryNotifier>{
     for (final alphaChar in alphabeta) alphaChar: WordCategoryNotifier()
   };
 
@@ -31,15 +30,16 @@ class ContentNotifier extends ValueNotifier<Content> {
       return;
     }
 
-    wordIds.clear();
+    wordDatas.clear();
 
     final List decoded = json.decode(data);
 
     decoded.forEach(
       (item) {
         final id = item[0] as int;
+        final count = item[1] as int;
 
-        wordIds.add(id);
+        wordDatas.add(WordData(id: id, count: count));
       },
     );
   }
@@ -53,17 +53,20 @@ class ContentNotifier extends ValueNotifier<Content> {
   void loadData(WordHub wordHub) {
     wordNotifiers.clear();
 
-    for (final id in wordIds) {
+    for (final wordData in wordDatas) {
       final selection =
-          wordHub.wordNotifiers.where((element) => element.id == id);
+          wordHub.wordNotifiers.where((element) => element.id == wordData.id);
 
       if (selection.isNotEmpty) {
-        wordNotifiers.add(
-          selection.first..addListener(() => this.notifyListeners()),
-        );
+        final wordNotifier = selection.first
+          ..addListener(() => this.notifyListeners())
+          ..contentCount = wordData.count;
+
+        wordNotifiers.add(wordNotifier);
       }
     }
 
+    // add to categories
     for (final wordNotifier in wordNotifiers) {
       final firstChar = wordNotifier.word.substring(0, 1);
 
@@ -78,13 +81,21 @@ class ContentNotifier extends ValueNotifier<Content> {
   void updateContent(String newContent) {
     value = value.copyWith(content: newContent);
   }
+
+  void clear() {
+    wordDatas.clear();
+    wordNotifiers.clear();
+    wordCategoris.values.forEach((element) => element.list.clear());
+  }
 }
 
 extension Get on ContentNotifier {
   String get wordCount {
     var sum = 0;
 
-    for (var category in wordCategoris.values) sum += category.list.length;
+    for (var category in wordCategoris.values) {
+      sum += category.list.length;
+    }
 
     return sum.toString();
   }
@@ -92,8 +103,9 @@ extension Get on ContentNotifier {
   String get allWordCount {
     var sum = 0;
 
-    for (var category in wordCategoris.values)
-      for (var wordNotifier in category.list) sum += wordNotifier.count;
+    for (var wordNotifier in wordNotifiers) {
+      sum += wordNotifier.contentCount;
+    }
 
     return sum.toString();
   }
@@ -149,12 +161,10 @@ extension Util on ContentNotifier {
   }
 
   String toJson() {
-    final m = wordNotifiers.map((e) => [e.id, e.count, e.know]).toList();
+    final m = wordNotifiers.map((e) => [e.id, e.contentCount, e.know]).toList();
 
     return jsonEncode(m);
   }
-
-  void addWord(Word word) => addWordNotifier(WordNotifier(word));
 
   void addWordNotifier(WordNotifier wordNotifier) {
     wordNotifiers.add(wordNotifier);

@@ -6,7 +6,9 @@ class WordNotifier extends ValueNotifier<Word> {
   String get word => value.word;
   bool get know => value.know;
 
-  int count = 0;
+  // on every load change
+  int contentCount = 0;
+  int totalCount = 0;
 
   WordNotifier(Word wordObject) : super(wordObject);
 

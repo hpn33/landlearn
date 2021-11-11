@@ -182,9 +182,9 @@ class StudyPage extends HookWidget {
             child: Padding(
               padding: const EdgeInsets.all(4.0),
               child: Text(
-                '${wordNotifier.word}',
+                '${wordNotifier.word} ${wordNotifier.contentCount}',
                 style: TextStyle(
-                  fontSize: 12.0, //+ word.count,
+                  fontSize: 12.0 + wordNotifier.contentCount,
                 ),
               ),
             ),
@@ -200,6 +200,8 @@ class StudyPage extends HookWidget {
         final editMode = useProvider(editModeProvider);
         final contentNotifier =
             useProvider(selectedContentStateProvider).state!;
+
+        useListenable(contentNotifier);
 
         return Material(
           elevation: 6,
@@ -255,6 +257,7 @@ class StudyPage extends HookWidget {
   /// ready to use
   void analyze(BuildContext context) async {
     final contentNotifier = context.read(selectedContentStateProvider).state!;
+    final wordHub = context.read(wordHubProvider);
 
     final db = context.read(dbProvider);
     final wordMap = <String, List<WordData>>{
@@ -266,7 +269,7 @@ class StudyPage extends HookWidget {
         .map((e) => e.toLowerCase())
         .toList();
 
-    // by default remove empty and dublicat word
+    // collect and count words
     for (final word in wordExtractedFromContentText) {
       if (word.isEmpty) {
         continue;
@@ -284,11 +287,12 @@ class StudyPage extends HookWidget {
     }
 
     // check for add or get from db
-    final allWordOnDB = context.read(wordHubProvider).wordNotifiers;
+    final allWordOnDB = wordHub.wordNotifiers;
+    contentNotifier.clear();
 
-    for (final word
-        in wordMap.values.expand((element) => element).map((e) => e.word)) {
-      final wordNotifier = await getOrAddWord(db, allWordOnDB, word);
+    for (final wordData in wordMap.values.expand((element) => element)) {
+      final wordNotifier = await getOrAddWord(db, allWordOnDB, wordData)
+        ..contentCount = wordData.count;
 
       contentNotifier.addWordNotifier(wordNotifier);
     }
@@ -296,24 +300,24 @@ class StudyPage extends HookWidget {
     // load word
     final newData = contentNotifier.toJson();
 
-    if (contentNotifier.data != newData) {
-      await db.contentDao.updateData(contentNotifier.value, newData);
-      contentNotifier.updateData();
-    }
+    // if (contentNotifier.data != newData) {
+    await db.contentDao.updateData(contentNotifier.value, newData);
+    contentNotifier.updateData();
+    // }
 
-    contentNotifier.loadData(context.read(wordHubProvider));
+    contentNotifier.loadData(wordHub);
   }
 
   Future<WordNotifier> getOrAddWord(
     Database db,
     List<WordNotifier> allWordInDB,
-    String word,
+    WordData wordData,
   ) async {
     final selection =
-        allWordInDB.where((element) => element.word == word).toList();
+        allWordInDB.where((element) => element.word == wordData.word).toList();
 
     if (selection.isEmpty) {
-      return WordNotifier(await db.wordDao.add(word));
+      return WordNotifier(await db.wordDao.add(wordData.word));
     }
 
     return selection.first;

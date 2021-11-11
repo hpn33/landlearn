@@ -126,6 +126,9 @@ http://www.english-for-students.com/Simple-Short-Stories.html
 
 * [x] many thing broken - fix analyze
 * [x] sync awarness on content view - when work know update on wordview
+* [x] count of word ( on project )
+* [ ] count of word ( totaly )
+* [x] refresh and save data after analyze
 
 
 ## subject
@@ -134,5 +137,7 @@ http://www.english-for-students.com/Simple-Short-Stories.html
 - [x] show knowing work on text content ( word by word )
 - [ ] study page good edit flow ( !!! ) (research plz )
 - [ ] improve analyze (can collect all word) and refresh data (add to wordhub)
+- [ ] some word not in en alphaChar ( solution )
+- [ ] different view for words ( categories  )
 
 
