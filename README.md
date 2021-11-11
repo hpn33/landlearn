@@ -133,6 +133,6 @@ http://www.english-for-students.com/Simple-Short-Stories.html
 - [x] easy adding content
 - [x] show knowing work on text content ( word by word )
 - [ ] study page good edit flow ( !!! ) (research plz )
-- [ ] improve analyze (can collect all word)
+- [ ] improve analyze (can collect all word) and refresh data (add to wordhub)
 
 

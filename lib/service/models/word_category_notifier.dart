@@ -9,14 +9,20 @@ class WordCategoryNotifier extends ChangeNotifier {
   void add(Word word) => addNotifier(WordNotifier(word));
 
   void addNotifier(WordNotifier word) {
-    final tempW = list.where((element) => element.word == word.word);
+    final selection = list.where((element) => element.word == word.word);
 
-    if (tempW.isEmpty) {
+    if (selection.isEmpty) {
       list.add(word);
     }
 
-    list.where((element) => element.word == word.word).first.count++;
+    final wordNotifier =
+        list.where((element) => element.word == word.word).first;
+
+    wordNotifier.count++;
+    wordNotifier.addListener(() => this.notifyListeners());
 
     notifyListeners();
   }
+
+  void sort() => list.sort((a, b) => a.word.compareTo(b.word));
 }

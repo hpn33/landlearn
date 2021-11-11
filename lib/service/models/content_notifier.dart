@@ -70,6 +70,8 @@ class ContentNotifier extends ValueNotifier<Content> {
       wordCategoris[firstChar]!.addNotifier(wordNotifier);
     }
 
+    wordCategoris.values.forEach((element) => element.sort());
+
     notifyListeners();
   }
 
