@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:landlearn/page/dialog/add_content_dialog.dart';
 import 'package:landlearn/page/home/content_view/content_view_vm.dart';
-import 'package:landlearn/page/home/word_hub.dart';
 import 'package:landlearn/page/study/study.dart';
 import 'package:landlearn/page/study/study_controller.dart';
 import 'package:landlearn/service/models/content_notifier.dart';
@@ -56,29 +56,31 @@ class ContentView extends StatelessWidget {
   }
 
   Widget contentItem(BuildContext context, ContentNotifier contentNotifier) {
-    return Card(
-      child: InkWell(
-        onTap: () {
-          contentNotifier.loadData(context.read(wordHubProvider));
+    return HookBuilder(builder: (context) {
+      useListenable(contentNotifier);
 
-          context.read(selectedContentStateProvider).state = contentNotifier;
+      return Card(
+        child: InkWell(
+          onTap: () {
+            context.read(selectedContentStateProvider).state = contentNotifier;
 
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (c) => StudyPage()),
-          );
-        },
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Row(
-            children: [
-              Text(contentNotifier.title),
-              Spacer(),
-              Text(contentNotifier.awarnessPercent.toStringAsFixed(1) + '%'),
-            ],
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (c) => StudyPage()),
+            );
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              children: [
+                Text(contentNotifier.title),
+                Spacer(),
+                Text(contentNotifier.awarnessPercent.toStringAsFixed(1) + '%'),
+              ],
+            ),
           ),
         ),
-      ),
-    );
+      );
+    });
   }
 }

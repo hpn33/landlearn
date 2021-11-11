@@ -145,8 +145,14 @@ extension Util on ContentNotifier {
 }
 
 extension Extra on ContentNotifier {
-  double get awarnessPercent =>
-      ((wordNotifiers.where((element) => element.know).length /
-              wordNotifiers.length) *
-          100);
+  double get awarnessPercent {
+    final ratio = (wordNotifiers.where((element) => element.know).length /
+        wordNotifiers.length);
+
+    if (ratio == 0) {
+      return 0;
+    }
+
+    return ratio * 100;
+  }
 }

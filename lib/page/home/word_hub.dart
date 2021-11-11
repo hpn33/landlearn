@@ -5,7 +5,7 @@ import 'package:landlearn/service/models/word_category_notifier.dart';
 import 'package:landlearn/service/models/word_notifier.dart';
 import 'package:landlearn/util/util.dart';
 
-final wordHubProvider = Provider.autoDispose((ref) {
+final wordHubProvider = Provider((ref) {
   final allWords = ref.watch(getAllWordsStateProvider).state;
 
   return WordHub(allWords);
