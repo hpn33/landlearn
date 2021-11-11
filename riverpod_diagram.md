@@ -16,7 +16,6 @@ graph TD;
 9(wordHubProvider) --> 7((WordView)) ;
 10(dbProvider) --> 7((WordView)) ;
 
-9(wordHubProvider) --> 8((ContentView)) ;
 11[[selectedContentStateProvider]] --> 8((ContentView)) ;
 14[[getContentNotifiersStateProvider]] --> 8((ContentView)) ;
 
@@ -28,6 +27,7 @@ graph TD;
 
 10(dbProvider) --> 13>watchContentsProvider] ;
 
+9(wordHubProvider) --> 14[[getContentNotifiersStateProvider]] ;
 13>watchContentsProvider] --> 14[[getContentNotifiersStateProvider]] ;
 
 10(dbProvider) --> 15>getAllWordsFutureProvider] ;

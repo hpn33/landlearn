@@ -124,11 +124,12 @@ http://www.english-for-students.com/Simple-Short-Stories.html
 * [x] show awareness of content
 * [x] show knowed word on study page
 
-* [ ] many thing broken - fix analyze
+* [x] many thing broken - fix analyze
+* [ ] sync awarness on content view - when work know update on wordview
 
 
 ## subject
 
 - [x] easy adding content
-- [ ] show knowing work on text content ( word by word )
+- [x] show knowing work on text content ( word by word )
 
