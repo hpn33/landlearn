@@ -137,7 +137,7 @@ class WordView extends StatelessWidget {
           },
           child: Padding(
             padding: const EdgeInsets.all(4.0),
-            child: Text(wordNotifier.word),
+            child: Text(wordNotifier.word + ' ${wordNotifier.totalCount}'),
           ),
         ),
       );

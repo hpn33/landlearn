@@ -60,7 +60,8 @@ class ContentNotifier extends ValueNotifier<Content> {
       if (selection.isNotEmpty) {
         final wordNotifier = selection.first
           ..addListener(() => this.notifyListeners())
-          ..contentCount = wordData.count;
+          ..contentCount = wordData.count
+          ..totalCount = selection.first.totalCount + wordData.count;
 
         wordNotifiers.add(wordNotifier);
       }
