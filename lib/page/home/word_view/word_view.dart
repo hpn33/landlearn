@@ -59,9 +59,15 @@ class WordView extends StatelessWidget {
   }
 
   Widget statusOfWord() {
-    return Consumer(
-      builder: (context, watch, child) {
-        final words = watch(wordHubProvider).words;
+    return HookBuilder(
+      builder: (context) {
+        final wordHub = useProvider(wordHubProvider);
+        final wordNotifiers = wordHub.wordNotifiers;
+
+        useListenable(wordHub);
+
+        final totalCount = wordNotifiers.length;
+        final knowCount = wordNotifiers.where((element) => element.know).length;
 
         return Row(
           children: [
@@ -69,9 +75,7 @@ class WordView extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
-                  words.length.toString() +
-                      '/' +
-                      words.where((element) => !element.know).length.toString(),
+                  '$totalCount/${totalCount - knowCount}',
                 ),
               ),
             ),
@@ -79,14 +83,9 @@ class WordView extends StatelessWidget {
               color: Colors.green[200],
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Text(
-                    words.where((element) => element.know).length.toString() +
-                        ' ( %' +
-                        (words.where((element) => element.know).length /
-                                words.length *
-                                100)
-                            .toStringAsFixed(1) +
-                        ' )'),
+                child: Text('$knowCount ( %' +
+                    (knowCount / totalCount * 100).toStringAsFixed(1) +
+                    ' )'),
               ),
             ),
           ],

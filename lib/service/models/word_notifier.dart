@@ -12,7 +12,5 @@ class WordNotifier extends ValueNotifier<Word> {
 
   void toggleKnow() {
     value = value.copyWith(know: !know);
-
-    notifyListeners();
   }
 }

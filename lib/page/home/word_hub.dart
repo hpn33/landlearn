@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:landlearn/page/home/word_view/word_view_controller.dart';
 import 'package:landlearn/service/db/database.dart';
@@ -11,7 +12,7 @@ final wordHubProvider = Provider((ref) {
   return WordHub(allWords);
 });
 
-class WordHub {
+class WordHub extends ChangeNotifier {
   final List<Word> words;
 
   final List<WordNotifier> _wordNotifiers = [];
@@ -25,7 +26,11 @@ class WordHub {
   };
 
   WordHub(this.words) {
-    _wordNotifiers.addAll(words.map((e) => WordNotifier(e)));
+    _wordNotifiers.addAll(
+      words.map(
+        (e) => WordNotifier(e)..addListener(() => this.notifyListeners()),
+      ),
+    );
 
     for (final wordNotifier in _wordNotifiers) {
       wordCategories[wordNotifier.word.substring(0, 1)]!
