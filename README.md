@@ -129,6 +129,7 @@ http://www.english-for-students.com/Simple-Short-Stories.html
 * [x] count of word ( on project )
 * [x] count of word ( totaly )
 * [x] refresh and save data after analyze
+* [ ] search bar for word
 
 
 ## subject
@@ -139,5 +140,6 @@ http://www.english-for-students.com/Simple-Short-Stories.html
 - [ ] improve analyze (can collect all word) and refresh data (add to wordhub)
 - [ ] some word not in en alphaChar ( solution )
 - [ ] different view for words ( categories - count )
+- [ ] different reading mode ( read only - edit - show knowage - tooltip )
 
 

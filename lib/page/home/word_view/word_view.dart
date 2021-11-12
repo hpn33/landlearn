@@ -43,13 +43,16 @@ class WordView extends StatelessWidget {
           child: HookBuilder(builder: (context) {
             final wordHub = useProvider(wordHubProvider);
 
-            return SingleChildScrollView(
-              child: Column(
-                children: [
-                  for (final row in wordHub.wordCategories.entries)
-                    wordSectionCard(row.key, row.value),
-                ],
-              ),
+            final wordCategories = wordHub.wordCategories.entries;
+
+            return ListView.builder(
+              itemCount: wordCategories.length,
+              itemBuilder: (context, index) {
+                final alphaChar = wordCategories.elementAt(index).key;
+                final category = wordCategories.elementAt(index).value;
+
+                return wordSectionCard(alphaChar, category);
+              },
             );
           }),
         ),
@@ -99,20 +102,26 @@ class WordView extends StatelessWidget {
     return Column(
       children: [
         Card(
-          child: Row(
-            children: [
-              Text(alphaChar),
-            ],
-          ),
+          child: Row(children: [Text(alphaChar)]),
         ),
         HookBuilder(builder: (context) {
           useListenable(wordCategoryNotifier);
 
-          return Wrap(
-            children: [
-              for (final word in wordCategoryNotifier.list) wordItem(word),
-            ],
+          return ListView.builder(
+            itemCount: wordCategoryNotifier.list.length,
+            shrinkWrap: true,
+            itemBuilder: (context, index) {
+              final word = wordCategoryNotifier.list[index];
+
+              return wordItem(word);
+            },
           );
+
+          // return Wrap(
+          //   children: [
+          //     for (final word in wordCategoryNotifier.list) wordItem(word),
+          //   ],
+          // );
         }),
         SizedBox(height: 30),
       ],
