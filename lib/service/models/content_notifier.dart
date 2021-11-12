@@ -73,8 +73,7 @@ extension Flow on ContentNotifier {
 
       if (selection.isNotEmpty) {
         final wordNotifier = selection.first
-          ..addListener(() => this.notify())
-          ..increaseTotalCount(wordData.count);
+          ..setContentNotifier(this, wordData);
 
         wordNotifiers.add(wordNotifier);
       }
@@ -92,16 +91,9 @@ extension Flow on ContentNotifier {
     notify();
   }
 
-  void selectAndLoad() {
-    for (final wordNotifier in wordNotifiers) {
-      final selection =
-          wordDatas.where((element) => element.id == wordNotifier.id);
-
-      if (selection.isNotEmpty) {
-        wordNotifier.setContentCount(selection.first.count);
-      }
-    }
-  }
+  // void selectAndLoad() {
+  // wordNotifiers.forEach((element) => element.setContentCount(this.id));
+  // }
 }
 
 extension Get on ContentNotifier {
@@ -119,7 +111,7 @@ extension Get on ContentNotifier {
     var sum = 0;
 
     for (var wordNotifier in wordNotifiers) {
-      sum += wordNotifier.contentCount;
+      sum += wordNotifier.getContentCount(this.id);
     }
 
     return sum.toString();
@@ -176,7 +168,9 @@ extension Util on ContentNotifier {
   }
 
   String toJson() {
-    final m = wordNotifiers.map((e) => [e.id, e.contentCount, e.know]).toList();
+    final m = wordNotifiers
+        .map((e) => [e.id, e.getContentCount(this.id), e.know])
+        .toList();
 
     return jsonEncode(m);
   }

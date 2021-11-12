@@ -168,6 +168,11 @@ class StudyPage extends HookWidget {
       builder: (context) {
         useListenable(wordNotifier);
 
+        final contentNotifier =
+            context.read(selectedContentStateProvider).state!;
+
+        final contentCount = wordNotifier.getContentCount(contentNotifier.id);
+
         return Card(
           color: wordNotifier.know ? Colors.green[100] : null,
           child: InkWell(
@@ -182,9 +187,9 @@ class StudyPage extends HookWidget {
             child: Padding(
               padding: const EdgeInsets.all(4.0),
               child: Text(
-                '${wordNotifier.word} ${wordNotifier.contentCount}',
+                '${wordNotifier.word} $contentCount',
                 style: TextStyle(
-                  fontSize: 12.0 + wordNotifier.contentCount,
+                  fontSize: 12.0 + contentCount,
                 ),
               ),
             ),
@@ -291,8 +296,7 @@ class StudyPage extends HookWidget {
     contentNotifier.clear();
 
     for (final wordData in wordMap.values.expand((element) => element)) {
-      final wordNotifier = await getOrAddWord(db, allWordOnDB, wordData)
-        ..contentCount = wordData.count;
+      final wordNotifier = await getOrAddWord(db, allWordOnDB, wordData);
 
       contentNotifier.addWordNotifier(wordNotifier);
     }

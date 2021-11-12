@@ -1,14 +1,31 @@
 import 'package:flutter/foundation.dart';
 import 'package:landlearn/service/db/database.dart';
 
+import 'content_notifier.dart';
+import 'word_data.dart';
+
 class WordNotifier extends ValueNotifier<Word> {
   int get id => value.id;
   String get word => value.word;
   bool get know => value.know;
 
   // on every load change
-  int contentCount = 0;
-  int totalCount = 0;
+  int _lastContentId = -1;
+  int _contentCount = 0;
+  int getContentCount(int contentId) {
+    if (_lastContentId != contentId) {
+      _contentCount = wordDataCatch[contentId]!.count;
+    }
+
+    return _contentCount;
+  }
+
+  int get totalCount => wordDataCatch.values
+      .map((e) => e.count)
+      .reduce((value, element) => value + element);
+
+  // contentId, wordData
+  final wordDataCatch = <int, WordData>{};
 
   WordNotifier(Word wordObject) : super(wordObject);
 
@@ -16,11 +33,9 @@ class WordNotifier extends ValueNotifier<Word> {
     value = value.copyWith(know: !know);
   }
 
-  void increaseTotalCount(int count) {
-    totalCount += count;
-  }
+  void setContentNotifier(ContentNotifier contentNotifier, WordData wordData) {
+    addListener(() => contentNotifier.notify());
 
-  void setContentCount(int count) {
-    contentCount = count;
+    wordDataCatch[contentNotifier.id] = wordData;
   }
 }
