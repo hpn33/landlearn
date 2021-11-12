@@ -1,19 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:landlearn/page/home/word_view/word_view_controller.dart';
 import 'package:landlearn/service/db/database.dart';
 import 'package:landlearn/service/models/word_category_notifier.dart';
 import 'package:landlearn/service/models/word_notifier.dart';
 import 'package:landlearn/util/util.dart';
 
-final wordHubProvider = Provider((ref) {
-  final allWords = ref.watch(getAllWordsStateProvider).state;
-
-  return WordHub(allWords);
-});
+final wordHubProvider = Provider((ref) => WordHub());
 
 class WordHub extends ChangeNotifier {
-  final List<Word> words;
+  final List<Word> words = [];
 
   final List<WordNotifier> _wordNotifiers = [];
   List<WordNotifier> get wordNotifiers => wordCategories.values
@@ -25,7 +20,14 @@ class WordHub extends ChangeNotifier {
     for (final alphaChar in alphabeta) alphaChar: WordCategoryNotifier(),
   };
 
-  WordHub(this.words) {
+  // functions
+
+  void load([List<Word>? newWords]) {
+    if (newWords != null) {
+      words.clear();
+      words.addAll(newWords);
+    }
+
     _wordNotifiers.addAll(
       words.map(
         (e) => WordNotifier(e)..addListener(() => this.notifyListeners()),

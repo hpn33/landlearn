@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:landlearn/page/home/word_hub.dart';
-import 'package:landlearn/service/db/database.dart';
+import 'package:landlearn/service/models/word_hub.dart';
 import 'package:landlearn/service/models/word_category_notifier.dart';
 import 'package:landlearn/service/models/word_notifier.dart';
 
@@ -68,15 +67,14 @@ class WordView extends StatelessWidget {
 
         final totalCount = wordNotifiers.length;
         final knowCount = wordNotifiers.where((element) => element.know).length;
+        final unknowCount = totalCount - knowCount;
 
         return Row(
           children: [
             Card(
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  '$totalCount/${totalCount - knowCount}',
-                ),
+                child: Text('$totalCount/$unknowCount'),
               ),
             ),
             Card(
@@ -128,12 +126,8 @@ class WordView extends StatelessWidget {
       return Card(
         color: wordNotifier.know ? Colors.green[100] : null,
         child: InkWell(
-          onTap: () async {
-            final db = context.read(dbProvider);
-
-            await db.wordDao.updateKnow(wordNotifier.value);
-
-            wordNotifier.toggleKnow();
+          onTap: () {
+            wordNotifier.toggleKnowToDB(context);
           },
           child: Padding(
             padding: const EdgeInsets.all(4.0),

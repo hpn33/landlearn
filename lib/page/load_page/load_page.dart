@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:landlearn/page/home/home.dart';
+import 'package:landlearn/service/db/database.dart';
+import 'package:landlearn/service/models/content_hub.dart';
+import 'package:landlearn/service/models/word_hub.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class LoadPage extends HookWidget {
+class LoadPage extends StatelessWidget {
   const LoadPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    // final hub = useProvider(hubProvider);
-
-    Future.delayed(Duration(seconds: 1)).then(
+    Future.wait([loadData(context)]).then(
       (value) {
         Navigator.pop(context);
         Navigator.push(
@@ -26,5 +27,19 @@ class LoadPage extends HookWidget {
         ),
       ),
     );
+  }
+
+  Future<void> loadData(BuildContext context) async {
+    final db = context.read(dbProvider);
+    final wordHub = context.read(wordHubProvider);
+    final contentHub = context.read(contentHubProvider);
+
+    final words = await db.wordDao.getAll();
+    wordHub.load(words);
+
+    final contents = await db.contentDao.getAll();
+    contentHub.load(wordHub, contents);
+
+    await Future.delayed(Duration(seconds: 1));
   }
 }

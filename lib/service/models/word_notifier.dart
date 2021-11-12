@@ -1,5 +1,7 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:landlearn/service/db/database.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'content_notifier.dart';
 import 'word_data.dart';
@@ -29,13 +31,19 @@ class WordNotifier extends ValueNotifier<Word> {
 
   WordNotifier(Word wordObject) : super(wordObject);
 
-  void toggleKnow() {
-    value = value.copyWith(know: !know);
-  }
-
   void setContentNotifier(ContentNotifier contentNotifier, WordData wordData) {
     addListener(() => contentNotifier.notify());
 
     wordDataCatch[contentNotifier.id] = wordData;
+  }
+}
+
+extension DB on WordNotifier {
+  Future<void> toggleKnowToDB(BuildContext context) async {
+    final db = context.read(dbProvider);
+
+    await db.wordDao.updateKnow(this.value);
+
+    this.value = this.value.copyWith(know: !know);
   }
 }

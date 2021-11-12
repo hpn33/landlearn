@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
-import 'package:landlearn/page/home/word_hub.dart';
+import 'package:landlearn/service/models/word_hub.dart';
 import 'package:landlearn/service/db/database.dart';
 import 'package:landlearn/service/models/word_data.dart';
 import 'package:landlearn/util/util.dart';
@@ -90,10 +90,6 @@ extension Flow on ContentNotifier {
 
     notify();
   }
-
-  // void selectAndLoad() {
-  // wordNotifiers.forEach((element) => element.setContentCount(this.id));
-  // }
 }
 
 extension Get on ContentNotifier {

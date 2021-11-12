@@ -32,4 +32,6 @@ class ContentDao extends DatabaseAccessor<Database> with _$ContentDaoMixin {
     return (select(contents)..where((tbl) => tbl.id.equals(id)))
         .getSingleOrNull();
   }
+
+  Future<List<Content>> getAll() => select(contents).get();
 }
