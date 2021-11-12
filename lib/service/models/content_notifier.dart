@@ -50,6 +50,20 @@ class ContentNotifier extends ValueNotifier<Content> {
     exportData();
   }
 
+  void updateContent(String newContent) {
+    value = value.copyWith(content: newContent);
+  }
+
+  void clear() {
+    wordDatas.clear();
+    wordNotifiers.clear();
+    wordCategoris.values.forEach((element) => element.list.clear());
+  }
+
+  void notify() => notifyListeners();
+}
+
+extension Flow on ContentNotifier {
   void loadData(WordHub wordHub) {
     wordNotifiers.clear();
 
@@ -59,9 +73,8 @@ class ContentNotifier extends ValueNotifier<Content> {
 
       if (selection.isNotEmpty) {
         final wordNotifier = selection.first
-          ..addListener(() => this.notifyListeners())
-          ..contentCount = wordData.count
-          ..totalCount = selection.first.totalCount + wordData.count;
+          ..addListener(() => this.notify())
+          ..increaseTotalCount(wordData.count);
 
         wordNotifiers.add(wordNotifier);
       }
@@ -76,17 +89,18 @@ class ContentNotifier extends ValueNotifier<Content> {
 
     wordCategoris.values.forEach((element) => element.sort());
 
-    notifyListeners();
+    notify();
   }
 
-  void updateContent(String newContent) {
-    value = value.copyWith(content: newContent);
-  }
+  void selectAndLoad() {
+    for (final wordNotifier in wordNotifiers) {
+      final selection =
+          wordDatas.where((element) => element.id == wordNotifier.id);
 
-  void clear() {
-    wordDatas.clear();
-    wordNotifiers.clear();
-    wordCategoris.values.forEach((element) => element.list.clear());
+      if (selection.isNotEmpty) {
+        wordNotifier.setContentCount(selection.first.count);
+      }
+    }
   }
 }
 

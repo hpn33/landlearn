@@ -15,4 +15,12 @@ class WordNotifier extends ValueNotifier<Word> {
   void toggleKnow() {
     value = value.copyWith(know: !know);
   }
+
+  void increaseTotalCount(int count) {
+    totalCount += count;
+  }
+
+  void setContentCount(int count) {
+    contentCount = count;
+  }
 }

@@ -3,7 +3,6 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:landlearn/page/dialog/add_content_dialog.dart';
 import 'package:landlearn/page/home/content_view/content_view_vm.dart';
-import 'package:landlearn/page/home/word_hub.dart';
 import 'package:landlearn/page/study/study.dart';
 import 'package:landlearn/page/study/study_controller.dart';
 import 'package:landlearn/service/models/content_notifier.dart';
@@ -63,8 +62,9 @@ class ContentView extends StatelessWidget {
       return Card(
         child: InkWell(
           onTap: () {
-            context.read(selectedContentStateProvider).state = contentNotifier
-              ..loadData(context.read(wordHubProvider));
+            contentNotifier.selectAndLoad();
+
+            context.read(selectedContentStateProvider).state = contentNotifier;
 
             Navigator.push(
               context,
