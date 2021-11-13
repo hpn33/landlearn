@@ -14,8 +14,21 @@ class ContentView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Row(
+        toolBar(context),
+        Expanded(
+          child: contentListWidget(context),
+        ),
+      ],
+    );
+  }
+
+  Widget toolBar(BuildContext context) {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 6.0),
+        child: Row(
           children: [
+            Spacer(),
             IconButton(
               icon: Icon(Icons.add),
               onPressed: () {
@@ -27,10 +40,7 @@ class ContentView extends StatelessWidget {
             )
           ],
         ),
-        Expanded(
-          child: contentListWidget(context),
-        ),
-      ],
+      ),
     );
   }
 
@@ -41,12 +51,15 @@ class ContentView extends StatelessWidget {
       return Row(
         children: [
           Expanded(
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  for (final contentNotifier in contentNotifiers)
-                    contentItem(contentNotifier),
-                ],
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: ListView.builder(
+                itemCount: contentNotifiers.length,
+                itemBuilder: (context, index) {
+                  final contentNotifier = contentNotifiers[index];
+
+                  return contentItem(contentNotifier);
+                },
               ),
             ),
           ),
@@ -69,15 +82,60 @@ class ContentView extends StatelessWidget {
               MaterialPageRoute(builder: (c) => StudyPage()),
             );
           },
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              children: [
-                Text(contentNotifier.title),
-                Spacer(),
-                Text(contentNotifier.awarnessPercent.toStringAsFixed(1) + '%'),
-              ],
-            ),
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: [
+                    Text(
+                      contentNotifier.title,
+                      style: TextStyle(fontSize: 20),
+                    ),
+                    Spacer(),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 2.0,
+                        horizontal: 2.0,
+                      ),
+                      child: Text(
+                        contentNotifier.awarnessPercent.toStringAsFixed(1) +
+                            ' %',
+                        style: TextStyle(fontSize: 12),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(
+                child: Row(
+                  children: [
+                    Spacer(),
+                    Spacer(),
+                    Expanded(
+                      child: Row(
+                        children: [
+                          Expanded(
+                            flex: contentNotifier.awarnessPercent.toInt(),
+                            child: Container(
+                              height: 3,
+                              color: Colors.green[300],
+                            ),
+                          ),
+                          Expanded(
+                            flex: 100 - contentNotifier.awarnessPercent.toInt(),
+                            child: Container(
+                              height: 3,
+                              color: Colors.grey[300],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
         ),
       );

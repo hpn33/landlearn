@@ -14,8 +14,22 @@ class WordView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Row(
+        toolBar(context),
+        Expanded(
+          child: listViewWidget(),
+        ),
+      ],
+    );
+  }
+
+  Widget toolBar(BuildContext context) {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+        child: Row(
           children: [
+            statusOfWord(),
+            Spacer(),
             IconButton(
               icon: Icon(Icons.add),
               onPressed: () {
@@ -25,38 +39,9 @@ class WordView extends StatelessWidget {
                 );
               },
             ),
-            Spacer(),
-            statusOfWord(),
           ],
         ),
-        Expanded(
-          child: listViewWidget(),
-        ),
-      ],
-    );
-  }
-
-  Widget listViewWidget() {
-    return Row(
-      children: [
-        Expanded(
-          child: HookBuilder(builder: (context) {
-            final wordHub = useProvider(wordHubProvider);
-
-            final wordCategories = wordHub.wordCategories.entries;
-
-            return ListView.builder(
-              itemCount: wordCategories.length,
-              itemBuilder: (context, index) {
-                final alphaChar = wordCategories.elementAt(index).key;
-                final category = wordCategories.elementAt(index).value;
-
-                return wordSectionCard(alphaChar, category);
-              },
-            );
-          }),
-        ),
-      ],
+      ),
     );
   }
 
@@ -74,12 +59,8 @@ class WordView extends StatelessWidget {
 
         return Row(
           children: [
-            Card(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text('$totalCount/$unknowCount'),
-              ),
-            ),
+            Text('$totalCount/$unknowCount'),
+            SizedBox(width: 8),
             Card(
               color: Colors.green[200],
               child: Padding(
@@ -95,6 +76,33 @@ class WordView extends StatelessWidget {
     );
   }
 
+  Widget listViewWidget() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8),
+      child: Row(
+        children: [
+          Expanded(
+            child: HookBuilder(builder: (context) {
+              final wordHub = useProvider(wordHubProvider);
+
+              final wordCategories = wordHub.wordCategories.entries;
+
+              return ListView.builder(
+                itemCount: wordCategories.length,
+                itemBuilder: (context, index) {
+                  final alphaChar = wordCategories.elementAt(index).key;
+                  final category = wordCategories.elementAt(index).value;
+
+                  return wordSectionCard(alphaChar, category);
+                },
+              );
+            }),
+          ),
+        ],
+      ),
+    );
+  }
+
   Column wordSectionCard(
     String alphaChar,
     WordCategoryNotifier wordCategoryNotifier,
@@ -102,27 +110,35 @@ class WordView extends StatelessWidget {
     return Column(
       children: [
         Card(
-          child: Row(children: [Text(alphaChar)]),
+          color: Colors.grey[200],
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(children: [Text(alphaChar)]),
+          ),
         ),
-        HookBuilder(builder: (context) {
-          useListenable(wordCategoryNotifier);
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 6.0),
+          child: HookBuilder(builder: (context) {
+            useListenable(wordCategoryNotifier);
 
-          return ListView.builder(
-            itemCount: wordCategoryNotifier.list.length,
-            shrinkWrap: true,
-            itemBuilder: (context, index) {
-              final word = wordCategoryNotifier.list[index];
+            // return ListView.builder(
+            //   itemCount: wordCategoryNotifier.list.length,
+            //   shrinkWrap: true,
+            //   itemBuilder: (context, index) {
+            //     final word = wordCategoryNotifier.list[index];
 
-              return wordItem(word);
-            },
-          );
+            //     return wordItem(word);
+            //   },
+            // );
 
-          // return Wrap(
-          //   children: [
-          //     for (final word in wordCategoryNotifier.list) wordItem(word),
-          //   ],
-          // );
-        }),
+            return Wrap(
+              alignment: WrapAlignment.center,
+              children: [
+                for (final word in wordCategoryNotifier.list) wordItem(word),
+              ],
+            );
+          }),
+        ),
         SizedBox(height: 30),
       ],
     );
