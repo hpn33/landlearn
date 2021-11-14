@@ -3,8 +3,8 @@
 graph TD;
 
 
+9(dbProvider) --> 2((HomePage)) ;
 
-9(dbProvider) --> 3((HomePage)) ;
 
 9(dbProvider) --> 4((StudyPage)) ;
 10(wordHubProvider) --> 4((StudyPage)) ;
@@ -18,6 +18,8 @@ graph TD;
 
 10(wordHubProvider) --> 7((WordView)) ;
 
+9(dbProvider) --> 8((ContentView)) ;
+10(wordHubProvider) --> 8((ContentView)) ;
 11(contentHubProvider) --> 8((ContentView)) ;
 12[[selectedContentStateProvider]] --> 8((ContentView)) ;
 

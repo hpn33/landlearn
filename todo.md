@@ -27,4 +27,12 @@
 - [x] easy adding content
 - [x] show knowing work on text content ( word by word )
 - [ ] study page good edit flow ( !!! ) (research plz )
-- [ ] need some default stody
+- [ ] need some default story
+
+
+## publish
+- [ ] default content
+- [ ] ui & ux
+- [ ] mobile ui
+- [ ] study page: read mode's
+- [ ] 
