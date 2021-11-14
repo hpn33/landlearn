@@ -26,3 +26,5 @@ const alphabeta = [
   'y',
   'z',
 ];
+
+final regex = RegExp("(?:(?![a-zA-Z])'|'(?![a-zA-Z])|[^a-zA-Z'])+");

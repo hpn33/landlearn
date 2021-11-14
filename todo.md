@@ -27,3 +27,4 @@
 - [x] easy adding content
 - [x] show knowing work on text content ( word by word )
 - [ ] study page good edit flow ( !!! ) (research plz )
+- [ ] need some default stody

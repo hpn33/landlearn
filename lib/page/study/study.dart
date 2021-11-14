@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:landlearn/page/analyze.dart';
 import 'package:landlearn/service/models/word_hub.dart';
 import 'package:landlearn/page/study/study_controller.dart';
 import 'package:landlearn/service/db/database.dart';
@@ -79,7 +80,7 @@ class StudyPage extends HookWidget {
                     for (final paragh in textController.text.split('\n')) ...[
                       TextSpan(
                         children: [
-                          for (final word in paragh.split(_regex))
+                          for (final word in paragh.split(regex))
                             WidgetSpan(
                               child: HookBuilder(
                                 builder: (context) {
@@ -254,53 +255,9 @@ class StudyPage extends HookWidget {
   void analyze(BuildContext context) async {
     final contentNotifier = context.read(selectedContentStateProvider).state!;
     final wordHub = context.read(wordHubProvider);
-
     final db = context.read(dbProvider);
-    final wordMap = <String, List<WordData>>{
-      for (final alpha in alphabeta) alpha: [],
-    };
 
-    final wordExtractedFromContentText = contentNotifier.content
-        .split(_regex)
-        .map((e) => e.toLowerCase())
-        .toList();
-
-    // collect and count words
-    for (final word in wordExtractedFromContentText) {
-      if (word.isEmpty) {
-        continue;
-      }
-
-      final category = wordMap[word.substring(0, 1)]!;
-
-      final selection = category.where((element) => element.word == word);
-
-      if (selection.isEmpty) {
-        category.add(WordData(word: word));
-      }
-
-      category.where((element) => element.word == word).first.count++;
-    }
-
-    // check for add or get from db
-    final allWordOnDB = wordHub.wordNotifiers;
-    contentNotifier.clear();
-
-    for (final wordData in wordMap.values.expand((element) => element)) {
-      final wordNotifier = await getOrAddWord(db, allWordOnDB, wordData);
-
-      contentNotifier.addWordNotifier(wordNotifier);
-    }
-
-    // load word
-    final newData = contentNotifier.toJson();
-
-    // if (contentNotifier.data != newData) {
-    await db.contentDao.updateData(contentNotifier.value, newData);
-    contentNotifier.updateData();
-    // }
-
-    contentNotifier.loadData(wordHub);
+    analyzeContent(db, contentNotifier, wordHub);
   }
 
   Future<WordNotifier> getOrAddWord(
@@ -318,5 +275,3 @@ class StudyPage extends HookWidget {
     return selection.first;
   }
 }
-
-final _regex = RegExp("(?:(?![a-zA-Z])'|'(?![a-zA-Z])|[^a-zA-Z'])+");
