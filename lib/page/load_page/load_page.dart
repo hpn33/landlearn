@@ -10,7 +10,10 @@ class LoadPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Future.wait([loadData(context)]).then(
+    Future.wait([
+      loadData(context),
+      // loadDefaultData(context),
+    ]).then(
       (value) {
         Navigator.pop(context);
         Navigator.push(

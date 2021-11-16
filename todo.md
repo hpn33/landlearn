@@ -35,4 +35,10 @@
 - [ ] ui & ux
 - [ ] mobile ui
 - [ ] study page: read mode's
-- [ ] 
+
+
+## default content
+- [ ] logic
+- [ ] refresh
+- [ ] add for first time
+- [ ] setting option: add default content ( any that not exsit )

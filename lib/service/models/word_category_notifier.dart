@@ -24,4 +24,6 @@ class WordCategoryNotifier extends ChangeNotifier {
   }
 
   void sort() => list.sort((a, b) => a.word.compareTo(b.word));
+
+  void notify() => notifyListeners();
 }

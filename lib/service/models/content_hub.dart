@@ -24,4 +24,19 @@ class ContentHub extends ChangeNotifier {
       contentNotifiers.add(contentNotifier);
     }
   }
+
+  void clear() {
+    contents.clear();
+    contentNotifiers.clear();
+
+    notifyListeners();
+  }
+
+  void notify({bool sub = false}) {
+    if (sub) {
+      contentNotifiers.forEach((contentNotifier) => contentNotifier.notify());
+    }
+
+    notifyListeners();
+  }
 }

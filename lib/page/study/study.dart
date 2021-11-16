@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:landlearn/page/analyze.dart';
+import 'package:landlearn/service/logic/analyze_content.dart';
 import 'package:landlearn/service/models/word_hub.dart';
 import 'package:landlearn/page/study/study_controller.dart';
 import 'package:landlearn/service/db/database.dart';

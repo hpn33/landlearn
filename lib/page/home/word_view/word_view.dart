@@ -85,6 +85,8 @@ class WordView extends StatelessWidget {
             child: HookBuilder(builder: (context) {
               final wordHub = useProvider(wordHubProvider);
 
+              useListenable(wordHub);
+
               final wordCategories = wordHub.wordCategories.entries;
 
               return ListView.builder(

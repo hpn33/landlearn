@@ -22,6 +22,8 @@ class WordHub extends ChangeNotifier {
 
   // functions
 
+  /// load with all words in db
+  /// because clear prevs data
   void load([List<Word>? newWords]) {
     if (newWords != null) {
       words.clear();
@@ -38,5 +40,29 @@ class WordHub extends ChangeNotifier {
       wordCategories[wordNotifier.word.substring(0, 1)]!
           .addNotifier(wordNotifier);
     }
+  }
+
+  void clear() {
+    words.clear();
+    _wordNotifiers.clear();
+    wordCategories.values.forEach((e) => e.list.clear());
+    notifyListeners();
+  }
+
+  void notify() {
+    wordCategories.values.forEach((e) => e.notify());
+
+    notifyListeners();
+  }
+
+  void addWordNotifier(WordNotifier wordNotifier) {
+    _wordNotifiers.add(
+      wordNotifier..addListener(() => this.notifyListeners()),
+    );
+
+    wordCategories[wordNotifier.word.substring(0, 1)]!
+        .addNotifier(wordNotifier);
+
+    notify();
   }
 }
