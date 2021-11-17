@@ -1,8 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:landlearn/service/logic/analyze_content.dart';
 import 'package:landlearn/service/db/database.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:landlearn/service/models/content_hub.dart';
 import 'package:landlearn/service/models/word_hub.dart';
 
@@ -20,10 +18,11 @@ const materials = [
   'Yussouf',
 ];
 
-Future<void> loadDefaultData(BuildContext context) async {
-  final db = context.read(dbProvider);
-  final wordHub = context.read(wordHubProvider);
-
+Future<void> loadDefaultData(
+  Database db,
+  WordHub wordHub,
+  ContentHub contentHub,
+) async {
   // insert new content
   for (final fileTitle in materials) {
     final assets =
@@ -34,12 +33,12 @@ Future<void> loadDefaultData(BuildContext context) async {
 
   // load
   final contents = await db.contentDao.getAll();
-  final contentHub = context.read(contentHubProvider)..load(wordHub, contents);
+  contentHub..load(wordHub, contents);
 
   // analyze
   for (final contentNotifier in contentHub.contentNotifiers) {
     await analyzeContent(db, contentNotifier, wordHub);
-    await Future.delayed(Duration(milliseconds: 1000));
     contentHub.notify();
+    await Future.delayed(Duration(milliseconds: 1000));
   }
 }
