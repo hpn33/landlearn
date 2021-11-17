@@ -20,7 +20,8 @@
 - [ ] different view for words ( categories - count )
 - [ ] different reading mode ( read only - edit - show knowage - tooltip )
 
-
+## improvment
+- [ ] issue: analyze time need be faster ( make problem for load default data )
 
 ## subject
 
@@ -32,13 +33,10 @@
 
 ## publish
 - [ ] default content
+  - [x] logic
+  - [x] refresh
+  - [x] add for first time
+  - [ ] setting option: add default content ( any that not exsit )
 - [ ] ui & ux
 - [ ] mobile ui
 - [ ] study page: read mode's
-
-
-## default content
-- [ ] logic
-- [ ] refresh
-- [ ] add for first time
-- [ ] setting option: add default content ( any that not exsit )

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:landlearn/page/home/home.dart';
 import 'package:landlearn/service/db/database.dart';
+import 'package:landlearn/service/logic/load_default_data.dart';
 import 'package:landlearn/service/models/content_hub.dart';
 import 'package:landlearn/service/models/word_hub.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -12,7 +14,12 @@ class LoadPage extends StatelessWidget {
   Widget build(BuildContext context) {
     Future.wait([
       loadData(context),
-      // loadDefaultData(context),
+      if (Hive.box('configs').get('first_time'))
+        loadDefaultData(
+          context.read(dbProvider),
+          context.read(wordHubProvider),
+          context.read(contentHubProvider),
+        ),
     ]).then(
       (value) {
         Navigator.pop(context);
