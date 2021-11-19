@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:landlearn/page/study/logic/view_mode.dart';
 import 'package:landlearn/page/study/study.dart';
 import 'package:landlearn/service/db/database.dart';
 import 'package:landlearn/service/logic/analyze_content.dart';
@@ -14,7 +15,6 @@ class AppbarWidget extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    final editMode = ref.watch(StudyPage.editModeProvider.notifier);
     final contentNotifier = ref.read(selectedContentStateProvider)!;
 
     useListenable(contentNotifier);
@@ -28,35 +28,49 @@ class AppbarWidget extends HookConsumerWidget {
             'text word\n${contentNotifier.allWordCount}',
             textAlign: TextAlign.center,
           ),
+          const SizedBox(width: 10),
           Text(
             'word count\n${contentNotifier.wordCount}',
             textAlign: TextAlign.center,
           ),
+          const SizedBox(width: 10),
           ElevatedButton(
             child: const Text('analyze'),
             onPressed: () => analyze(ref),
           ),
-          ElevatedButton(
-            child: Text(editMode.state ? 'done' : 'edit'),
-            onPressed: () async {
-              final contentNotifier = ref.read(selectedContentStateProvider)!;
-
-              final textController = ref.read(textControllerProvider);
-
-              if (textController.text != contentNotifier.content) {
-                await ref
-                    .read(dbProvider)
-                    .contentDao
-                    .updateContent(contentNotifier.value, textController.text);
-
-                contentNotifier.updateContent(textController.text);
-              }
-
-              editMode.state = !editMode.state;
-            },
-          ),
+          const SizedBox(width: 10),
+          toggleViewModeButton(),
         ],
       ),
+    );
+  }
+
+  Widget toggleViewModeButton() {
+    const viewModeItems = [
+      Tooltip(message: 'Normal', child: Icon(Icons.remove_red_eye)),
+      Tooltip(message: 'Clear', child: Icon(Icons.toll_outlined)),
+      Tooltip(message: 'Edit', child: Icon(Icons.edit)),
+    ];
+
+    return HookConsumer(
+      builder: (BuildContext context, WidgetRef ref, Widget? child) {
+        final viewMode = ref.watch(StudyPage.viewModeProvider.notifier);
+
+        final isSelected = useState(
+          List.generate(viewModeItems.length, (i) => i == 0),
+        );
+
+        return ToggleButtons(
+          children: viewModeItems,
+          onPressed: (int index) {
+            isSelected.value =
+                List.generate(viewModeItems.length, (i) => index == i);
+
+            viewMode.state = ViewMode.values[index];
+          },
+          isSelected: isSelected.value,
+        );
+      },
     );
   }
 

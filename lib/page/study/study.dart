@@ -3,6 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:landlearn/page/study/component/content_text.dart';
 import 'package:landlearn/page/study/component/content_words.dart';
+import 'package:landlearn/page/study/logic/view_mode.dart';
 
 import 'component/appbar.dart';
 
@@ -27,7 +28,8 @@ import 'component/appbar.dart';
 /// update word
 
 class StudyPage extends HookWidget {
-  static final editModeProvider = StateProvider((ref) => false);
+  static final viewModeProvider =
+      StateProvider.autoDispose((ref) => ViewMode.normal);
 
   const StudyPage({Key? key}) : super(key: key);
 

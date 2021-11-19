@@ -30,6 +30,7 @@
 - [ ] study page good edit flow ( !!! ) (research plz )
 - [x] need some default story
 - [ ] show word usage sample ( if exist )
+- [ ] edit flow - maybe remove analyze button
 
 
 ## publish
@@ -42,5 +43,5 @@
   - [x] show word count in each category
   - [x] show word count on each content
   - [x] word status in study page ( awarness - know - unknow)
-  - [ ] study page: read mode's
+  - [x] study page: content view mode's
   - [ ] mobile ui
