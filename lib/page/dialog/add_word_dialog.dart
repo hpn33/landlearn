@@ -5,10 +5,9 @@ import 'package:landlearn/service/db/database.dart';
 
 Widget addWordDialog() {
   return Dialog(
-    child: HookBuilder(
-      builder: (BuildContext context) {
+    child: HookConsumer(
+      builder: (context, ref, child) {
         final controller = useTextEditingController();
-        final db = useProvider(dbProvider);
 
         return Container(
           width: 500,
@@ -25,6 +24,7 @@ Widget addWordDialog() {
                   IconButton(
                     icon: Icon(Icons.add),
                     onPressed: () {
+                      final db = ref.read(dbProvider);
                       db.wordDao.add(controller.text);
 
                       Navigator.pop(context);

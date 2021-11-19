@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:landlearn/page/home/home.dart';
 import 'package:landlearn/service/db/database.dart';
 import 'package:landlearn/service/logic/load_default_data.dart';
@@ -7,12 +8,12 @@ import 'package:landlearn/service/models/content_hub.dart';
 import 'package:landlearn/service/models/word_hub.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class LoadPage extends StatelessWidget {
+class LoadPage extends HookConsumerWidget {
   const LoadPage({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    Future.wait([load(context)]).then(
+  Widget build(BuildContext context, ref) {
+    Future.wait([load(ref)]).then(
       (value) {
         Navigator.pop(context);
         Navigator.push(
@@ -31,25 +32,25 @@ class LoadPage extends StatelessWidget {
     );
   }
 
-  Future<void> load(BuildContext context) async {
-    await loadData(context);
+  Future<void> load(WidgetRef ref) async {
+    final db = ref.read(dbProvider);
+    final wordHub = ref.read(wordHubProvider);
+    final contentHub = ref.read(contentHubProvider);
+
+    await loadData(db, wordHub, contentHub);
 
     if (Hive.box('configs').get('first_time')) {
-      await loadDefaultData(
-        context.read(dbProvider),
-        context.read(wordHubProvider),
-        context.read(contentHubProvider),
-      );
+      await loadDefaultData(db, wordHub, contentHub);
 
       await Hive.box('configs').put('first_time', false);
     }
   }
 
-  Future<void> loadData(BuildContext context) async {
-    final db = context.read(dbProvider);
-    final wordHub = context.read(wordHubProvider);
-    final contentHub = context.read(contentHubProvider);
-
+  Future<void> loadData(
+    Database db,
+    WordHub wordHub,
+    ContentHub contentHub,
+  ) async {
     final words = await db.wordDao.getAll();
     wordHub.load(words);
 

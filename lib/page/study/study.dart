@@ -59,10 +59,10 @@ class StudyPage extends HookWidget {
   }
 
   Widget contentView() {
-    return HookBuilder(builder: (context) {
-      final textController = useProvider(textControllerProvider);
-      final editMode = useProvider(editModeProvider).state;
-      final contentNotifier = useProvider(selectedContentStateProvider).state!;
+    return HookConsumer(builder: (context, ref, child) {
+      final textController = ref.watch(textControllerProvider);
+      final editMode = ref.watch(editModeProvider);
+      final contentNotifier = ref.read(selectedContentStateProvider)!;
 
       useListenable(contentNotifier);
 
@@ -96,7 +96,7 @@ class StudyPage extends HookWidget {
 
                                   return InkWell(
                                     onTap: () {
-                                      wordNotifier.toggleKnowToDB(context);
+                                      wordNotifier.toggleKnowToDB(ref);
                                     },
                                     child: Text(
                                       word + ' ',
@@ -129,8 +129,9 @@ class StudyPage extends HookWidget {
     // or section section
     // - [x] update word know state
     // - [ ] remove on update
-    return HookBuilder(builder: (context) {
-      final contentNotifier = useProvider(selectedContentStateProvider).state!;
+    return HookConsumer(builder: (context, ref, child) {
+      final contentNotifier =
+          ref.read(selectedContentStateProvider.state).state!;
       useListenable(contentNotifier);
 
       final wordCategoris = contentNotifier.wordCategoris;
@@ -161,12 +162,12 @@ class StudyPage extends HookWidget {
 
   Widget wordCard(
       WordCategoryNotifier wordCategory, WordNotifier wordNotifier) {
-    return HookBuilder(
-      builder: (context) {
+    return HookConsumer(
+      builder: (context, ref, child) {
         useListenable(wordNotifier);
 
         final contentNotifier =
-            context.read(selectedContentStateProvider).state!;
+            ref.read(selectedContentStateProvider.state).state!;
 
         final contentCount = wordNotifier.getContentCount(contentNotifier.id);
 
@@ -174,7 +175,7 @@ class StudyPage extends HookWidget {
           color: wordNotifier.know ? Colors.green[100] : null,
           child: InkWell(
             onTap: () {
-              wordNotifier.toggleKnowToDB(context);
+              wordNotifier.toggleKnowToDB(ref);
             },
             child: Padding(
               padding: const EdgeInsets.all(4.0),
@@ -192,11 +193,10 @@ class StudyPage extends HookWidget {
   }
 
   Widget topBar() {
-    return HookBuilder(
-      builder: (context) {
-        final editMode = useProvider(editModeProvider);
-        final contentNotifier =
-            useProvider(selectedContentStateProvider).state!;
+    return HookConsumer(
+      builder: (context, ref, child) {
+        final editMode = ref.watch(editModeProvider.notifier);
+        final contentNotifier = ref.read(selectedContentStateProvider)!;
 
         useListenable(contentNotifier);
 
@@ -215,18 +215,18 @@ class StudyPage extends HookWidget {
               ),
               ElevatedButton(
                 child: Text('analyze'),
-                onPressed: () => analyze(context),
+                onPressed: () => analyze(ref),
               ),
               ElevatedButton(
                 child: Text(editMode.state ? 'done' : 'edit'),
                 onPressed: () async {
                   final contentNotifier =
-                      context.read(selectedContentStateProvider).state!;
+                      ref.read(selectedContentStateProvider)!;
 
-                  final textController = context.read(textControllerProvider);
+                  final textController = ref.read(textControllerProvider);
 
                   if (textController.text != contentNotifier.content) {
-                    await context.read(dbProvider).contentDao.updateContent(
+                    await ref.read(dbProvider).contentDao.updateContent(
                           contentNotifier.value,
                           textController.text,
                         );
@@ -252,10 +252,10 @@ class StudyPage extends HookWidget {
   /// update
   ///
   /// ready to use
-  void analyze(BuildContext context) async {
-    final contentNotifier = context.read(selectedContentStateProvider).state!;
-    final wordHub = context.read(wordHubProvider);
-    final db = context.read(dbProvider);
+  void analyze(WidgetRef ref) async {
+    final contentNotifier = ref.read(selectedContentStateProvider)!;
+    final wordHub = ref.read(wordHubProvider);
+    final db = ref.read(dbProvider);
 
     analyzeContent(db, contentNotifier, wordHub);
   }

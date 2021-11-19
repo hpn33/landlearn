@@ -39,8 +39,8 @@ class WordNotifier extends ValueNotifier<Word> {
 }
 
 extension DB on WordNotifier {
-  Future<void> toggleKnowToDB(BuildContext context) async {
-    final db = context.read(dbProvider);
+  Future<void> toggleKnowToDB(WidgetRef ref) async {
+    final db = ref.read(dbProvider);
 
     await db.wordDao.updateKnow(this.value);
 

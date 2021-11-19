@@ -4,11 +4,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:landlearn/page/dialog/add_content_dialog.dart';
 import 'package:landlearn/page/study/study.dart';
 import 'package:landlearn/page/study/study_controller.dart';
-import 'package:landlearn/service/db/database.dart';
-import 'package:landlearn/service/logic/load_default_data.dart';
 import 'package:landlearn/service/models/content_hub.dart';
 import 'package:landlearn/service/models/content_notifier.dart';
-import 'package:landlearn/service/models/word_hub.dart';
 
 class ContentView extends StatelessWidget {
   const ContentView({Key? key}) : super(key: key);
@@ -48,8 +45,8 @@ class ContentView extends StatelessWidget {
   }
 
   Widget contentListWidget(BuildContext context) {
-    return HookBuilder(builder: (context) {
-      final contentHub = context.read(contentHubProvider);
+    return HookConsumer(builder: (context, ref, child) {
+      final contentHub = ref.read(contentHubProvider);
 
       useListenable(contentHub);
 
@@ -76,7 +73,7 @@ class ContentView extends StatelessWidget {
   }
 
   Widget contentItem(ContentNotifier contentNotifier) {
-    return HookBuilder(builder: (context) {
+    return HookConsumer(builder: (context, ref, child) {
       useListenable(contentNotifier);
 
       final awarnessPercent =
@@ -87,7 +84,8 @@ class ContentView extends StatelessWidget {
       return Card(
         child: InkWell(
           onTap: () {
-            context.read(selectedContentStateProvider).state = contentNotifier;
+            ref.read(selectedContentStateProvider.state).state =
+                contentNotifier;
 
             Navigator.push(
               context,

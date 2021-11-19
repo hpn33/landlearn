@@ -6,7 +6,7 @@ final selectedContentStateProvider =
     StateProvider<ContentNotifier?>((ref) => null);
 
 final textControllerProvider = ChangeNotifierProvider.autoDispose((ref) {
-  final contentNotifier = ref.watch(selectedContentStateProvider).state;
+  final contentNotifier = ref.watch(selectedContentStateProvider);
 
   return TextEditingController(
     text: contentNotifier == null ? 'something Wrong' : contentNotifier.content,

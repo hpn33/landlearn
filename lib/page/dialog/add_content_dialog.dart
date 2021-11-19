@@ -8,11 +8,12 @@ import 'package:landlearn/util/sample.dart';
 
 Widget addContentDialog() {
   return Dialog(
-    child: HookBuilder(
-      builder: (BuildContext context) {
+    child: HookConsumer(
+      builder: (context, ref, child) {
+        final db = ref.read(dbProvider);
+
         final controller = useTextEditingController();
         final useSample = useState(false);
-        final db = useProvider(dbProvider);
 
         return Container(
           width: 500,

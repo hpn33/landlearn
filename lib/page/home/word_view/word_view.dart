@@ -46,9 +46,9 @@ class WordView extends StatelessWidget {
   }
 
   Widget statusOfWord() {
-    return HookBuilder(
-      builder: (context) {
-        final wordHub = useProvider(wordHubProvider);
+    return HookConsumer(
+      builder: (context, ref, child) {
+        final wordHub = ref.read(wordHubProvider);
         final wordNotifiers = wordHub.wordNotifiers;
 
         useListenable(wordHub);
@@ -82,8 +82,8 @@ class WordView extends StatelessWidget {
       child: Row(
         children: [
           Expanded(
-            child: HookBuilder(builder: (context) {
-              final wordHub = useProvider(wordHubProvider);
+            child: HookConsumer(builder: (context, ref, child) {
+              final wordHub = ref.read(wordHubProvider);
 
               useListenable(wordHub);
 
@@ -147,14 +147,14 @@ class WordView extends StatelessWidget {
   }
 
   Widget wordItem(WordNotifier wordNotifier) {
-    return HookBuilder(builder: (context) {
+    return HookConsumer(builder: (context, ref, child) {
       useListenable(wordNotifier);
 
       return Card(
         color: wordNotifier.know ? Colors.green[100] : null,
         child: InkWell(
           onTap: () {
-            wordNotifier.toggleKnowToDB(context);
+            wordNotifier.toggleKnowToDB(ref);
           },
           child: Padding(
             padding: const EdgeInsets.all(4.0),

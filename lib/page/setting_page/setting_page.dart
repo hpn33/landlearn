@@ -6,11 +6,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:landlearn/service/models/content_hub.dart';
 import 'package:landlearn/service/models/word_hub.dart';
 
-class SettingPage extends StatelessWidget {
+class SettingPage extends ConsumerWidget {
   const SettingPage({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, ref) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Settings'),
@@ -21,15 +21,15 @@ class SettingPage extends StatelessWidget {
             title: Text('Add Default Content'),
             onTap: () {
               loadDefaultData(
-                context.read(dbProvider),
-                context.read(wordHubProvider),
-                context.read(contentHubProvider),
+                ref.read(dbProvider),
+                ref.read(wordHubProvider),
+                ref.read(contentHubProvider),
               );
             },
           ),
           ListTile(
             title: Text('delete all'),
-            onTap: () => deleteAllData(context),
+            onTap: () => deleteAllData(ref),
           ),
         ],
       ),

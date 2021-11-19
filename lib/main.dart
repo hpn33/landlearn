@@ -22,21 +22,17 @@ Future<void> loadHive() async {
 }
 
 class Ob extends ProviderObserver {
-  void didAddProvider(ProviderBase provider, Object? value) {
-    print('didAddProvider: $provider');
-    // print('didAddProvider: $provider :: $value');
-  }
-
-  void mayHaveChanged(ProviderBase provider) {
-    print('mayHaveChanged: $provider');
-  }
-
-  void didUpdateProvider(ProviderBase provider, Object? newValue) {
-    print('didUpdateProvider: $provider');
-    // print('didUpdateProvider: $provider :: $newValue');
-  }
-
-  void didDisposeProvider(ProviderBase provider) {
-    print('didDisposeProvider: $provider');
+  @override
+  void didUpdateProvider(
+    ProviderBase provider,
+    Object? previousValue,
+    Object? newValue,
+    ProviderContainer container,
+  ) {
+    print('''
+{
+  "provider": "${provider.name ?? provider.runtimeType}",
+  "newValue": "$newValue"
+}''');
   }
 }
