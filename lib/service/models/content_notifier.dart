@@ -120,8 +120,8 @@ extension Get on ContentNotifier {
     final ratio = (wordNotifiers.where((element) => element.know).length /
         wordNotifiers.length);
 
-    if (ratio == 0) {
-      return 0;
+    if (ratio == 0.0 || ratio.toString() == 'NaN') {
+      return 0.0;
     }
 
     return ratio * 100;

@@ -72,10 +72,7 @@ class ContentView extends StatelessWidget {
     return HookConsumer(builder: (context, ref, child) {
       useListenable(contentNotifier);
 
-      final awarnessPercent =
-          contentNotifier.awarnessPercent.toString() == 'NaN'
-              ? 0.0
-              : contentNotifier.awarnessPercent;
+      final awarnessPercent = contentNotifier.awarnessPercent;
 
       return Card(
         child: InkWell(
@@ -105,41 +102,38 @@ class ContentView extends StatelessWidget {
                         horizontal: 2.0,
                       ),
                       child: Text(
-                        contentNotifier.awarnessPercent.toStringAsFixed(1) +
-                            ' %',
+                        awarnessPercent.toStringAsFixed(1) + ' %',
                         style: const TextStyle(fontSize: 12),
                       ),
                     ),
                   ],
                 ),
               ),
-              SizedBox(
-                child: Row(
-                  children: [
-                    const Spacer(),
-                    const Spacer(),
-                    Expanded(
-                      child: Row(
-                        children: [
-                          Expanded(
-                            flex: awarnessPercent.toInt(),
-                            child: Container(
-                              height: 3,
-                              color: Colors.green[300],
-                            ),
+              Row(
+                children: [
+                  const Spacer(),
+                  const Spacer(),
+                  Expanded(
+                    child: Row(
+                      children: [
+                        Expanded(
+                          flex: awarnessPercent.toInt(),
+                          child: Container(
+                            height: 3,
+                            color: Colors.green[300],
                           ),
-                          Expanded(
-                            flex: 100 - awarnessPercent.toInt(),
-                            child: Container(
-                              height: 3,
-                              color: Colors.grey[300],
-                            ),
+                        ),
+                        Expanded(
+                          flex: 100 - awarnessPercent.toInt(),
+                          child: Container(
+                            height: 3,
+                            color: Colors.grey[300],
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ],
           ),
