@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:landlearn/page/setting_page/setting_page.dart';
 import 'package:landlearn/service/logic/delete_all_database.dart';
 
 import 'desk.dart';
@@ -13,6 +14,15 @@ class HomePage extends HookWidget {
         children: [
           Row(
             children: [
+              IconButton(
+                icon: Icon(Icons.settings),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => SettingPage()),
+                  );
+                },
+              ),
               TextButton(
                 child: Text('delete all'),
                 onPressed: () => deleteAllData(context),
