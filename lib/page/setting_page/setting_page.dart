@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:landlearn/service/db/database.dart';
+import 'package:landlearn/service/logic/delete_all_database.dart';
 import 'package:landlearn/service/logic/load_default_data.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:landlearn/service/models/content_hub.dart';
@@ -25,6 +26,10 @@ class SettingPage extends StatelessWidget {
                 context.read(contentHubProvider),
               );
             },
+          ),
+          ListTile(
+            title: Text('delete all'),
+            onTap: () => deleteAllData(context),
           ),
         ],
       ),

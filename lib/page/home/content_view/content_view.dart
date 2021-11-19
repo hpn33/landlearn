@@ -41,28 +41,6 @@ class ContentView extends StatelessWidget {
                 );
               },
             ),
-            HookBuilder(builder: (context) {
-              final loadState = useState(false);
-
-              return TextButton(
-                onPressed: loadState.value
-                    ? null
-                    : () async {
-                        loadState.value = true;
-
-                        await loadDefaultData(
-                          context.read(dbProvider),
-                          context.read(wordHubProvider),
-                          context.read(contentHubProvider),
-                        );
-
-                        loadState.value = false;
-                      },
-                child: loadState.value
-                    ? CircularProgressIndicator()
-                    : Text('添加内容'),
-              );
-            }),
           ],
         ),
       ),
