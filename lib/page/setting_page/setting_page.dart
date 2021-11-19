@@ -18,7 +18,7 @@ class SettingPage extends ConsumerWidget {
       body: Column(
         children: [
           ListTile(
-            title: Text('Add Default Content'),
+            title: const Text('Add Default Content'),
             onTap: () {
               loadDefaultData(
                 ref.read(dbProvider),
@@ -28,7 +28,7 @@ class SettingPage extends ConsumerWidget {
             },
           ),
           ListTile(
-            title: Text('delete all'),
+            title: const Text('delete all'),
             onTap: () => deleteAllData(ref),
           ),
         ],

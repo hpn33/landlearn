@@ -17,6 +17,7 @@ class WordNotifier extends ValueNotifier<Word> {
   int getContentCount(int contentId) {
     if (_lastContentId != contentId) {
       _contentCount = wordDataCatch[contentId]!.count;
+      _lastContentId = contentId;
     }
 
     return _contentCount;
@@ -42,8 +43,8 @@ extension DB on WordNotifier {
   Future<void> toggleKnowToDB(WidgetRef ref) async {
     final db = ref.read(dbProvider);
 
-    await db.wordDao.updateKnow(this.value);
+    await db.wordDao.updateKnow(value);
 
-    this.value = this.value.copyWith(know: !know);
+    value = value.copyWith(know: !know);
   }
 }

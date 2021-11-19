@@ -18,12 +18,12 @@ class LoadPage extends HookConsumerWidget {
         Navigator.pop(context);
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (c) => HomePage()),
+          MaterialPageRoute(builder: (c) => const HomePage()),
         );
       },
     );
 
-    return Material(
+    return const Material(
       child: SafeArea(
         child: Center(
           child: CircularProgressIndicator(),
@@ -57,6 +57,6 @@ class LoadPage extends HookConsumerWidget {
     final contents = await db.contentDao.getAll();
     contentHub.load(wordHub, contents);
 
-    await Future.delayed(Duration(milliseconds: 100));
+    await Future.delayed(const Duration(milliseconds: 100));
   }
 }

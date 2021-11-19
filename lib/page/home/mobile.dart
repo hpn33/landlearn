@@ -18,8 +18,8 @@ class MobileHomePage extends HookWidget {
       body: PageView(
         controller: pageController,
         children: [
-          pageScroll(WordView(), 0, 2, pageController),
-          pageScroll(ContentView(), 1, 2, pageController),
+          pageScroll(const WordView(), 0, 2, pageController),
+          pageScroll(const ContentView(), 1, 2, pageController),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
@@ -55,24 +55,24 @@ class MobileHomePage extends HookWidget {
       children: [
         if (index > 0)
           TextButton(
-            child: Text('<'),
+            child: const Text('<'),
             onPressed: () {
               pageController.animateToPage(
                 index - 1,
                 curve: Curves.ease,
-                duration: Duration(milliseconds: 500),
+                duration: const Duration(milliseconds: 500),
               );
             },
           ),
         Expanded(child: child),
         if (index < lenght - 1)
           TextButton(
-            child: Text('>'),
+            child: const Text('>'),
             onPressed: () {
               pageController.animateToPage(
                 index + 1,
                 curve: Curves.ease,
-                duration: Duration(milliseconds: 500),
+                duration: const Duration(milliseconds: 500),
               );
             },
           ),

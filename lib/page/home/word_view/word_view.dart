@@ -28,9 +28,9 @@ class WordView extends StatelessWidget {
         child: Row(
           children: [
             statusOfWord(),
-            Spacer(),
+            const Spacer(),
             IconButton(
-              icon: Icon(Icons.add),
+              icon: const Icon(Icons.add),
               onPressed: () {
                 showDialog(
                   context: context,
@@ -59,7 +59,7 @@ class WordView extends StatelessWidget {
         return Row(
           children: [
             Text('$totalCount/$unknowCount'),
-            SizedBox(width: 8),
+            const SizedBox(width: 8),
             Card(
               color: Colors.green[200],
               child: Padding(

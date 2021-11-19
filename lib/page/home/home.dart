@@ -6,6 +6,8 @@ import 'desk.dart';
 import 'mobile.dart';
 
 class HomePage extends HookWidget {
+  const HomePage({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -14,11 +16,12 @@ class HomePage extends HookWidget {
           Row(
             children: [
               IconButton(
-                icon: Icon(Icons.settings),
+                icon: const Icon(Icons.settings),
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => SettingPage()),
+                    MaterialPageRoute(
+                        builder: (context) => const SettingPage()),
                   );
                 },
               ),
@@ -34,9 +37,9 @@ class HomePage extends HookWidget {
     final width = MediaQuery.of(context).size.width;
 
     if (width < 600) {
-      return MobileHomePage();
+      return const MobileHomePage();
     }
 
-    return DeskHomePage();
+    return const DeskHomePage();
   }
 }

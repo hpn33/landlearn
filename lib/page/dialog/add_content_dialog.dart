@@ -26,9 +26,9 @@ Widget addContentDialog() {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('content'),
+                  const Text('content'),
                   IconButton(
-                    icon: Icon(Icons.add),
+                    icon: const Icon(Icons.add),
                     onPressed: () {
                       // Hive.box<ProjectObj>('projects').add(
                       //   ProjectObj()
@@ -46,14 +46,14 @@ Widget addContentDialog() {
                   ),
                 ],
               ),
-              Divider(),
-              Text('title'),
+              const Divider(),
+              const Text('title'),
               TextField(controller: controller),
-              Divider(),
+              const Divider(),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('use Sample'),
+                  const Text('use Sample'),
                   Checkbox(
                     value: useSample.value,
                     onChanged: (v) => useSample.value = v!,

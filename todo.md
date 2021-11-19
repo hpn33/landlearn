@@ -41,6 +41,6 @@
 - [ ] ui & ux
   - [x] show word count in each category
   - [ ] show word count on each content
-  - [ ] show awarness of content in study page
+  - [ ] word status in study page ( awarness - know - unknow)
 - [ ] mobile ui
 - [ ] study page: read mode's

@@ -28,9 +28,9 @@ class ContentView extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 6.0),
         child: Row(
           children: [
-            Spacer(),
+            const Spacer(),
             IconButton(
-              icon: Icon(Icons.add),
+              icon: const Icon(Icons.add),
               onPressed: () {
                 showDialog(
                   context: context,
@@ -89,7 +89,7 @@ class ContentView extends StatelessWidget {
 
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (c) => StudyPage()),
+              MaterialPageRoute(builder: (c) => const StudyPage()),
             );
           },
           child: Column(
@@ -100,9 +100,9 @@ class ContentView extends StatelessWidget {
                   children: [
                     Text(
                       contentNotifier.title,
-                      style: TextStyle(fontSize: 20),
+                      style: const TextStyle(fontSize: 20),
                     ),
-                    Spacer(),
+                    const Spacer(),
                     Container(
                       padding: const EdgeInsets.symmetric(
                         vertical: 2.0,
@@ -111,7 +111,7 @@ class ContentView extends StatelessWidget {
                       child: Text(
                         contentNotifier.awarnessPercent.toStringAsFixed(1) +
                             ' %',
-                        style: TextStyle(fontSize: 12),
+                        style: const TextStyle(fontSize: 12),
                       ),
                     ),
                   ],
@@ -120,8 +120,8 @@ class ContentView extends StatelessWidget {
               SizedBox(
                 child: Row(
                   children: [
-                    Spacer(),
-                    Spacer(),
+                    const Spacer(),
+                    const Spacer(),
                     Expanded(
                       child: Row(
                         children: [

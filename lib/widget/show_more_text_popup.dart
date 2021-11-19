@@ -38,15 +38,16 @@ class ShowMoreTextPopup {
     BorderRadius? borderRadius,
     EdgeInsetsGeometry? padding,
   }) {
-    this.dismissCallback = onDismiss;
-    this._popupHeight = height;
-    this._popupWidth = width;
-    this._text = text;
-    this._textStyle = textStyle ??
-        TextStyle(fontWeight: FontWeight.normal, color: Color(0xFF000000));
-    this._backgroundColor = backgroundColor ?? Color(0xFFFFA500);
-    this._borderRadius = borderRadius ?? BorderRadius.circular(10.0);
-    this._padding = padding ?? EdgeInsets.all(4.0);
+    dismissCallback = onDismiss;
+    _popupHeight = height;
+    _popupWidth = width;
+    _text = text;
+    _textStyle = textStyle ??
+        const TextStyle(
+            fontWeight: FontWeight.normal, color: Color(0xFF000000));
+    _backgroundColor = backgroundColor ?? const Color(0xFFFFA500);
+    _borderRadius = borderRadius ?? BorderRadius.circular(10.0);
+    _padding = padding ?? const EdgeInsets.all(4.0);
   }
 
   /// Shows a popup near a widget with key [widgetKey] .
@@ -68,8 +69,8 @@ class ShowMoreTextPopup {
 
   /// Shows a popup near a widget with [rect].
   void show(Rect rect) {
-    this._showRect = rect;
-    this._screenSize = window.physicalSize / window.devicePixelRatio;
+    _showRect = rect;
+    _screenSize = window.physicalSize / window.devicePixelRatio;
 
     // calculate position
     _offset = _calculateOffset(context);
@@ -142,7 +143,7 @@ class ShowMoreTextPopup {
                     decoration: BoxDecoration(
                         color: _backgroundColor,
                         borderRadius: _borderRadius,
-                        boxShadow: [
+                        boxShadow: const [
                           BoxShadow(
                             color: Color(0xFF808080),
                             blurRadius: 1.0,

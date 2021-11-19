@@ -32,7 +32,7 @@ class WordHub extends ChangeNotifier {
 
     _wordNotifiers.addAll(
       words.map(
-        (e) => WordNotifier(e)..addListener(() => this.notifyListeners()),
+        (e) => WordNotifier(e)..addListener(() => notifyListeners()),
       ),
     );
 
@@ -45,19 +45,23 @@ class WordHub extends ChangeNotifier {
   void clear() {
     words.clear();
     _wordNotifiers.clear();
-    wordCategories.values.forEach((e) => e.list.clear());
+    for (var e in wordCategories.values) {
+      e.list.clear();
+    }
     notifyListeners();
   }
 
   void notify() {
-    wordCategories.values.forEach((e) => e.notify());
+    for (var e in wordCategories.values) {
+      e.notify();
+    }
 
     notifyListeners();
   }
 
   void addWordNotifier(WordNotifier wordNotifier) {
     _wordNotifiers.add(
-      wordNotifier..addListener(() => this.notifyListeners()),
+      wordNotifier..addListener(() => notifyListeners()),
     );
 
     wordCategories[wordNotifier.word.substring(0, 1)]!

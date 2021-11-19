@@ -18,7 +18,7 @@ class WordCategoryNotifier extends ChangeNotifier {
     final wordNotifier =
         list.where((element) => element.word == word.word).first;
 
-    wordNotifier.addListener(() => this.notifyListeners());
+    wordNotifier.addListener(() => notifyListeners());
 
     notifyListeners();
   }

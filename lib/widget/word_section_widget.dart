@@ -26,9 +26,9 @@ class WordSectionWidget extends StatelessWidget {
                   child: Row(
                     children: [
                       Text(alphaChar),
-                      Spacer(),
+                      const Spacer(),
                       Text(wordCategoryNotifier.knowCount.toString()),
-                      Text('/'),
+                      const Text('/'),
                       Text(wordCategoryNotifier.length.toString()),
                     ],
                   ),
@@ -60,7 +60,7 @@ class WordSectionWidget extends StatelessWidget {
             );
           }),
         ),
-        SizedBox(height: 30),
+        const SizedBox(height: 30),
       ],
     );
   }
@@ -81,7 +81,7 @@ class WordSectionWidget extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(wordNotifier.word),
-                SizedBox(width: 4),
+                const SizedBox(width: 4),
                 Container(
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,

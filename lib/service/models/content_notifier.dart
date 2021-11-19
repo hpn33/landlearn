@@ -34,18 +34,16 @@ class ContentNotifier extends ValueNotifier<Content> {
 
     final List decoded = json.decode(data);
 
-    decoded.forEach(
-      (item) {
-        final id = item[0] as int;
-        final count = item[1] as int;
+    for (var item in decoded) {
+      final id = item[0] as int;
+      final count = item[1] as int;
 
-        wordDatas.add(WordData(id: id, count: count));
-      },
-    );
+      wordDatas.add(WordData(id: id, count: count));
+    }
   }
 
   void updateData() {
-    value = value.copyWith(data: this.toJson());
+    value = value.copyWith(data: toJson());
 
     exportData();
   }
@@ -57,7 +55,10 @@ class ContentNotifier extends ValueNotifier<Content> {
   void clear() {
     wordDatas.clear();
     wordNotifiers.clear();
-    wordCategoris.values.forEach((element) => element.list.clear());
+
+    for (var element in wordCategoris.values) {
+      element.list.clear();
+    }
   }
 
   void notify() => notifyListeners();
@@ -86,7 +87,9 @@ extension Flow on ContentNotifier {
       wordCategoris[firstChar]!.addNotifier(wordNotifier);
     }
 
-    wordCategoris.values.forEach((element) => element.sort());
+    for (var element in wordCategoris.values) {
+      element.sort();
+    }
 
     notify();
   }
@@ -107,7 +110,7 @@ extension Get on ContentNotifier {
     var sum = 0;
 
     for (var wordNotifier in wordNotifiers) {
-      sum += wordNotifier.getContentCount(this.id);
+      sum += wordNotifier.getContentCount(id);
     }
 
     return sum.toString();
@@ -165,7 +168,7 @@ extension Util on ContentNotifier {
 
   String toJson() {
     final m = wordNotifiers
-        .map((e) => [e.id, e.getContentCount(this.id), e.know])
+        .map((e) => [e.id, e.getContentCount(id), e.know])
         .toList();
 
     return jsonEncode(m);

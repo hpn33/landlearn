@@ -11,7 +11,7 @@ class DeskHomePage extends StatelessWidget {
     return Material(
       child: SafeArea(
         child: Row(
-          children: [
+          children: const [
             Expanded(child: WordView()),
             Expanded(child: ContentView()),
           ],

@@ -34,7 +34,9 @@ class ContentHub extends ChangeNotifier {
 
   void notify({bool sub = false}) {
     if (sub) {
-      contentNotifiers.forEach((contentNotifier) => contentNotifier.notify());
+      for (var contentNotifier in contentNotifiers) {
+        contentNotifier.notify();
+      }
     }
 
     notifyListeners();

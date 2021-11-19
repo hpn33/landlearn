@@ -5,8 +5,6 @@ import 'package:landlearn/service/logic/analyze_content.dart';
 import 'package:landlearn/service/models/word_hub.dart';
 import 'package:landlearn/page/study/study_controller.dart';
 import 'package:landlearn/service/db/database.dart';
-import 'package:landlearn/service/models/word_category_notifier.dart';
-import 'package:landlearn/service/models/word_data.dart';
 import 'package:landlearn/service/models/word_notifier.dart';
 import 'package:landlearn/service/models/content_notifier.dart';
 import 'package:landlearn/util/util.dart';
@@ -34,6 +32,8 @@ import 'package:landlearn/widget/word_section_widget.dart';
 
 class StudyPage extends HookWidget {
   static final editModeProvider = StateProvider((ref) => false);
+
+  const StudyPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -116,7 +116,7 @@ class StudyPage extends HookWidget {
                             ),
                         ],
                       ),
-                      TextSpan(text: '\n'),
+                      const TextSpan(text: '\n'),
                     ],
                   ],
                 ),
@@ -156,7 +156,7 @@ class StudyPage extends HookWidget {
           elevation: 6,
           child: Row(
             children: [
-              BackButton(),
+              const BackButton(),
               Text(
                 'text word\n${contentNotifier.allWordCount}',
                 textAlign: TextAlign.center,
@@ -166,7 +166,7 @@ class StudyPage extends HookWidget {
                 textAlign: TextAlign.center,
               ),
               ElevatedButton(
-                child: Text('analyze'),
+                child: const Text('analyze'),
                 onPressed: () => analyze(ref),
               ),
               ElevatedButton(

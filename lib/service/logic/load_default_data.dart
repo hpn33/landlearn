@@ -39,12 +39,12 @@ Future<void> loadDefaultData(
 
   // load
   final contents = await db.contentDao.getAll();
-  contentHub..load(wordHub, contents);
+  contentHub.load(wordHub, contents);
 
   // analyze
   for (final contentNotifier in contentHub.contentNotifiers) {
     await analyzeContent(db, contentNotifier, wordHub);
     contentHub.notify();
-    await Future.delayed(Duration(milliseconds: 100));
+    await Future.delayed(const Duration(milliseconds: 100));
   }
 }

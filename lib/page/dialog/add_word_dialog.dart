@@ -20,9 +20,9 @@ Widget addWordDialog() {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('word'),
+                  const Text('word'),
                   IconButton(
-                    icon: Icon(Icons.add),
+                    icon: const Icon(Icons.add),
                     onPressed: () {
                       final db = ref.read(dbProvider);
                       db.wordDao.add(controller.text);
@@ -32,7 +32,7 @@ Widget addWordDialog() {
                   ),
                 ],
               ),
-              Divider(),
+              const Divider(),
               TextField(controller: controller),
             ],
           ),

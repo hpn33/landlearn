@@ -7,7 +7,7 @@ import 'app.dart';
 void main() async {
   await loadHive();
 
-  runApp(ProviderScope(
+  runApp(const ProviderScope(
     child: MyApp(),
     // observers: [Ob()],
   ));
@@ -29,7 +29,7 @@ class Ob extends ProviderObserver {
     Object? newValue,
     ProviderContainer container,
   ) {
-    print('''
+    debugPrint('''
 {
   "provider": "${provider.name ?? provider.runtimeType}",
   "newValue": "$newValue"
