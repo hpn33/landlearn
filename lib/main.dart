@@ -18,7 +18,9 @@ Future<void> loadHive() async {
 
   final box = await Hive.openBox('configs');
 
-  await box.put('first_time', true);
+  if (!box.containsKey('first_time')) {
+    await box.put('first_time', true);
+  }
 }
 
 class Ob extends ProviderObserver {

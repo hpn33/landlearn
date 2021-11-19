@@ -96,16 +96,7 @@ class ContentView extends StatelessWidget {
                       style: const TextStyle(fontSize: 20),
                     ),
                     const Spacer(),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 2.0,
-                        horizontal: 2.0,
-                      ),
-                      child: Text(
-                        awarnessPercent.toStringAsFixed(1) + ' %',
-                        style: const TextStyle(fontSize: 12),
-                      ),
-                    ),
+                    ...status2(contentNotifier),
                   ],
                 ),
               ),
@@ -140,5 +131,69 @@ class ContentView extends StatelessWidget {
         ),
       );
     });
+  }
+
+  List<Widget> status2(ContentNotifier contentNotifier) {
+    return [
+      Text(contentNotifier.wordCount),
+      const Text(' '),
+      Padding(
+        padding: const EdgeInsets.symmetric(
+          vertical: 2.0,
+          horizontal: 2.0,
+        ),
+        child: Text(
+          contentNotifier.awarnessPercent.toStringAsFixed(1) + ' %',
+          style: const TextStyle(fontSize: 12),
+        ),
+      ),
+    ];
+  }
+
+  List<Widget> status(ContentNotifier contentNotifier) {
+    return [
+      Container(
+        padding: const EdgeInsets.all(4.0),
+        decoration: BoxDecoration(
+          color: Colors.grey[300],
+          borderRadius: BorderRadius.circular(5),
+        ),
+        child: Row(
+          children: [
+            Text(contentNotifier.allWordCountString),
+            const Text(' '),
+            Text(
+              contentNotifier.awarnessPercentOfAllWord.toStringAsFixed(1) +
+                  ' %',
+              style: const TextStyle(fontSize: 12),
+            ),
+          ],
+        ),
+      ),
+      const SizedBox(width: 4),
+      Container(
+        padding: const EdgeInsets.all(4.0),
+        decoration: BoxDecoration(
+          color: Colors.blue[100],
+          borderRadius: BorderRadius.circular(5),
+        ),
+        child: Row(
+          children: [
+            Text(contentNotifier.wordCount),
+            const Text(' '),
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                vertical: 2.0,
+                horizontal: 2.0,
+              ),
+              child: Text(
+                contentNotifier.awarnessPercent.toStringAsFixed(1) + ' %',
+                style: const TextStyle(fontSize: 12),
+              ),
+            ),
+          ],
+        ),
+      ),
+    ];
   }
 }

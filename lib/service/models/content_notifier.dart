@@ -106,19 +106,36 @@ extension Get on ContentNotifier {
     return sum.toString();
   }
 
-  String get allWordCount {
+  int get allWordCount {
     var sum = 0;
 
     for (var wordNotifier in wordNotifiers) {
       sum += wordNotifier.getContentCount(id);
     }
 
-    return sum.toString();
+    return sum;
   }
+
+  String get allWordCountString => allWordCount.toString();
 
   double get awarnessPercent {
     final ratio = (wordNotifiers.where((element) => element.know).length /
         wordNotifiers.length);
+
+    if (ratio == 0.0 || ratio.toString() == 'NaN') {
+      return 0.0;
+    }
+
+    return ratio * 100;
+  }
+
+  double get awarnessPercentOfAllWord {
+    final count = wordNotifiers
+        .where((element) => element.know)
+        .map((e) => e.getContentCount(id));
+
+    final reduce = count.isEmpty ? 0 : count.reduce((a, b) => a + b);
+    final ratio = (reduce / allWordCount);
 
     if (ratio == 0.0 || ratio.toString() == 'NaN') {
       return 0.0;
