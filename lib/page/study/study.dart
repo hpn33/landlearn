@@ -126,10 +126,6 @@ class StudyPage extends HookWidget {
   }
 
   Widget wordOfContent() {
-    // TODO: refresh word by word
-    // or section section
-    // - [x] update word know state
-    // - [ ] remove on update
     return HookConsumer(builder: (context, ref, child) {
       final contentNotifier =
           ref.read(selectedContentStateProvider.state).state!;
@@ -142,78 +138,10 @@ class StudyPage extends HookWidget {
           children: [
             for (final categoryRow in wordCategoris.entries)
               WordSectionWidget(categoryRow.key, categoryRow.value),
-            // Column(
-            //   children: [
-            //     Row(
-            //       children: [
-            //         SizedBox(
-            //           width: 250,
-            //           child: Card(
-            //             color: Colors.grey[200],
-            //             child: Padding(
-            //               padding: const EdgeInsets.all(8.0),
-            //               child: Row(
-            //                 children: [
-            //                   Text(alphaChar),
-            //                   Spacer(),
-            //                   // Text('  -  '),
-            //                   Text(wordCategoris[alphaChar]!
-            //                       .length
-            //                       .toString()),
-            //                 ],
-            //               ),
-            //             ),
-            //           ),
-            //         ),
-            //       ],
-            //     ),
-
-            //     // Divider(),
-            //     Wrap(
-            //       children: [
-            //         for (final wordRow in wordCategoris[alphaChar]!.list)
-            //           wordCard(wordCategoris[alphaChar]!, wordRow),
-            //       ],
-            //     ),
-            //     SizedBox(height: 20),
-            //   ],
-            // ),
           ],
         ),
       );
     });
-  }
-
-  Widget wordCard(
-      WordCategoryNotifier wordCategory, WordNotifier wordNotifier) {
-    return HookConsumer(
-      builder: (context, ref, child) {
-        useListenable(wordNotifier);
-
-        final contentNotifier =
-            ref.read(selectedContentStateProvider.state).state!;
-
-        final contentCount = wordNotifier.getContentCount(contentNotifier.id);
-
-        return Card(
-          color: wordNotifier.know ? Colors.green[100] : null,
-          child: InkWell(
-            onTap: () {
-              wordNotifier.toggleKnowToDB(ref);
-            },
-            child: Padding(
-              padding: const EdgeInsets.all(4.0),
-              child: Text(
-                '${wordNotifier.word} $contentCount',
-                style: TextStyle(
-                  fontSize: 12.0 + contentCount,
-                ),
-              ),
-            ),
-          ),
-        );
-      },
-    );
   }
 
   Widget topBar() {
@@ -282,20 +210,5 @@ class StudyPage extends HookWidget {
     final db = ref.read(dbProvider);
 
     analyzeContent(db, contentNotifier, wordHub);
-  }
-
-  Future<WordNotifier> getOrAddWord(
-    Database db,
-    List<WordNotifier> allWordInDB,
-    WordData wordData,
-  ) async {
-    final selection =
-        allWordInDB.where((element) => element.word == wordData.word).toList();
-
-    if (selection.isEmpty) {
-      return WordNotifier(await db.wordDao.add(wordData.word));
-    }
-
-    return selection.first;
   }
 }
