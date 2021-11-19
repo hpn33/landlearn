@@ -18,7 +18,6 @@ const materials = [
   'Yussouf',
 ];
 
-/// TODO check existans of content
 Future<void> loadDefaultData(
   Database db,
   WordHub wordHub,
@@ -26,6 +25,10 @@ Future<void> loadDefaultData(
 ) async {
   // insert new content
   for (final fileTitle in materials) {
+    if (contentHub.contents.where((c) => c.title == fileTitle).length != 0) {
+      continue;
+    }
+
     final assets =
         await rootBundle.loadString('assets/material/$fileTitle.txt');
 
