@@ -12,15 +12,7 @@ class LoadPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Future.wait([
-      loadData(context),
-      if (Hive.box('configs').get('first_time'))
-        loadDefaultData(
-          context.read(dbProvider),
-          context.read(wordHubProvider),
-          context.read(contentHubProvider),
-        ),
-    ]).then(
+    Future.wait([load(context)]).then(
       (value) {
         Navigator.pop(context);
         Navigator.push(
@@ -39,6 +31,20 @@ class LoadPage extends StatelessWidget {
     );
   }
 
+  Future<void> load(BuildContext context) async {
+    await loadData(context);
+
+    if (Hive.box('configs').get('first_time')) {
+      await loadDefaultData(
+        context.read(dbProvider),
+        context.read(wordHubProvider),
+        context.read(contentHubProvider),
+      );
+
+      await Hive.box('configs').put('first_time', false);
+    }
+  }
+
   Future<void> loadData(BuildContext context) async {
     final db = context.read(dbProvider);
     final wordHub = context.read(wordHubProvider);
@@ -50,6 +56,6 @@ class LoadPage extends StatelessWidget {
     final contents = await db.contentDao.getAll();
     contentHub.load(wordHub, contents);
 
-    await Future.delayed(Duration(seconds: 1));
+    await Future.delayed(Duration(milliseconds: 100));
   }
 }

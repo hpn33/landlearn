@@ -32,11 +32,11 @@
 
 
 ## publish
-- [ ] default content
+- [x] default content
   - [x] logic
   - [x] refresh
   - [x] add for first time
-  - [ ] setting option: add default content ( any that not exsit )
+  - [x] setting option: add default content ( any that not exsit )
 - [ ] ui & ux
 - [ ] mobile ui
 - [ ] study page: read mode's

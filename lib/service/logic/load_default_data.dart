@@ -25,7 +25,9 @@ Future<void> loadDefaultData(
 ) async {
   // insert new content
   for (final fileTitle in materials) {
-    if (contentHub.contents.where((c) => c.title == fileTitle).length != 0) {
+    final matchContent = contentHub.contents.where((c) => c.title == fileTitle);
+
+    if (matchContent.isNotEmpty) {
       continue;
     }
 
@@ -43,6 +45,6 @@ Future<void> loadDefaultData(
   for (final contentNotifier in contentHub.contentNotifiers) {
     await analyzeContent(db, contentNotifier, wordHub);
     contentHub.notify();
-    await Future.delayed(Duration(milliseconds: 1000));
+    await Future.delayed(Duration(milliseconds: 100));
   }
 }
