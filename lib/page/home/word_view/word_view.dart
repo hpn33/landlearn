@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:landlearn/service/models/word_hub.dart';
-import 'package:landlearn/service/models/word_category_notifier.dart';
-import 'package:landlearn/service/models/word_notifier.dart';
+import 'package:landlearn/widget/word_section_widget.dart';
 
 import '../../dialog/add_word_dialog.dart';
 
@@ -95,7 +94,7 @@ class WordView extends StatelessWidget {
                   final alphaChar = wordCategories.elementAt(index).key;
                   final category = wordCategories.elementAt(index).value;
 
-                  return wordSectionCard(alphaChar, category);
+                  return WordSectionWidget(alphaChar, category);
                 },
               );
             }),
@@ -103,65 +102,5 @@ class WordView extends StatelessWidget {
         ],
       ),
     );
-  }
-
-  Column wordSectionCard(
-    String alphaChar,
-    WordCategoryNotifier wordCategoryNotifier,
-  ) {
-    return Column(
-      children: [
-        Card(
-          color: Colors.grey[200],
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(children: [Text(alphaChar)]),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 6.0),
-          child: HookBuilder(builder: (context) {
-            useListenable(wordCategoryNotifier);
-
-            // return ListView.builder(
-            //   itemCount: wordCategoryNotifier.list.length,
-            //   shrinkWrap: true,
-            //   itemBuilder: (context, index) {
-            //     final word = wordCategoryNotifier.list[index];
-
-            //     return wordItem(word);
-            //   },
-            // );
-
-            return Wrap(
-              alignment: WrapAlignment.center,
-              children: [
-                for (final word in wordCategoryNotifier.list) wordItem(word),
-              ],
-            );
-          }),
-        ),
-        SizedBox(height: 30),
-      ],
-    );
-  }
-
-  Widget wordItem(WordNotifier wordNotifier) {
-    return HookConsumer(builder: (context, ref, child) {
-      useListenable(wordNotifier);
-
-      return Card(
-        color: wordNotifier.know ? Colors.green[100] : null,
-        child: InkWell(
-          onTap: () {
-            wordNotifier.toggleKnowToDB(ref);
-          },
-          child: Padding(
-            padding: const EdgeInsets.all(4.0),
-            child: Text(wordNotifier.word + ' ${wordNotifier.totalCount}'),
-          ),
-        ),
-      );
-    });
   }
 }

@@ -28,7 +28,8 @@
 - [x] easy adding content
 - [x] show knowing work on text content ( word by word )
 - [ ] study page good edit flow ( !!! ) (research plz )
-- [ ] need some default story
+- [x] need some default story
+- [ ] show word usage sample ( if exist )
 
 
 ## publish
@@ -38,5 +39,8 @@
   - [x] add for first time
   - [x] setting option: add default content ( any that not exsit )
 - [ ] ui & ux
+  - [x] show word count in each category
+  - [ ] show word count on each content
+  - [ ] show awarness of content in study page
 - [ ] mobile ui
 - [ ] study page: read mode's

@@ -10,6 +10,7 @@ import 'package:landlearn/service/models/word_data.dart';
 import 'package:landlearn/service/models/word_notifier.dart';
 import 'package:landlearn/service/models/content_notifier.dart';
 import 'package:landlearn/util/util.dart';
+import 'package:landlearn/widget/word_section_widget.dart';
 
 /// TODO:  goal: improve data flow in study page
 /// refactor
@@ -139,21 +140,44 @@ class StudyPage extends HookWidget {
       return SingleChildScrollView(
         child: Column(
           children: [
-            for (final alphaChar in alphabeta)
-              Card(
-                child: Column(
-                  children: [
-                    Text(alphaChar),
-                    Divider(),
-                    Wrap(
-                      children: [
-                        for (final wordRow in wordCategoris[alphaChar]!.list)
-                          wordCard(wordCategoris[alphaChar]!, wordRow),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
+            for (final categoryRow in wordCategoris.entries)
+              WordSectionWidget(categoryRow.key, categoryRow.value),
+            // Column(
+            //   children: [
+            //     Row(
+            //       children: [
+            //         SizedBox(
+            //           width: 250,
+            //           child: Card(
+            //             color: Colors.grey[200],
+            //             child: Padding(
+            //               padding: const EdgeInsets.all(8.0),
+            //               child: Row(
+            //                 children: [
+            //                   Text(alphaChar),
+            //                   Spacer(),
+            //                   // Text('  -  '),
+            //                   Text(wordCategoris[alphaChar]!
+            //                       .length
+            //                       .toString()),
+            //                 ],
+            //               ),
+            //             ),
+            //           ),
+            //         ),
+            //       ],
+            //     ),
+
+            //     // Divider(),
+            //     Wrap(
+            //       children: [
+            //         for (final wordRow in wordCategoris[alphaChar]!.list)
+            //           wordCard(wordCategoris[alphaChar]!, wordRow),
+            //       ],
+            //     ),
+            //     SizedBox(height: 20),
+            //   ],
+            // ),
           ],
         ),
       );

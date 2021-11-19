@@ -27,3 +27,8 @@ class WordCategoryNotifier extends ChangeNotifier {
 
   void notify() => notifyListeners();
 }
+
+extension Gets on WordCategoryNotifier {
+  int get length => list.length;
+  int get knowCount => list.where((element) => element.know).length;
+}
