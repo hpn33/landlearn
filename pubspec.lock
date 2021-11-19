@@ -176,6 +176,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.0"
+  db_viewer:
+    dependency: transitive
+    description:
+      name: db_viewer
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.0"
   drift:
     dependency: transitive
     description:
@@ -367,7 +374,7 @@ packages:
       name: moor_db_viewer
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.4.0"
+    version: "5.0.0"
   moor_flutter:
     dependency: "direct main"
     description:
