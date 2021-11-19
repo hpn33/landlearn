@@ -129,17 +129,25 @@ class StudyPage extends HookWidget {
     return HookConsumer(builder: (context, ref, child) {
       final contentNotifier =
           ref.read(selectedContentStateProvider.state).state!;
+
       useListenable(contentNotifier);
 
       final wordCategoris = contentNotifier.wordCategoris;
 
-      return SingleChildScrollView(
-        child: Column(
-          children: [
-            for (final categoryRow in wordCategoris.entries)
-              WordSectionWidget(categoryRow.key, categoryRow.value),
-          ],
-        ),
+      return Column(
+        children: [
+          status(contentNotifier),
+          Expanded(
+            child: ListView.builder(
+              itemCount: wordCategoris.length,
+              itemBuilder: (context, index) {
+                final categoryRow = wordCategoris.entries.elementAt(index);
+
+                return WordSectionWidget(categoryRow.key, categoryRow.value);
+              },
+            ),
+          ),
+        ],
       );
     });
   }
@@ -210,5 +218,23 @@ class StudyPage extends HookWidget {
     final db = ref.read(dbProvider);
 
     analyzeContent(db, contentNotifier, wordHub);
+  }
+
+  Widget status(ContentNotifier contentNotifier) {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          children: [
+            Text(contentNotifier.wordCount),
+            const Text(' '),
+            Text(
+              contentNotifier.awarnessPercent.toStringAsFixed(1) + ' %',
+              style: const TextStyle(fontSize: 12),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
