@@ -3,10 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:landlearn/page/study/logic/view_mode.dart';
 import 'package:landlearn/page/study/study.dart';
-import 'package:landlearn/service/db/database.dart';
-import 'package:landlearn/service/logic/analyze_content.dart';
 import 'package:landlearn/service/models/content_notifier.dart';
-import 'package:landlearn/service/models/word_hub.dart';
 
 import '../study_controller.dart';
 
@@ -34,10 +31,10 @@ class AppbarWidget extends HookConsumerWidget {
             textAlign: TextAlign.center,
           ),
           const SizedBox(width: 10),
-          ElevatedButton(
-            child: const Text('analyze'),
-            onPressed: () => analyze(ref),
-          ),
+          // ElevatedButton(
+          //   child: const Text('analyze'),
+          //   onPressed: () => analyze(ref),
+          // ),
           const SizedBox(width: 10),
           toggleViewModeButton(),
         ],
@@ -60,28 +57,28 @@ class AppbarWidget extends HookConsumerWidget {
           List.generate(viewModeItems.length, (i) => i == 0),
         );
 
-        return ToggleButtons(
-          children: viewModeItems,
-          onPressed: (int index) {
-            isSelected.value =
-                List.generate(viewModeItems.length, (i) => index == i);
+        return Column(
+          children: [
+            const Text('View Mode'),
+            ToggleButtons(
+              children: viewModeItems,
+              onPressed: (int index) {
+                isSelected.value =
+                    List.generate(viewModeItems.length, (i) => index == i);
 
-            viewMode.state = ViewMode.values[index];
-          },
-          isSelected: isSelected.value,
+                if (viewMode.state == ViewMode.edit &&
+                    ref.read(selectedContentStateProvider)!.content !=
+                        ref.read(textControllerProvider).text) {
+                  analyze(ref);
+                }
+
+                viewMode.state = ViewMode.values[index];
+              },
+              isSelected: isSelected.value,
+            ),
+          ],
         );
       },
     );
-  }
-
-  /// logic
-
-  /// extract work from content text
-  void analyze(WidgetRef ref) async {
-    final contentNotifier = ref.read(selectedContentStateProvider)!;
-    final wordHub = ref.read(wordHubProvider);
-    final db = ref.read(dbProvider);
-
-    analyzeContent(db, contentNotifier, wordHub);
   }
 }

@@ -31,6 +31,7 @@
 - [x] need some default story
 - [ ] show word usage sample ( if exist )
 - [ ] edit flow - maybe remove analyze button
+- [ ] mobilize
 
 
 ## publish
@@ -39,9 +40,9 @@
   - [x] refresh
   - [x] add for first time
   - [x] setting option: add default content ( any that not exsit )
-- [ ] ui & ux
+- [x] ui & ux
   - [x] show word count in each category
   - [x] show word count on each content
   - [x] word status in study page ( awarness - know - unknow)
   - [x] study page: content view mode's
-  - [ ] mobile ui
+- [ ] good README
