@@ -40,7 +40,7 @@
   - [x] setting option: add default content ( any that not exsit )
 - [ ] ui & ux
   - [x] show word count in each category
-  - [ ] show word count on each content
-  - [ ] word status in study page ( awarness - know - unknow)
-- [ ] mobile ui
-- [ ] study page: read mode's
+  - [x] show word count on each content
+  - [x] word status in study page ( awarness - know - unknow)
+  - [ ] study page: read mode's
+  - [ ] mobile ui

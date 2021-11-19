@@ -147,7 +147,7 @@ extension Get on ContentNotifier {
 
 extension Util on ContentNotifier {
   bool isKnow(String w) {
-    final word = get(w);
+    final word = getWord(w);
 
     if (word == null) {
       return false;
@@ -156,8 +156,8 @@ extension Util on ContentNotifier {
     return word.know;
   }
 
-  Word? get(String word) {
-    final wordNotifiers = getNotifier(word);
+  Word? getWord(String word) {
+    final wordNotifiers = getWordNotifier(word);
 
     if (wordNotifiers == null) {
       return null;
@@ -166,7 +166,7 @@ extension Util on ContentNotifier {
     return wordNotifiers.value;
   }
 
-  WordNotifier? getNotifier(String word) {
+  WordNotifier? getWordNotifier(String word) {
     if (word.isEmpty) {
       return null;
     }

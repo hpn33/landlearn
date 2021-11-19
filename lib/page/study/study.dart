@@ -1,14 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:landlearn/service/logic/analyze_content.dart';
-import 'package:landlearn/service/models/word_hub.dart';
-import 'package:landlearn/page/study/study_controller.dart';
-import 'package:landlearn/service/db/database.dart';
-import 'package:landlearn/service/models/word_notifier.dart';
-import 'package:landlearn/service/models/content_notifier.dart';
-import 'package:landlearn/util/util.dart';
-import 'package:landlearn/widget/word_section_widget.dart';
+import 'package:landlearn/page/study/component/content_text.dart';
+import 'package:landlearn/page/study/component/content_words.dart';
+
+import 'component/appbar.dart';
 
 /// TODO:  goal: improve data flow in study page
 /// refactor
@@ -40,200 +36,21 @@ class StudyPage extends HookWidget {
     return Material(
       child: Column(
         children: [
-          topBar(),
+          const AppbarWidget(),
           Expanded(
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
+              children: const [
                 Expanded(
-                  child: contentView(),
+                  child: ContentTextWidget(),
                 ),
                 Expanded(
-                  child: wordOfContent(),
+                  child: ContentWordWidget(),
                 ),
               ],
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget contentView() {
-    return HookConsumer(builder: (context, ref, child) {
-      final textController = ref.watch(textControllerProvider);
-      final editMode = ref.watch(editModeProvider);
-      final contentNotifier = ref.read(selectedContentStateProvider)!;
-
-      useListenable(contentNotifier);
-
-      return SingleChildScrollView(
-        child: editMode
-            ? TextField(
-                controller: textController,
-                minLines: 20,
-                maxLines: 1000,
-              )
-            // : Text(textController.text),
-            : RichText(
-                text: TextSpan(
-                  children: [
-                    for (final paragh in textController.text.split('\n')) ...[
-                      TextSpan(
-                        children: [
-                          for (final word in paragh.split(regex))
-                            WidgetSpan(
-                              child: HookBuilder(
-                                builder: (context) {
-                                  final wordNotifier =
-                                      contentNotifier.getNotifier(word);
-
-                                  useListenable(
-                                      wordNotifier ?? ChangeNotifier());
-
-                                  if (wordNotifier == null) {
-                                    return Text('($word)');
-                                  }
-
-                                  return InkWell(
-                                    onTap: () {
-                                      wordNotifier.toggleKnowToDB(ref);
-                                    },
-                                    child: Text(
-                                      word + ' ',
-                                      style: TextStyle(
-                                        color: wordNotifier.know
-                                            ? Colors.green
-                                            : Colors.black,
-                                        decoration: wordNotifier.know
-                                            ? TextDecoration.underline
-                                            : null,
-                                      ),
-                                    ),
-                                  );
-                                },
-                              ),
-                            ),
-                        ],
-                      ),
-                      const TextSpan(text: '\n'),
-                    ],
-                  ],
-                ),
-              ),
-      );
-    });
-  }
-
-  Widget wordOfContent() {
-    return HookConsumer(builder: (context, ref, child) {
-      final contentNotifier =
-          ref.read(selectedContentStateProvider.state).state!;
-
-      useListenable(contentNotifier);
-
-      final wordCategoris = contentNotifier.wordCategoris;
-
-      return Column(
-        children: [
-          status(contentNotifier),
-          Expanded(
-            child: ListView.builder(
-              itemCount: wordCategoris.length,
-              itemBuilder: (context, index) {
-                final categoryRow = wordCategoris.entries.elementAt(index);
-
-                return WordSectionWidget(categoryRow.key, categoryRow.value);
-              },
-            ),
-          ),
-        ],
-      );
-    });
-  }
-
-  Widget topBar() {
-    return HookConsumer(
-      builder: (context, ref, child) {
-        final editMode = ref.watch(editModeProvider.notifier);
-        final contentNotifier = ref.read(selectedContentStateProvider)!;
-
-        useListenable(contentNotifier);
-
-        return Material(
-          elevation: 6,
-          child: Row(
-            children: [
-              const BackButton(),
-              Text(
-                'text word\n${contentNotifier.allWordCount}',
-                textAlign: TextAlign.center,
-              ),
-              Text(
-                'word count\n${contentNotifier.wordCount}',
-                textAlign: TextAlign.center,
-              ),
-              ElevatedButton(
-                child: const Text('analyze'),
-                onPressed: () => analyze(ref),
-              ),
-              ElevatedButton(
-                child: Text(editMode.state ? 'done' : 'edit'),
-                onPressed: () async {
-                  final contentNotifier =
-                      ref.read(selectedContentStateProvider)!;
-
-                  final textController = ref.read(textControllerProvider);
-
-                  if (textController.text != contentNotifier.content) {
-                    await ref.read(dbProvider).contentDao.updateContent(
-                          contentNotifier.value,
-                          textController.text,
-                        );
-
-                    contentNotifier.updateContent(textController.text);
-                  }
-
-                  editMode.state = !editMode.state;
-                },
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-
-  /// extract work from content text
-  /// remove dub
-  ///
-  /// check for add or get
-  ///
-  /// update
-  ///
-  /// ready to use
-  void analyze(WidgetRef ref) async {
-    final contentNotifier = ref.read(selectedContentStateProvider)!;
-    final wordHub = ref.read(wordHubProvider);
-    final db = ref.read(dbProvider);
-
-    analyzeContent(db, contentNotifier, wordHub);
-  }
-
-  Widget status(ContentNotifier contentNotifier) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Row(
-          children: [
-            Text(contentNotifier.wordCount),
-            const Text(' '),
-            Text(
-              contentNotifier.awarnessPercent.toStringAsFixed(1) + ' %',
-              style: const TextStyle(fontSize: 12),
-            ),
-          ],
-        ),
       ),
     );
   }

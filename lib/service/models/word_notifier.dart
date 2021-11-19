@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:landlearn/service/db/database.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'content_notifier.dart';
 import 'word_data.dart';
@@ -23,20 +23,10 @@ class WordNotifier extends ValueNotifier<Word> {
     return _contentCount;
   }
 
-  int get totalCount => wordDataCatch.values
-      .map((e) => e.count)
-      .reduce((value, element) => value + element);
-
   // contentId, wordData
   final wordDataCatch = <int, WordData>{};
 
   WordNotifier(Word wordObject) : super(wordObject);
-
-  void setContentNotifier(ContentNotifier contentNotifier, WordData wordData) {
-    addListener(() => contentNotifier.notify());
-
-    wordDataCatch[contentNotifier.id] = wordData;
-  }
 }
 
 extension DB on WordNotifier {
@@ -46,5 +36,19 @@ extension DB on WordNotifier {
     await db.wordDao.updateKnow(value);
 
     value = value.copyWith(know: !know);
+  }
+}
+
+extension Gets on WordNotifier {
+  int get totalCount => wordDataCatch.values
+      .map((e) => e.count)
+      .reduce((value, element) => value + element);
+}
+
+extension Func on WordNotifier {
+  void setContentNotifier(ContentNotifier contentNotifier, WordData wordData) {
+    addListener(() => contentNotifier.notify());
+
+    wordDataCatch[contentNotifier.id] = wordData;
   }
 }
