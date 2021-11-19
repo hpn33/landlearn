@@ -5,7 +5,7 @@ import 'package:landlearn/service/models/content_notifier.dart';
 
 import 'word_hub.dart';
 
-final contentHubProvider = Provider((ref) => ContentHub());
+final contentHubProvider = ChangeNotifierProvider((ref) => ContentHub());
 
 class ContentHub extends ChangeNotifier {
   final List<Content> contents = [];

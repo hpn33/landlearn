@@ -5,7 +5,7 @@ import 'package:landlearn/service/models/word_category_notifier.dart';
 import 'package:landlearn/service/models/word_notifier.dart';
 import 'package:landlearn/util/util.dart';
 
-final wordHubProvider = Provider((ref) => WordHub());
+final wordHubProvider = ChangeNotifierProvider((ref) => WordHub());
 
 class WordHub extends ChangeNotifier {
   final List<Word> words = [];

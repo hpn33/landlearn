@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:landlearn/service/models/word_hub.dart';
 import 'package:landlearn/widget/word_section_widget.dart';
@@ -47,10 +46,7 @@ class WordView extends StatelessWidget {
   Widget statusOfWord() {
     return HookConsumer(
       builder: (context, ref, child) {
-        final wordHub = ref.read(wordHubProvider);
-        final wordNotifiers = wordHub.wordNotifiers;
-
-        useListenable(wordHub);
+        final wordNotifiers = ref.watch(wordHubProvider).wordNotifiers;
 
         final totalCount = wordNotifiers.length;
         final knowCount = wordNotifiers.where((element) => element.know).length;
@@ -82,11 +78,8 @@ class WordView extends StatelessWidget {
         children: [
           Expanded(
             child: HookConsumer(builder: (context, ref, child) {
-              final wordHub = ref.read(wordHubProvider);
-
-              useListenable(wordHub);
-
-              final wordCategories = wordHub.wordCategories.entries;
+              final wordCategories =
+                  ref.watch(wordHubProvider).wordCategories.entries;
 
               return ListView.builder(
                 itemCount: wordCategories.length,

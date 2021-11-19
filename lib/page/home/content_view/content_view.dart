@@ -46,11 +46,7 @@ class ContentView extends StatelessWidget {
 
   Widget contentListWidget(BuildContext context) {
     return HookConsumer(builder: (context, ref, child) {
-      final contentHub = ref.read(contentHubProvider);
-
-      useListenable(contentHub);
-
-      final contentNotifiers = contentHub.contentNotifiers;
+      final contentNotifiers = ref.watch(contentHubProvider).contentNotifiers;
 
       return Row(
         children: [

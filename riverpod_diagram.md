@@ -3,24 +3,18 @@
 graph TD;
 
 
-9(dbProvider) --> 2((HomePage)) ;
 
 
 9(dbProvider) --> 4((StudyPage)) ;
-10(wordHubProvider) --> 4((StudyPage)) ;
+10[[wordHubProvider]] --> 4((StudyPage)) ;
 12[[selectedContentStateProvider]] --> 4((StudyPage)) ;
 13[[textControllerProvider]] --> 4((StudyPage)) ;
 
 
-9(dbProvider) --> 6((LoadPage)) ;
-10(wordHubProvider) --> 6((LoadPage)) ;
-11(contentHubProvider) --> 6((LoadPage)) ;
 
-10(wordHubProvider) --> 7((WordView)) ;
+10[[wordHubProvider]] --> 7((WordView)) ;
 
-9(dbProvider) --> 8((ContentView)) ;
-10(wordHubProvider) --> 8((ContentView)) ;
-11(contentHubProvider) --> 8((ContentView)) ;
+11[[contentHubProvider]] --> 8((ContentView)) ;
 12[[selectedContentStateProvider]] --> 8((ContentView)) ;
 
 
