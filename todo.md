@@ -15,10 +15,9 @@
 * [x] count of word ( totaly )
 * [x] refresh and save data after analyze
 * [ ] search bar for word
-- [ ] improve analyze (can collect all word) and refresh data (add to wordhub)
 - [ ] some word not in en alphaChar ( solution )
 - [ ] different view for words ( categories - count )
-- [ ] different reading mode ( read only - edit - show knowage - tooltip )
+- [x] different reading mode ( read only - edit - show knowage - tooltip )
 
 ## improvment
 - [ ] issue: analyze time need be faster ( make problem for load default data )
@@ -31,8 +30,15 @@
 - [x] need some default story
 - [ ] show word usage sample ( if exist )
 - [ ] edit flow - maybe remove analyze button
-- [ ] mobilize
-
+- [ ] mobilize - mobile ui
+- [ ] نمایش نمونه های استفاده شده از کلمه در متن ( اگر موجود باشد )
+- [ ] رنگ بندی های متفاوت برای کلمات با وضعیت فهم متفاوت
+- [ ] نمایش کلمات جدید ( فقط در این محتوا وجود دارد )
+- [ ] ترجمه کلمه
+  - [ ] نوشتن ترجمه مورد نظر
+  - [ ] وصل شدن به یه منبع انلاین برای ترجمه ( به زبان های مختلف )
+  - [ ] پخش صدا کلمه
+- [ ] 
 
 ## publish
 - [x] default content
