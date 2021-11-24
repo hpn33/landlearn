@@ -27,14 +27,18 @@ import 'component/appbar.dart';
 /// on edit
 /// update word
 
-class StudyPage extends HookWidget {
+class StudyPage extends HookConsumerWidget {
   static final viewModeProvider =
       StateProvider.autoDispose((ref) => ViewMode.normal);
+  static final showContentTextProvider =
+      StateProvider.autoDispose((ref) => true);
+  static final showContentWordsProvider =
+      StateProvider.autoDispose((ref) => true);
 
   const StudyPage({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, ref) {
     return Material(
       child: Column(
         children: [
@@ -42,13 +46,15 @@ class StudyPage extends HookWidget {
           Expanded(
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
-                Expanded(
-                  child: ContentTextWidget(),
-                ),
-                Expanded(
-                  child: ContentWordWidget(),
-                ),
+              children: [
+                if (ref.watch(showContentTextProvider))
+                  const Expanded(
+                    child: ContentTextWidget(),
+                  ),
+                if (ref.watch(showContentWordsProvider))
+                  const Expanded(
+                    child: ContentWordWidget(),
+                  ),
               ],
             ),
           ),

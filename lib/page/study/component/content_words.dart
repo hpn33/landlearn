@@ -17,20 +17,25 @@ class ContentWordWidget extends HookConsumerWidget {
 
     final wordCategoris = contentNotifier.wordCategoris;
 
-    return Column(
-      children: [
-        status(contentNotifier),
-        Expanded(
-          child: ListView.builder(
-            itemCount: wordCategoris.length,
-            itemBuilder: (context, index) {
-              final categoryRow = wordCategoris.entries.elementAt(index);
+    return Center(
+      child: SizedBox(
+        width: 750,
+        child: Column(
+          children: [
+            status(contentNotifier),
+            Expanded(
+              child: ListView.builder(
+                itemCount: wordCategoris.length,
+                itemBuilder: (context, index) {
+                  final categoryRow = wordCategoris.entries.elementAt(index);
 
-              return WordSectionWidget(categoryRow.key, categoryRow.value);
-            },
-          ),
+                  return WordSectionWidget(categoryRow.key, categoryRow.value);
+                },
+              ),
+            ),
+          ],
         ),
-      ],
+      ),
     );
   }
 

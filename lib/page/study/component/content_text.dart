@@ -15,6 +15,15 @@ class ContentTextWidget extends HookConsumerWidget {
   Widget build(BuildContext context, ref) {
     final viewMode = ref.watch(StudyPage.viewModeProvider);
 
+    return Center(
+      child: SizedBox(
+        width: 750,
+        child: getView(viewMode),
+      ),
+    );
+  }
+
+  Widget getView(ViewMode viewMode) {
     if (viewMode == ViewMode.edit) {
       return const EditView();
     }
