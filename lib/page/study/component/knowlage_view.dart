@@ -15,14 +15,16 @@ class KnowlageView extends HookConsumerWidget {
     final textController = ref.watch(textControllerProvider);
     final contentNotifier = ref.read(selectedContentStateProvider)!;
 
-    return RichText(
-      text: TextSpan(
-        children: [
-          for (final paragh in textController.text.split('\n')) ...[
-            paragraphSection(paragh, contentNotifier),
-            const TextSpan(text: '\n'),
+    return SingleChildScrollView(
+      child: RichText(
+        text: TextSpan(
+          children: [
+            for (final paragh in textController.text.split('\n')) ...[
+              paragraphSection(paragh, contentNotifier),
+              const TextSpan(text: '\n'),
+            ],
           ],
-        ],
+        ),
       ),
     );
   }
@@ -60,6 +62,8 @@ class KnowlageView extends HookConsumerWidget {
               style: TextStyle(
                 color: wordNotifier.know ? Colors.green : Colors.black,
                 // decoration: wordNotifier.know ? TextDecoration.underline : null,
+                fontSize: 20,
+                fontWeight: FontWeight.w500,
               ),
             ),
           );
