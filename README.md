@@ -1,16 +1,15 @@
 # landlearn
 
+this is a tools for learning language words
 
-- description - about app goal ( flow - plans - goals)
-- 
+the concept:
+you can learn word means from contents ( that you self add ).
 
+app make some job to easy you learn.
+like:
+- underestand of content
+- tip knowlage level of words on the content text view
 
-import your .srt file (subtitle) to this app and know the word in file
-you check the word that you know and you can learn other word
-
-later you add another file, can see how many percentage of word know and how many not know
-
-
-can import content by other way .srt file is a goal for now
+after stury on each content and adding new content you can see the new words ( that you not underestand ).
 
 
