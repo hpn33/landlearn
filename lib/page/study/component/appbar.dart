@@ -62,14 +62,18 @@ class AppbarWidget extends HookConsumerWidget {
             const Text('View Mode'),
             ToggleButtons(
               children: viewModeItems,
-              onPressed: (int index) {
+              onPressed: (int index) async {
                 isSelected.value =
                     List.generate(viewModeItems.length, (i) => index == i);
 
                 if (viewMode.state == ViewMode.edit &&
                     ref.read(selectedContentStateProvider)!.content !=
                         ref.read(textControllerProvider).text) {
-                  analyze(ref);
+                  ref
+                      .read(selectedContentStateProvider)!
+                      .updateContent(ref.read(textControllerProvider).text);
+
+                  await analyze(ref);
                 }
 
                 viewMode.state = ViewMode.values[index];

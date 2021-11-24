@@ -18,6 +18,8 @@
 - [ ] some word not in en alphaChar ( solution )
 - [ ] different view for words ( categories - count )
 - [x] different reading mode ( read only - edit - show knowage - tooltip )
+- [ ] show count of content
+- [ ] refresh content list view when add new content
 
 ## improvment
 - [ ] issue: analyze time need be faster ( make problem for load default data )
@@ -52,3 +54,9 @@
   - [x] word status in study page ( awarness - know - unknow)
   - [x] study page: content view mode's
 - [ ] good README
+
+
+## editor
+- [x] analyze after change text
+- [x] panel to edit content
+- [ ] 

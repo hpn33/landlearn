@@ -5,6 +5,7 @@ import 'package:landlearn/service/logic/analyze_content.dart';
 import 'package:landlearn/service/models/content_notifier.dart';
 import 'package:landlearn/service/models/word_hub.dart';
 
+// TODO: change name
 final selectedContentStateProvider =
     StateProvider<ContentNotifier?>((ref) => null);
 
@@ -19,7 +20,7 @@ final textControllerProvider = ChangeNotifierProvider.autoDispose((ref) {
 /// logic
 
 /// extract work from content text
-void analyze(WidgetRef ref) async {
+Future<void> analyze(WidgetRef ref) async {
   final contentNotifier = ref.read(selectedContentStateProvider)!;
   final wordHub = ref.read(wordHubProvider);
   final db = ref.read(dbProvider);
