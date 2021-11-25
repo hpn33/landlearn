@@ -92,10 +92,28 @@ class ContentWordToggleWidget extends HookConsumerWidget {
                     const Text(' '),
                     RotatedBox(
                       quarterTurns: 1,
-                      child: Text(
-                        contentNotifier.awarnessPercent.toStringAsFixed(1) +
-                            ' %',
-                        style: const TextStyle(fontSize: 12),
+                      child: Container(
+                        decoration:
+                            // ?
+                            BoxDecoration(
+                          borderRadius: BorderRadius.circular(5),
+                          color: contentNotifier.awarnessPercent.toInt() == 100
+                              ? Colors.green[200]
+                              : Colors.grey[300],
+                        ),
+                        // : null,
+                        padding: const EdgeInsets.all(2),
+                        child: Text(
+                          contentNotifier.awarnessPercent.toStringAsFixed(1) +
+                              ' %',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color:
+                                contentNotifier.awarnessPercent.toInt() == 100
+                                    ? Colors.white
+                                    : null,
+                          ),
+                        ),
                       ),
                     ),
                   ],
