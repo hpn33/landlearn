@@ -28,10 +28,10 @@
 
 - [x] easy adding content
 - [x] show knowing work on text content ( word by word )
-- [ ] study page good edit flow ( !!! ) (research plz )
 - [x] need some default story
+- [x] study page good edit flow ( !!! ) (research plz )
+- [x] edit flow - maybe remove analyze button
 - [ ] show word usage sample ( if exist )
-- [ ] edit flow - maybe remove analyze button
 - [ ] mobilize - mobile ui
 - [ ] نمایش نمونه های استفاده شده از کلمه در متن ( اگر موجود باشد )
 - [ ] رنگ بندی های متفاوت برای کلمات با وضعیت فهم متفاوت
@@ -40,7 +40,7 @@
   - [ ] نوشتن ترجمه مورد نظر
   - [ ] وصل شدن به یه منبع انلاین برای ترجمه ( به زبان های مختلف )
   - [ ] پخش صدا کلمه
-- [ ] 
+- [ ] studyPage: View modes must be more useful ( less mode - more usablity ) read view and tooltip view in same mode - on mode change lost the location ( less mode for solution )
 
 ## publish
 - [x] default content
@@ -53,7 +53,8 @@
   - [x] show word count on each content
   - [x] word status in study page ( awarness - know - unknow)
   - [x] study page: content view mode's
-- [ ] good README
+- [x] editor word
+- [x] good README
 
 
 ## editor

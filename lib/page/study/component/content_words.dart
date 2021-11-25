@@ -41,6 +41,7 @@ class ContentWordToggleWidget extends HookConsumerWidget {
             ),
           )
         : openText();
+
     return child;
 
     // return AnimatedSize(
@@ -52,20 +53,70 @@ class ContentWordToggleWidget extends HookConsumerWidget {
   }
 
   Widget openText() {
-    return Consumer(
+    return HookConsumer(
       builder: (BuildContext context, WidgetRef ref, Widget? child) {
+        final contentNotifier = ref.read(selectedContentStateProvider)!;
+
+        useListenable(contentNotifier);
+
         return SizedBox(
           width: 50,
-          child: Center(
-            child: TextButton(
-              onPressed: () {
-                ref.read(StudyPage.showContentWordsProvider.state).state = true;
-              },
-              child: const RotatedBox(
-                quarterTurns: 1,
-                child: Text('Words', style: TextStyle(fontSize: 20)),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // const Spacer(),
+              Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    // const Text(' '),
+                    RotatedBox(
+                      quarterTurns: 1,
+                      child: Text(contentNotifier.wordCount),
+                    ),
+                    const Text(' '),
+                    // RotatedBox(
+                    //   quarterTurns: 1,
+                    //   child: Text(
+                    //     contentNotifier.awarnessPercent.toStringAsFixed(1) +
+                    //         ' %',
+                    //     style: const TextStyle(fontSize: 12),
+                    //   ),
+                    // ),
+                  ],
+                ),
               ),
-            ),
+              TextButton(
+                onPressed: () {
+                  ref.read(StudyPage.showContentWordsProvider.state).state =
+                      true;
+                },
+                child: const RotatedBox(
+                  quarterTurns: 1,
+                  child: Text('Words', style: TextStyle(fontSize: 20)),
+                ),
+              ),
+              Expanded(
+                child: Column(
+                  children: [
+                    // const Text(' '),
+                    // RotatedBox(
+                    //   quarterTurns: 1,
+                    //   child: Text(contentNotifier.wordCount),
+                    // ),
+                    const Text(' '),
+                    RotatedBox(
+                      quarterTurns: 1,
+                      child: Text(
+                        contentNotifier.awarnessPercent.toStringAsFixed(1) +
+                            ' %',
+                        style: const TextStyle(fontSize: 12),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
         );
       },
