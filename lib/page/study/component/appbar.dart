@@ -69,16 +69,6 @@ class AppbarWidget extends HookConsumerWidget {
                 isSelected.value =
                     List.generate(viewModeItems.length, (i) => index == i);
 
-                if (viewMode.state == ViewMode.edit &&
-                    ref.read(selectedContentStateProvider)!.content !=
-                        ref.read(textControllerProvider).text) {
-                  ref
-                      .read(selectedContentStateProvider)!
-                      .updateContent(ref.read(textControllerProvider).text);
-
-                  await analyze(ref);
-                }
-
                 viewMode.state = ViewMode.values[index];
               },
               isSelected: isSelected.value,
