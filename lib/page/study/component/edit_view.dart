@@ -5,68 +5,105 @@ import 'package:landlearn/page/study/study_controller.dart';
 import 'package:landlearn/service/models/content_notifier.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class EditView extends HookConsumerWidget {
+class EditView extends StatelessWidget {
   const EditView({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context, ref) {
-    final textController = ref.watch(textControllerProvider);
-    final contentNotifier = ref.read(selectedContentStateProvider);
-
-    useListenable(contentNotifier!);
-
+  Widget build(BuildContext context) {
     return Column(
       children: [
-        // status card
-        panel(ref, textController, contentNotifier),
+        const EditPanel(),
         Expanded(
-          child: SingleChildScrollView(
-            child: TextField(
-              controller: textController,
-              minLines: 20,
-              maxLines: 1000,
-            ),
-          ),
+          child: SingleChildScrollView(child: textField()),
         ),
       ],
     );
   }
 
+  Widget textField() => Consumer(
+        builder: (context, ref, child) {
+          final textController = ref.watch(textControllerProvider);
+
+          return TextField(
+            controller: textController,
+            minLines: 20,
+            maxLines: 1000,
+          );
+        },
+      );
+}
+
+class EditPanel extends HookConsumerWidget {
+  const EditPanel({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context, ref) {
+    final textController = ref.watch(textControllerProvider);
+    final contentNotifier = ref.read(selectedContentStateProvider)!;
+
+    useListenable(contentNotifier);
+
+    if (textController.text == contentNotifier.content) {
+      return const SizedBox();
+    }
+
+    return panel(textController, contentNotifier);
+  }
+
   Widget panel(
-    WidgetRef ref,
     TextEditingController textController,
     ContentNotifier contentNotifier,
   ) {
-    if (textController.text != contentNotifier.content) {
-      return Card(
-        margin: const EdgeInsets.all(8.0),
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Row(
-            children: [
-              const Spacer(),
-              IconButton(
-                icon: const Icon(Icons.refresh),
-                onPressed: () {
-                  textController.text = contentNotifier.content;
-                },
-              ),
-              IconButton(
-                icon: const Icon(Icons.done),
-                onPressed: () async {
-                  ref
-                      .read(selectedContentStateProvider)!
-                      .updateContent(ref.read(textControllerProvider).text);
+    return HookBuilder(builder: (context) {
+      final animationController = useAnimationController(
+        duration: const Duration(milliseconds: 150),
+      );
 
-                  await analyze(ref);
-                },
-              ),
-            ],
+      final opacity = useAnimation(
+        Tween(begin: 0.0, end: 1.0).animate(animationController),
+      );
+
+      useEffect(
+        () {
+          animationController.forward();
+
+          return () => animationController.dispose();
+        },
+        [],
+      );
+
+      return Opacity(
+        opacity: opacity,
+        child: Card(
+          margin: const EdgeInsets.all(8.0),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              children: [
+                const Spacer(),
+                IconButton(
+                  icon: const Icon(Icons.refresh),
+                  onPressed: () {
+                    textController.text = contentNotifier.content;
+                  },
+                ),
+                Consumer(builder: (context, ref, child) {
+                  return IconButton(
+                    icon: const Icon(Icons.done),
+                    onPressed: () async {
+                      ref
+                          .read(selectedContentStateProvider)!
+                          .updateContent(ref.read(textControllerProvider).text);
+
+                      await analyze(ref);
+                    },
+                  );
+                }),
+              ],
+            ),
           ),
         ),
       );
-    }
-
-    return const SizedBox();
+    });
   }
 }
