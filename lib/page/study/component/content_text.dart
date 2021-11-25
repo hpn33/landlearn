@@ -42,11 +42,14 @@ class ContentTextWidget extends HookConsumerWidget {
       useListenable(contentNotifier);
 
       return SingleChildScrollView(
-        child: Text(
-          contentNotifier.content,
-          style: const TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.w500,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 24),
+          child: Text(
+            contentNotifier.content,
+            style: const TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.w500,
+            ),
           ),
         ),
       );

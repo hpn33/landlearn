@@ -64,25 +64,15 @@ class ContentWordToggleWidget extends HookConsumerWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // const Spacer(),
               Expanded(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    // const Text(' '),
                     RotatedBox(
                       quarterTurns: 1,
                       child: Text(contentNotifier.wordCount),
                     ),
                     const Text(' '),
-                    // RotatedBox(
-                    //   quarterTurns: 1,
-                    //   child: Text(
-                    //     contentNotifier.awarnessPercent.toStringAsFixed(1) +
-                    //         ' %',
-                    //     style: const TextStyle(fontSize: 12),
-                    //   ),
-                    // ),
                   ],
                 ),
               ),
@@ -99,11 +89,6 @@ class ContentWordToggleWidget extends HookConsumerWidget {
               Expanded(
                 child: Column(
                   children: [
-                    // const Text(' '),
-                    // RotatedBox(
-                    //   quarterTurns: 1,
-                    //   child: Text(contentNotifier.wordCount),
-                    // ),
                     const Text(' '),
                     RotatedBox(
                       quarterTurns: 1,

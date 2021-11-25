@@ -16,14 +16,17 @@ class KnowlageView extends HookConsumerWidget {
     final contentNotifier = ref.read(selectedContentStateProvider)!;
 
     return SingleChildScrollView(
-      child: RichText(
-        text: TextSpan(
-          children: [
-            for (final paragh in textController.text.split('\n')) ...[
-              paragraphSection(paragh, contentNotifier),
-              const TextSpan(text: '\n'),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 24),
+        child: RichText(
+          text: TextSpan(
+            children: [
+              for (final paragh in textController.text.split('\n')) ...[
+                paragraphSection(paragh, contentNotifier),
+                const TextSpan(text: '\n'),
+              ],
             ],
-          ],
+          ),
         ),
       ),
     );

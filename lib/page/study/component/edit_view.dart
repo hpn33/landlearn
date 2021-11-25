@@ -24,10 +24,13 @@ class EditView extends StatelessWidget {
         builder: (context, ref, child) {
           final textController = ref.watch(textControllerProvider);
 
-          return TextField(
-            controller: textController,
-            minLines: 20,
-            maxLines: 1000,
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 16),
+            child: TextField(
+              controller: textController,
+              minLines: 20,
+              maxLines: 1000,
+            ),
           );
         },
       );
