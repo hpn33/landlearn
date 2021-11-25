@@ -12,10 +12,10 @@ class EditView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        const EditPanel(),
         Expanded(
           child: SingleChildScrollView(child: textField()),
         ),
+        const EditPanel(),
       ],
     );
   }
@@ -59,10 +59,6 @@ class EditPanel extends HookConsumerWidget {
         duration: const Duration(milliseconds: 150),
       );
 
-      final opacity = useAnimation(
-        Tween(begin: 0.0, end: 1.0).animate(animationController),
-      );
-
       useEffect(
         () {
           animationController.forward();
@@ -72,8 +68,8 @@ class EditPanel extends HookConsumerWidget {
         [],
       );
 
-      return Opacity(
-        opacity: opacity,
+      return FadeTransition(
+        opacity: Tween(begin: 0.0, end: 1.0).animate(animationController),
         child: Card(
           margin: const EdgeInsets.all(8.0),
           child: Padding(
