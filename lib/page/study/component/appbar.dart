@@ -40,13 +40,6 @@ class AppbarWidget extends HookConsumerWidget {
                   !ref.read(StudyPage.showContentTextProvider);
             },
           ),
-          TextButton(
-            child: const Text('toggle words'),
-            onPressed: () {
-              ref.read(StudyPage.showContentWordsProvider.notifier).state =
-                  !ref.read(StudyPage.showContentWordsProvider);
-            },
-          ),
         ],
       ),
     );

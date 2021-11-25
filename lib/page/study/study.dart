@@ -32,7 +32,7 @@ class StudyPage extends HookConsumerWidget {
   static final showContentTextProvider =
       StateProvider.autoDispose((ref) => true);
   static final showContentWordsProvider =
-      StateProvider.autoDispose((ref) => true);
+      StateProvider.autoDispose((ref) => false);
 
   const StudyPage({Key? key}) : super(key: key);
 
@@ -50,10 +50,7 @@ class StudyPage extends HookConsumerWidget {
                   const Expanded(
                     child: ContentTextWidget(),
                   ),
-                if (ref.watch(showContentWordsProvider))
-                  const Expanded(
-                    child: ContentWordWidget(),
-                  ),
+                const ContentWordToggleWidget(),
               ],
             ),
           ),
