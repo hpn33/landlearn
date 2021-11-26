@@ -60,13 +60,22 @@ class KnowlageView extends HookConsumerWidget {
             onTap: () {
               wordNotifier.toggleKnowToDB(ref);
             },
-            child: Text(
-              word + ' ',
-              style: TextStyle(
-                color: wordNotifier.know ? Colors.green : Colors.black,
-                // decoration: wordNotifier.know ? TextDecoration.underline : null,
-                fontSize: 20,
-                fontWeight: FontWeight.w500,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 1, vertical: 2),
+              child: Container(
+                padding: const EdgeInsets.all(1),
+                decoration: BoxDecoration(
+                  color: wordNotifier.know ? Colors.green[100] : null,
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                child: Text(
+                  word,
+                  style: const TextStyle(
+                    color: Colors.black,
+                    fontSize: 20,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
               ),
             ),
           );
