@@ -42,6 +42,7 @@ class ContentTextWidget extends HookConsumerWidget {
       useListenable(contentNotifier);
 
       return SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 24),
           child: Text(

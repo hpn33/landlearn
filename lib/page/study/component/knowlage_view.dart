@@ -16,6 +16,7 @@ class KnowlageView extends HookConsumerWidget {
     final contentNotifier = ref.read(selectedContentStateProvider)!;
 
     return SingleChildScrollView(
+      physics: const BouncingScrollPhysics(),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 24),
         child: RichText(
