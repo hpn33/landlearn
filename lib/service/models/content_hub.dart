@@ -18,11 +18,15 @@ class ContentHub extends ChangeNotifier {
     }
 
     for (final content in contents) {
-      final contentNotifier = ContentNotifier(content);
-      contentNotifier.loadData(wordHub);
-
-      contentNotifiers.add(contentNotifier);
+      addContent(content, wordHub);
     }
+  }
+
+  void addContent(Content content, WordHub wordHub) {
+    final contentNotifier = ContentNotifier(content);
+    contentNotifier.loadData(wordHub);
+
+    contentNotifiers.add(contentNotifier);
   }
 
   void clear() {

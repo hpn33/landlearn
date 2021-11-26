@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:landlearn/service/db/database.dart';
+import 'package:landlearn/service/models/content_hub.dart';
+import 'package:landlearn/service/models/word_hub.dart';
 import 'package:landlearn/util/sample.dart';
 
 Widget addContentDialog() {
@@ -25,13 +27,17 @@ Widget addContentDialog() {
                   const Text('content'),
                   IconButton(
                     icon: const Icon(Icons.add),
-                    onPressed: () {
+                    onPressed: () async {
                       final db = ref.read(dbProvider);
 
-                      db.contentDao.add(
+                      final content = await db.contentDao.add(
                         controller.text,
                         useSample.value ? sample : '',
                       );
+
+                      final contentHub = ref.read(contentHubProvider);
+                      contentHub.addContent(content, ref.read(wordHubProvider));
+                      contentHub.notify();
 
                       Navigator.pop(context);
                     },
