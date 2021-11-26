@@ -137,11 +137,14 @@ class ContentView extends StatelessWidget {
     return [
       Text(contentNotifier.wordCount),
       const Text(' '),
-      Padding(
-        padding: const EdgeInsets.symmetric(
-          vertical: 2.0,
-          horizontal: 2.0,
+      Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(5),
+          color: contentNotifier.awarnessPercent.toInt() == 100
+              ? Colors.green[200]
+              : Colors.grey[300],
         ),
+        padding: const EdgeInsets.all(2),
         child: Text(
           contentNotifier.awarnessPercent.toStringAsFixed(1) + ' %',
           style: const TextStyle(fontSize: 12),
