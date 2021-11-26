@@ -1,5 +1,16 @@
 
 
+## Feature
+- [x] collect Contents ( text and word )
+- [ ] manage contents
+  - [x] create
+  - [x] read
+  - [x] update
+  - [ ] delete
+- [ ] word oriented feature ( mean - refrence - know level )
+- [ ] rech editor ( show knowlage level - ... )
+- [ ] backup and data usablility for others ( json - bit file (for less file size) )
+
 ## Goal
 * [x] good for public and publish
 
@@ -55,7 +66,7 @@
   - [x] word status in study page ( awarness - know - unknow)
   - [x] study page: content view mode's
 - [x] editor word
-- [ ] add sql to release file or good lib
+- [x] add sql to release file or ~~good lib~~
 - [x] good README
 
 
