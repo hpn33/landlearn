@@ -28,6 +28,14 @@ class ContentView extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 6.0),
         child: Row(
           children: [
+            Consumer(
+              builder: (context, ref, child) {
+                final count =
+                    ref.watch(contentHubProvider).contentNotifiers.length;
+
+                return Text('$count');
+              },
+            ),
             const Spacer(),
             IconButton(
               icon: const Icon(Icons.add),

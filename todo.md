@@ -10,6 +10,13 @@
 - [ ] word oriented feature ( mean - refrence - know level )
 - [ ] rech editor ( show knowlage level - ... )
 - [ ] backup and data usablility for others ( json - bit file (for less file size) )
+- [ ] ( online ) content provider
+  - [how make feed website](https://themeisle.com/blog/news-aggregator-websites-examples/)
+  - https://feedly.com
+  - https://blog.feedspot.com/video_game_rss_feeds/
+  - https://feeder.co/discover/18-great-gaming-feeds
+  - https://www.gameinformer.com/rss
+  - 
 
 ## Goal
 * [x] good for public and publish
@@ -29,7 +36,7 @@
 - [ ] some word not in en alphaChar ( solution )
 - [ ] different view for words ( categories - count )
 - [x] different reading mode ( read only - edit - show knowage - tooltip )
-- [ ] show count of content
+- [x] show count of content
 - [x] refresh content list view when add new content
 
 ## improvment
