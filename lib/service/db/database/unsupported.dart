@@ -1,5 +1,9 @@
 import '../database.dart';
 
-Database constructDb({bool logStatements = false}) {
+Database constructDb({
+  String? subPath,
+  String fileName = 'db',
+  bool logStatements = false,
+}) {
   throw 'Platform not supported';
 }

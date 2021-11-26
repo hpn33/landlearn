@@ -10,7 +10,13 @@ import 'table/words.dart';
 
 part 'database.g.dart';
 
-final dbProvider = Provider((ref) => constructDb(logStatements: kReleaseMode));
+final dbProvider = Provider(
+  (ref) => constructDb(
+    subPath: 'LLdb',
+    fileName: 'landLearn',
+    logStatements: !kReleaseMode,
+  ),
+);
 
 @UseMoor(
   tables: [Words, Contents],

@@ -8,13 +8,22 @@ import 'package:path/path.dart' as p;
 
 import '../database.dart';
 
-Database constructDb({String fileName = 'numemo', bool logStatements = false}) {
+Database constructDb({
+  String? subPath,
+  String fileName = 'db',
+  bool logStatements = false,
+}) {
   final fName = '$fileName.sqlite';
 
   if (Platform.isIOS || Platform.isAndroid) {
     final executor = LazyDatabase(() async {
       final dataDir = await paths.getApplicationDocumentsDirectory();
-      final dbFile = File(p.join(dataDir.path, fName));
+
+      final pas = subPath != null
+          ? p.join(dataDir.path, subPath, fName)
+          : p.join(dataDir.path, fName);
+
+      final dbFile = File(pas);
 
       return VmDatabase(dbFile, logStatements: logStatements);
     });
@@ -23,14 +32,23 @@ Database constructDb({String fileName = 'numemo', bool logStatements = false}) {
   }
 
   if (Platform.isMacOS || Platform.isLinux || Platform.isWindows) {
-    final file = File(fName);
-    return Database(VmDatabase(file, logStatements: logStatements));
-  }
+    final executor = LazyDatabase(() async {
+      final dataDir = await paths.getApplicationDocumentsDirectory();
 
-  // if (Platform.isWindows) {
-  //   final file = File(fName);
-  //   return Database(VmDatabase(file, logStatements: logStatements));
-  // }
+      final pas = subPath != null
+          ? p.join(dataDir.path, subPath, fName)
+          : p.join(dataDir.path, fName);
+
+      final dbFile = File(pas);
+
+      return VmDatabase(dbFile, logStatements: logStatements);
+    });
+
+    return Database(executor);
+
+    // final file = File(fName);
+    // return Database(VmDatabase(file, logStatements: logStatements));
+  }
 
   return Database(VmDatabase.memory(logStatements: logStatements));
 }
