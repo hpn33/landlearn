@@ -6,6 +6,7 @@ import 'package:landlearn/page/study/study.dart';
 import 'package:landlearn/page/study/study_controller.dart';
 import 'package:landlearn/service/models/content_hub.dart';
 import 'package:landlearn/service/models/content_notifier.dart';
+import 'package:landlearn/widget/styled_percent_widget.dart';
 
 class ContentView extends StatelessWidget {
   const ContentView({Key? key}) : super(key: key);
@@ -145,19 +146,7 @@ class ContentView extends StatelessWidget {
     return [
       Text(contentNotifier.wordCount),
       const Text(' '),
-      Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(5),
-          color: contentNotifier.awarnessPercent.toInt() == 100
-              ? Colors.green[200]
-              : Colors.grey[300],
-        ),
-        padding: const EdgeInsets.all(2),
-        child: Text(
-          contentNotifier.awarnessPercent.toStringAsFixed(1) + ' %',
-          style: const TextStyle(fontSize: 12),
-        ),
-      ),
+      StyledPercent(awarnessPercent: contentNotifier.awarnessPercent),
     ];
   }
 

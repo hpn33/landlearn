@@ -3,6 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:landlearn/page/study/study.dart';
 import 'package:landlearn/service/models/content_notifier.dart';
+import 'package:landlearn/widget/styled_percent_widget.dart';
 import 'package:landlearn/widget/word_section_widget.dart';
 
 import '../study_controller.dart';
@@ -92,28 +93,8 @@ class ContentWordToggleWidget extends HookConsumerWidget {
                     const Text(' '),
                     RotatedBox(
                       quarterTurns: 1,
-                      child: Container(
-                        decoration:
-                            // ?
-                            BoxDecoration(
-                          borderRadius: BorderRadius.circular(5),
-                          color: contentNotifier.awarnessPercent.toInt() == 100
-                              ? Colors.green[200]
-                              : Colors.grey[300],
-                        ),
-                        // : null,
-                        padding: const EdgeInsets.all(2),
-                        child: Text(
-                          contentNotifier.awarnessPercent.toStringAsFixed(1) +
-                              ' %',
-                          style: TextStyle(
-                            fontSize: 12,
-                            color:
-                                contentNotifier.awarnessPercent.toInt() == 100
-                                    ? Colors.white
-                                    : null,
-                          ),
-                        ),
+                      child: StyledPercent(
+                        awarnessPercent: contentNotifier.awarnessPercent,
                       ),
                     ),
                   ],
@@ -168,10 +149,7 @@ class ContentWordWidget extends HookConsumerWidget {
           children: [
             Text(contentNotifier.wordCount),
             const Text(' '),
-            Text(
-              contentNotifier.awarnessPercent.toStringAsFixed(1) + ' %',
-              style: const TextStyle(fontSize: 12),
-            ),
+            StyledPercent(awarnessPercent: contentNotifier.awarnessPercent),
             const Spacer(),
             IconButton(
               icon: const Icon(Icons.toggle_off),
