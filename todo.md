@@ -41,6 +41,7 @@
   - [ ] وصل شدن به یه منبع انلاین برای ترجمه ( به زبان های مختلف )
   - [ ] پخش صدا کلمه
 - [ ] studyPage: View modes must be more useful ( less mode - more usablity ) read view and tooltip view in same mode - on mode change lost the location ( less mode for solution )
+- [ ] delete option ( -_- )
 
 ## publish
 - [x] default content

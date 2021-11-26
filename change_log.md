@@ -1,3 +1,19 @@
+
+## 0.1.1+1
+- **DELETE**
+  - content text toggle button
+
+- **IMPROV**
+  - knowlageView text style
+  - refresh ContentList when add new
+
+- **CHANGE**
+  - path of database
+  - scroll physic
+  - style of awarness percent
+
+---
+
 ## 0.1.0+1
 
 - default content
