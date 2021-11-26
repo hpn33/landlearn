@@ -13,3 +13,8 @@ like:
 after stury on each content and adding new content you can see the new words ( that you not underestand ).
 
 
+
+### Links
+* [Change Log](change_log.md)
+* [TODO](todo.md)
+<!-- [TODO](todo.md) -->

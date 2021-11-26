@@ -1,7 +1,7 @@
 
 
 ## Goal
-* good for public and publish
+* [x] good for public and publish
 
 ## TODO
 * [ ] import .srt convert to content
@@ -54,6 +54,7 @@
   - [x] word status in study page ( awarness - know - unknow)
   - [x] study page: content view mode's
 - [x] editor word
+- [ ] add sql to release file or good lib
 - [x] good README
 
 
