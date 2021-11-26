@@ -29,8 +29,8 @@ import 'component/appbar.dart';
 class StudyPage extends HookConsumerWidget {
   static final viewModeProvider =
       StateProvider.autoDispose((ref) => ViewMode.normal);
-  static final showContentTextProvider =
-      StateProvider.autoDispose((ref) => true);
+  // static final showContentTextProvider =
+  //     StateProvider.autoDispose((ref) => true);
   static final showContentWordsProvider =
       StateProvider.autoDispose((ref) => false);
 
@@ -45,12 +45,12 @@ class StudyPage extends HookConsumerWidget {
           Expanded(
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (ref.watch(showContentTextProvider))
-                  const Expanded(
-                    child: ContentTextWidget(),
-                  ),
-                const ContentWordToggleWidget(),
+              children: const [
+                // if (ref.watch(showContentTextProvider))
+                Expanded(
+                  child: ContentTextWidget(),
+                ),
+                ContentWordToggleWidget(),
               ],
             ),
           ),

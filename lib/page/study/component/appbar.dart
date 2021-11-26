@@ -33,13 +33,13 @@ class AppbarWidget extends HookConsumerWidget {
           const SizedBox(width: 10),
           toggleViewModeButton(),
           const SizedBox(width: 10),
-          TextButton(
-            child: const Text('toggle text'),
-            onPressed: () {
-              ref.read(StudyPage.showContentTextProvider.notifier).state =
-                  !ref.read(StudyPage.showContentTextProvider);
-            },
-          ),
+          // TextButton(
+          //   child: const Text('toggle text'),
+          //   onPressed: () {
+          //     ref.read(StudyPage.showContentTextProvider.notifier).state =
+          //         !ref.read(StudyPage.showContentTextProvider);
+          //   },
+          // ),
         ],
       ),
     );
