@@ -144,7 +144,7 @@ class ContentView extends StatelessWidget {
 
   List<Widget> status2(ContentNotifier contentNotifier) {
     return [
-      Text(contentNotifier.wordCount),
+      Text(contentNotifier.wordCount.toString()),
       const Text(' '),
       StyledPercent(awarnessPercent: contentNotifier.awarnessPercent),
     ];
@@ -179,7 +179,7 @@ class ContentView extends StatelessWidget {
         ),
         child: Row(
           children: [
-            Text(contentNotifier.wordCount),
+            Text(contentNotifier.wordCount.toString()),
             const Text(' '),
             Padding(
               padding: const EdgeInsets.symmetric(

@@ -69,9 +69,9 @@ class ContentWordToggleWidget extends HookConsumerWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    RotatedBox(
-                      quarterTurns: 1,
-                      child: Text(contentNotifier.wordCount),
+                    Tooltip(
+                      message: 'Total',
+                      child: Text(contentNotifier.wordCount.toString()),
                     ),
                     const Text(' '),
                   ],
@@ -91,11 +91,12 @@ class ContentWordToggleWidget extends HookConsumerWidget {
                 child: Column(
                   children: [
                     const Text(' '),
-                    RotatedBox(
-                      quarterTurns: 1,
-                      child: StyledPercent(
-                        awarnessPercent: contentNotifier.awarnessPercent,
-                      ),
+                    Tooltip(
+                      message: 'Know',
+                      child: Text(contentNotifier.wordKnowCount.toString()),
+                    ),
+                    StyledPercent(
+                      awarnessPercent: contentNotifier.awarnessPercent,
                     ),
                   ],
                 ),
@@ -147,7 +148,15 @@ class ContentWordWidget extends HookConsumerWidget {
         padding: const EdgeInsets.all(8.0),
         child: Row(
           children: [
-            Text(contentNotifier.wordCount),
+            Tooltip(
+              message: 'Total',
+              child: Text(contentNotifier.wordCount.toString()),
+            ),
+            const Text('/'),
+            Tooltip(
+              message: 'Know',
+              child: Text(contentNotifier.wordKnowCount.toString()),
+            ),
             const Text(' '),
             StyledPercent(awarnessPercent: contentNotifier.awarnessPercent),
             const Spacer(),

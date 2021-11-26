@@ -96,15 +96,10 @@ extension Flow on ContentNotifier {
 }
 
 extension Get on ContentNotifier {
-  String get wordCount {
-    var sum = 0;
+  int get wordCount => wordNotifiers.length;
 
-    for (var category in wordCategoris.values) {
-      sum += category.list.length;
-    }
-
-    return sum.toString();
-  }
+  int get wordKnowCount =>
+      wordNotifiers.where((element) => element.know).length;
 
   int get allWordCount {
     var sum = 0;
