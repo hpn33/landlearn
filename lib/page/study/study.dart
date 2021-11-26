@@ -31,8 +31,7 @@ class StudyPage extends HookConsumerWidget {
       StateProvider.autoDispose((ref) => ViewMode.normal);
   // static final showContentTextProvider =
   //     StateProvider.autoDispose((ref) => true);
-  static final showContentWordsProvider =
-      StateProvider.autoDispose((ref) => false);
+  static final showContentWordsProvider = StateProvider((ref) => false);
 
   const StudyPage({Key? key}) : super(key: key);
 
