@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:landlearn/service/models/content_notifier.dart';
-import 'package:landlearn/util/util.dart';
 import 'package:landlearn/service/models/word_notifier.dart';
 
 import '../study_controller.dart';
@@ -39,7 +38,7 @@ class KnowlageView extends HookConsumerWidget {
   ) {
     return TextSpan(
       children: [
-        for (final word in paragh.split(regex))
+        for (final word in paragh.split(' '))
           wordSection(contentNotifier, word),
       ],
     );
@@ -54,6 +53,10 @@ class KnowlageView extends HookConsumerWidget {
           useListenable(wordNotifier ?? ChangeNotifier());
 
           if (wordNotifier == null) {
+            if (word.runes.first == 13) {
+              return Text(word);
+            }
+
             return Text('($word)');
           }
 

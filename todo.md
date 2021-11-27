@@ -81,3 +81,8 @@
 - [x] analyze after change text
 - [x] panel to edit content
 - [x] toggle section ( text and words)
+
+## Study Page
+- [ ] modes???
+- [ ] ui
+- [ ] ux

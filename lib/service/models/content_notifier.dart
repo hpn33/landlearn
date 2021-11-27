@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:landlearn/service/models/word_hub.dart';
 import 'package:landlearn/service/db/database.dart';
 import 'package:landlearn/service/models/word_data.dart';
@@ -161,15 +162,26 @@ extension Util on ContentNotifier {
     return wordNotifiers.value;
   }
 
+  // TODO : optimize ( is slow )
   WordNotifier? getWordNotifier(String word) {
     if (word.isEmpty) {
       return null;
     }
 
-    final lowerCase = word.toLowerCase();
-    final selection = wordCategoris[lowerCase.substring(0, 1)]!
-        .list
-        .where((element) => element.word == lowerCase);
+    final cleanWord = word.replaceAll(RegExp(r'[^A-Za-z0-9]'), '');
+    if (cleanWord.isEmpty) {
+      return null;
+    }
+
+    final lowerCase = cleanWord.toLowerCase();
+    final firstChar = lowerCase.characters.first;
+
+    if (int.tryParse(firstChar) != null) {
+      return null;
+    }
+
+    final category = wordCategoris[firstChar]!.list;
+    final selection = category.where((element) => element.word == lowerCase);
 
     if (selection.isEmpty) {
       return null;
