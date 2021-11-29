@@ -21,25 +21,11 @@ class AppbarWidget extends HookConsumerWidget {
       child: Row(
         children: [
           const BackButton(),
-          Text(
-            'text word\n${contentNotifier.allWordCount}',
-            textAlign: TextAlign.center,
-          ),
+          Text('count ${contentNotifier.allWordCount}'),
           const SizedBox(width: 10),
-          Text(
-            'word count\n${contentNotifier.wordCount}',
-            textAlign: TextAlign.center,
-          ),
+          Text('uniqe ${contentNotifier.wordCount}'),
           const SizedBox(width: 10),
           toggleViewModeButton(),
-          const SizedBox(width: 10),
-          // TextButton(
-          //   child: const Text('toggle text'),
-          //   onPressed: () {
-          //     ref.read(StudyPage.showContentTextProvider.notifier).state =
-          //         !ref.read(StudyPage.showContentTextProvider);
-          //   },
-          // ),
         ],
       ),
     );
@@ -52,18 +38,18 @@ class AppbarWidget extends HookConsumerWidget {
       Tooltip(message: 'Edit', child: Icon(Icons.edit)),
     ];
 
-    return HookConsumer(
-      builder: (BuildContext context, WidgetRef ref, Widget? child) {
-        final viewMode = ref.watch(StudyPage.viewModeProvider.notifier);
+    return Row(
+      children: [
+        const Text('Views '),
+        HookConsumer(
+          builder: (BuildContext context, WidgetRef ref, Widget? child) {
+            final viewMode = ref.watch(StudyPage.viewModeProvider.notifier);
 
-        final isSelected = useState(
-          List.generate(viewModeItems.length, (i) => i == 0),
-        );
+            final isSelected = useState(
+              List.generate(viewModeItems.length, (i) => i == 0),
+            );
 
-        return Column(
-          children: [
-            const Text('View Mode'),
-            ToggleButtons(
+            return ToggleButtons(
               children: viewModeItems,
               onPressed: (int index) async {
                 isSelected.value =
@@ -72,10 +58,10 @@ class AppbarWidget extends HookConsumerWidget {
                 viewMode.state = ViewMode.values[index];
               },
               isSelected: isSelected.value,
-            ),
-          ],
-        );
-      },
+            );
+          },
+        ),
+      ],
     );
   }
 }
