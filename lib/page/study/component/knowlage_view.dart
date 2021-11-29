@@ -52,6 +52,7 @@ class KnowlageView extends HookConsumerWidget {
     );
   }
 
+  // TODO: store result to faster refresh
   WidgetSpan wordSection(ContentNotifier contentNotifier, String word) {
     return WidgetSpan(
       child: HookConsumer(
