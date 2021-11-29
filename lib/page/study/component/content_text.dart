@@ -28,11 +28,11 @@ class ContentTextWidget extends HookConsumerWidget {
       return const EditView();
     }
 
-    if (viewMode == ViewMode.clearKnowladge) {
-      return const KnowlageView();
-    }
+    // if (viewMode == ViewMode.clearKnowladge) {
+    return const KnowlageView();
+    // }
 
-    return textView();
+    // return textView();
   }
 
   Widget textView() {

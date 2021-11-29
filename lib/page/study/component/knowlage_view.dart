@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:landlearn/page/study/logic/view_mode.dart';
+import 'package:landlearn/page/study/study.dart';
 import 'package:landlearn/service/models/content_notifier.dart';
 import 'package:landlearn/service/models/word_notifier.dart';
 
@@ -11,8 +13,7 @@ class KnowlageView extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    final textController = ref.watch(textControllerProvider);
-    final contentNotifier = ref.read(selectedContentStateProvider)!;
+    final contentNotifier = ref.watch(selectedContentStateProvider)!;
 
     return SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
@@ -21,7 +22,7 @@ class KnowlageView extends HookConsumerWidget {
         child: RichText(
           text: TextSpan(
             children: [
-              for (final paragh in textController.text.split('\n')) ...[
+              for (final paragh in contentNotifier.content.split('\n')) ...[
                 paragraphSection(paragh, contentNotifier),
                 const TextSpan(text: '\n'),
               ],
@@ -38,8 +39,15 @@ class KnowlageView extends HookConsumerWidget {
   ) {
     return TextSpan(
       children: [
-        for (final word in paragh.split(' '))
+        for (final word in paragh.split(' ')) ...[
           wordSection(contentNotifier, word),
+          const WidgetSpan(
+            child: Text(
+              ' ',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+            ),
+          ),
+        ],
       ],
     );
   }
@@ -47,6 +55,7 @@ class KnowlageView extends HookConsumerWidget {
   WidgetSpan wordSection(ContentNotifier contentNotifier, String word) {
     return WidgetSpan(
       child: HookConsumer(
+        key: Key(word),
         builder: (context, ref, child) {
           final wordNotifier = contentNotifier.getWordNotifier(word);
 
@@ -60,28 +69,43 @@ class KnowlageView extends HookConsumerWidget {
             return Text('($word)');
           }
 
-          return InkWell(
-            onTap: () {
-              wordNotifier.toggleKnowToDB(ref);
-            },
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 1, vertical: 2),
-              child: Container(
-                padding: const EdgeInsets.all(1),
-                decoration: BoxDecoration(
-                  color: wordNotifier.know ? Colors.green[100] : null,
-                  borderRadius: BorderRadius.circular(5),
-                ),
-                child: Text(
-                  word,
-                  style: const TextStyle(
-                    color: Colors.black,
-                    fontSize: 20,
-                    fontWeight: FontWeight.w500,
+          return HookBuilder(
+            key: Key(contentNotifier.id.toString()),
+            builder: (context) {
+              final viewMode = ref.watch(StudyPage.viewModeProvider);
+              final isNormal = viewMode == ViewMode.normal;
+
+              final child = Padding(
+                padding: const EdgeInsets.symmetric(vertical: 1),
+                child: Container(
+                  padding: const EdgeInsets.all(0.1),
+                  decoration: isNormal
+                      ? null
+                      : BoxDecoration(
+                          color: wordNotifier.know ? Colors.green[100] : null,
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                  child: Text(
+                    word,
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                 ),
-              ),
-            ),
+              );
+
+              if (isNormal) {
+                return child;
+              }
+
+              return InkWell(
+                onTap: () {
+                  wordNotifier.toggleKnowToDB(ref);
+                },
+                child: child,
+              );
+            },
           );
         },
       ),
