@@ -42,15 +42,24 @@ class StudyPage extends HookConsumerWidget {
         children: [
           const AppbarWidget(),
           Expanded(
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
-                // if (ref.watch(showContentTextProvider))
-                Expanded(
-                  child: ContentTextWidget(),
+            child: Center(
+              child: SizedBox(
+                width: MediaQuery.of(context).size.width > 1100
+                    ? MediaQuery.of(context).size.width > 1500
+                        ? 1500
+                        : MediaQuery.of(context).size.width * 0.8
+                    : null,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: const [
+                    // if (ref.watch(showContentTextProvider))
+                    Expanded(
+                      child: ContentTextWidget(),
+                    ),
+                    ContentWordToggleWidget(),
+                  ],
                 ),
-                ContentWordToggleWidget(),
-              ],
+              ),
             ),
           ),
         ],

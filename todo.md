@@ -17,6 +17,7 @@
   - https://feeder.co/discover/18-great-gaming-feeds
   - https://www.gameinformer.com/rss
   - 
+- [ ] import ( txt - subtitle (.srt) - by hand)
 
 ## Goal
 * [x] good for public and publish
@@ -38,6 +39,7 @@
 - [x] different reading mode ( read only - edit - show knowage - tooltip )
 - [x] show count of content
 - [x] refresh content list view when add new content
+- [ ] colorize edit panel on editor study Page 
 
 ## improvment
 - [ ] issue: analyze time need be faster ( make problem for load default data )
