@@ -39,7 +39,8 @@
 - [x] different reading mode ( read only - edit - show knowage - tooltip )
 - [x] show count of content
 - [x] refresh content list view when add new content
-- [ ] colorize edit panel on editor study Page 
+- [x] colorize edit panel on editor study Page 
+- [x] tab key for change modes
 
 ## improvment
 - [ ] issue: analyze time need be faster ( make problem for load default data )

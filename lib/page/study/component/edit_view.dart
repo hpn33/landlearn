@@ -74,6 +74,7 @@ class EditPanel extends HookConsumerWidget {
       return FadeTransition(
         opacity: Tween(begin: 0.0, end: 1.0).animate(animationController),
         child: Card(
+          color: Colors.orange[100],
           margin: const EdgeInsets.all(8.0),
           child: Padding(
             padding: const EdgeInsets.all(8.0),
@@ -88,7 +89,10 @@ class EditPanel extends HookConsumerWidget {
                 ),
                 Consumer(builder: (context, ref, child) {
                   return IconButton(
-                    icon: const Icon(Icons.done),
+                    icon: const Icon(
+                      Icons.done,
+                      color: Colors.green,
+                    ),
                     onPressed: () async {
                       ref
                           .read(selectedContentStateProvider)!

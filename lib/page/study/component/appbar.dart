@@ -43,10 +43,17 @@ class AppbarWidget extends HookConsumerWidget {
         const Text('Views '),
         HookConsumer(
           builder: (BuildContext context, WidgetRef ref, Widget? child) {
-            final viewMode = ref.watch(StudyPage.viewModeProvider.notifier);
+            final viewMode = ref.watch(StudyPage.viewModeProvider.state);
 
-            final isSelected = useState(
-              List.generate(viewModeItems.length, (i) => i == 0),
+            final isSelected = useState(<bool>[]);
+
+            useEffect(
+              () {
+                final index = ViewMode.values.indexOf(viewMode.state);
+                isSelected.value =
+                    List.generate(viewModeItems.length, (i) => i == index);
+              },
+              [viewMode.state],
             );
 
             return ToggleButtons(
