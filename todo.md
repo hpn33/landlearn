@@ -89,4 +89,10 @@
 - [x] modes???
 - [ ] ui
 - [ ] ux
-- [ ] performance
+- [x] performance
+- [x] key binding ( to change mode tab, digit1 normal, digit2 know )
+
+## import content panel
+- [ ] txt
+- [ ] .srt
+- [ ] cliboard
