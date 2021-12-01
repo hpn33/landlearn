@@ -86,6 +86,7 @@
 - [x] toggle section ( text and words)
 
 ## Study Page
-- [ ] modes???
+- [x] modes???
 - [ ] ui
 - [ ] ux
+- [ ] performance
