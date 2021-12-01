@@ -41,6 +41,8 @@ class StudyPage extends HookConsumerWidget {
     return Shortcuts(
       shortcuts: {
         LogicalKeySet(LogicalKeyboardKey.tab): ToggleViewModeIntent(),
+        LogicalKeySet(LogicalKeyboardKey.digit1): ViewModeNormalIntent(),
+        LogicalKeySet(LogicalKeyboardKey.digit2): ViewModeKnowIntent(),
       },
       child: Actions(
         actions: {
@@ -49,6 +51,12 @@ class StudyPage extends HookConsumerWidget {
                 ref.read(viewModeProvider) == ViewMode.normal
                     ? ViewMode.clearKnowladge
                     : ViewMode.normal;
+          }),
+          ViewModeNormalIntent: CallbackAction(onInvoke: (intent) {
+            ref.read(viewModeProvider.state).state = ViewMode.normal;
+          }),
+          ViewModeKnowIntent: CallbackAction(onInvoke: (intent) {
+            ref.read(viewModeProvider.state).state = ViewMode.clearKnowladge;
           }),
         },
         child: Material(
@@ -85,6 +93,10 @@ class StudyPage extends HookConsumerWidget {
 }
 
 class ToggleViewModeIntent extends Intent {}
+
+class ViewModeNormalIntent extends Intent {}
+
+class ViewModeKnowIntent extends Intent {}
 
 // class ToggleViewMode extends Action<ToggleViewModeIntent> {
 //   @override
