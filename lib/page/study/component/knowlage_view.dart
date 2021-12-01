@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -15,64 +17,100 @@ class KnowlageView extends HookConsumerWidget {
   Widget build(BuildContext context, ref) {
     final contentNotifier = ref.watch(selectedContentStateProvider)!;
 
-    return SingleChildScrollView(
-      physics: const BouncingScrollPhysics(),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 24),
-        child: RichText(
-          text: TextSpan(
-            children: [
-              for (final paragh in contentNotifier.content.split('\n')) ...[
-                paragraphSection(paragh, contentNotifier),
-                const TextSpan(text: '\n'),
-              ],
-            ],
-          ),
-        ),
+    // load data
+    final paragraphs = useState<List<Map<String, WordNotifier?>>>([]);
+
+    useEffect(
+      () {
+        paragraphs.value = [
+          for (final paragraph in contentNotifier.content.split('\n'))
+            <String, WordNotifier?>{
+              for (final word in paragraph.split(' '))
+                word: contentNotifier.getWordNotifier(word),
+            },
+        ];
+      },
+      [contentNotifier.content],
+    );
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 24),
+      child: ListView.builder(
+        physics: const BouncingScrollPhysics(),
+        itemCount: paragraphs.value.length,
+        itemBuilder: (context, index) {
+          final paragraph = paragraphs.value[index];
+
+          return RichText(
+            text: paragraphSection(paragraph, contentNotifier),
+          );
+        },
       ),
     );
   }
 
   TextSpan paragraphSection(
-    String paragh,
+    Map<String, WordNotifier?> paragraph,
     ContentNotifier contentNotifier,
   ) {
     return TextSpan(
       children: [
-        for (final word in paragh.split(' ')) ...[
-          wordSection(contentNotifier, word),
-          const WidgetSpan(
-            child: Text(
-              ' ',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+        for (final wordRow in paragraph.entries) ...[
+          wordSection(contentNotifier, wordRow.key, wordRow.value),
+          const TextSpan(
+            text: ' ',
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
             ),
           ),
-        ],
+        ]
       ],
     );
   }
 
-  // TODO: store result to faster refresh
-  WidgetSpan wordSection(ContentNotifier contentNotifier, String word) {
+  WidgetSpan wordSection(
+    ContentNotifier contentNotifier,
+    String word,
+    WordNotifier? wordNotifier,
+  ) {
     return WidgetSpan(
-      child: HookConsumer(
-        key: Key(word),
-        builder: (context, ref, child) {
-          final wordNotifier = contentNotifier.getWordNotifier(word);
-
+      child: HookBuilder(
+        key: Key(word.isEmpty ? 'empty' : word),
+        builder: (context) {
           useListenable(wordNotifier ?? ChangeNotifier());
 
           if (wordNotifier == null) {
+            if (word.isEmpty) {
+              return const SizedBox(width: 0);
+            }
+
             if (word.runes.first == 13) {
               return Text(word);
             }
 
+            // if (word == ' ') {
+            //   return Padding(
+            //     padding: const EdgeInsets.symmetric(vertical: 1),
+            //     child: Container(
+            //       padding: const EdgeInsets.all(0.1),
+            //       child: const Text(
+            //         ' ',
+            //         style: TextStyle(
+            //           fontSize: 20,
+            //           fontWeight: FontWeight.w500,
+            //         ),
+            //       ),
+            //     ),
+            //   );
+            // }
+
             return Text('($word)');
           }
 
-          return HookBuilder(
+          return HookConsumer(
             key: Key(contentNotifier.id.toString()),
-            builder: (context) {
+            builder: (context, ref, child) {
               final viewMode = ref.watch(StudyPage.viewModeProvider);
               final isNormal = viewMode == ViewMode.normal;
 
