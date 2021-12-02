@@ -16,7 +16,8 @@
   - https://blog.feedspot.com/video_game_rss_feeds/
   - https://feeder.co/discover/18-great-gaming-feeds
   - https://www.gameinformer.com/rss
-  - 
+- [ ] online translation
+  - [package for translation](https://pub.dev/packages/translator)
 - [ ] import ( txt - subtitle (.srt) - by hand)
 
 ## Goal
