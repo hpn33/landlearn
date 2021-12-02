@@ -22,11 +22,13 @@ class ContentHub extends ChangeNotifier {
     }
   }
 
-  void addContent(Content content, WordHub wordHub) {
+  ContentNotifier addContent(Content content, WordHub wordHub) {
     final contentNotifier = ContentNotifier(content);
     contentNotifier.loadData(wordHub);
 
     contentNotifiers.add(contentNotifier);
+
+    return contentNotifier;
   }
 
   void clear() {

@@ -2,11 +2,7 @@
 
 ## Feature
 - [x] collect Contents ( text and word )
-- [x] manage contents
-  - [x] create
-  - [x] read
-  - [x] update
-  - [x] delete
+- [x] manage contents ( crud )
 - [ ] word oriented feature ( mean - refrence - know level )
 - [ ] rech editor ( show knowlage level - ... )
 - [ ] backup and data usablility for others ( json - bit file (for less file size) )
@@ -42,8 +38,8 @@
 - [x] refresh content list view when add new content
 - [x] colorize edit panel on editor study Page 
 - [x] tab key for change modes
-- [ ] analyze after add content
-- [ ] refresh content list view when add new content
+- [x] analyze after add content
+- [x] refresh content list view when add new content
 
 ## improvment
 - [ ] issue: analyze time need be faster ( make problem for load default data )

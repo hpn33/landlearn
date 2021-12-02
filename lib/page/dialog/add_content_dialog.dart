@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:landlearn/page/home/content_view/content_view.dart';
 import 'package:landlearn/service/db/database.dart';
+import 'package:landlearn/service/logic/analyze_content.dart';
 import 'package:landlearn/service/models/content_hub.dart';
 import 'package:landlearn/service/models/word_hub.dart';
 import 'package:landlearn/util/sample.dart';
@@ -36,8 +38,17 @@ Widget addContentDialog() {
                       );
 
                       final contentHub = ref.read(contentHubProvider);
-                      contentHub.addContent(content, ref.read(wordHubProvider));
+                      final wordHub = ref.read(wordHubProvider);
+
+                      final contentNotifier =
+                          contentHub.addContent(content, wordHub);
                       contentHub.notify();
+
+                      await analyzeContent(db, contentNotifier, wordHub);
+
+                      final index = contentHub.contentNotifiers.length - 1;
+                      ContentView.animatedListKey.currentState!
+                          .insertItem(index);
 
                       Navigator.pop(context);
                     },
