@@ -62,27 +62,17 @@ class ContentView extends StatelessWidget {
           Expanded(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              child:
-                  // AnimatedList(
-                  //   // key: contentListKey,
-                  //   initialItemCount: contentNotifiers.length,
-                  //   itemBuilder: (context, index, animation) {
-                  //     final contentNotifier = contentNotifiers[index];
-
-                  //     return SlideTransition(
-                  //       position: animation.drive(
-                  //         Tween(begin: const Offset(100, 0), end: Offset.zero),
-                  //       ),
-                  //       child: contentItem(contentNotifier, index),
-                  //     );
-                  //   },
-                  // ),
-                  ListView.builder(
-                itemCount: contentNotifiers.length,
-                itemBuilder: (context, index) {
+              child: AnimatedList(
+                initialItemCount: contentNotifiers.length,
+                itemBuilder: (context, index, animation) {
                   final contentNotifier = contentNotifiers[index];
 
-                  return contentItem(contentNotifier);
+                  return SlideTransition(
+                    position: animation.drive(
+                      Tween(begin: const Offset(100, 0), end: Offset.zero),
+                    ),
+                    child: contentItem(contentNotifier, index),
+                  );
                 },
               ),
             ),
@@ -127,17 +117,17 @@ class ContentView extends StatelessWidget {
                           onTap: () async {
                             await contentNotifier.removeWithDB(ref);
 
-                            // AnimatedList.of(context).removeItem(
-                            //   index,
-                            //   (context, animation) {
-                            //     return FadeTransition(
-                            //       opacity: animation.drive(
-                            //         Tween(begin: 0.0, end: 1.0),
-                            //       ),
-                            //       child: contentItem(contentNotifier),
-                            //     );
-                            //   },
-                            // );
+                            AnimatedList.of(context).removeItem(
+                              index,
+                              (context, animation) {
+                                return FadeTransition(
+                                  opacity: animation.drive(
+                                    Tween(begin: 0.0, end: 1.0),
+                                  ),
+                                  child: contentItem(contentNotifier),
+                                );
+                              },
+                            );
                           },
                           value: 'delete',
                           child: Row(
