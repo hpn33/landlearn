@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:landlearn/service/models/content_hub.dart';
 import 'package:landlearn/service/models/word_hub.dart';
 import 'package:landlearn/service/db/database.dart';
 import 'package:landlearn/service/models/word_data.dart';
@@ -204,5 +206,16 @@ extension Util on ContentNotifier {
     final firstChar = wordNotifier.word.toLowerCase().substring(0, 1);
 
     wordCategoris[firstChar]!.addNotifier(wordNotifier);
+  }
+}
+
+extension DB on ContentNotifier {
+  Future<void> removeWithDB(WidgetRef ref) async {
+    final db = ref.read(dbProvider);
+    final contentHub = ref.read(contentHubProvider);
+
+    await db.contentDao.remove(this);
+
+    contentHub.remove(this);
   }
 }

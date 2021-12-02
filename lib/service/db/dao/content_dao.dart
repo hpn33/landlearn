@@ -1,4 +1,5 @@
 import 'package:landlearn/service/db/table/contents.dart';
+import 'package:landlearn/service/models/content_notifier.dart';
 import 'package:moor/moor.dart';
 
 import '../database.dart';
@@ -36,4 +37,7 @@ class ContentDao extends DatabaseAccessor<Database> with _$ContentDaoMixin {
   }
 
   Future<List<Content>> getAll() => select(contents).get();
+
+  Future<int> remove(ContentNotifier contentNotifier) =>
+      delete(contents).delete(contentNotifier.value);
 }

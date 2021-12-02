@@ -45,4 +45,10 @@ class ContentHub extends ChangeNotifier {
 
     notifyListeners();
   }
+
+  void remove(ContentNotifier contentNotifier) {
+    contentNotifiers.remove(contentNotifier);
+
+    notify();
+  }
 }

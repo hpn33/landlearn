@@ -62,7 +62,22 @@ class ContentView extends StatelessWidget {
           Expanded(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              child: ListView.builder(
+              child:
+                  // AnimatedList(
+                  //   // key: contentListKey,
+                  //   initialItemCount: contentNotifiers.length,
+                  //   itemBuilder: (context, index, animation) {
+                  //     final contentNotifier = contentNotifiers[index];
+
+                  //     return SlideTransition(
+                  //       position: animation.drive(
+                  //         Tween(begin: const Offset(100, 0), end: Offset.zero),
+                  //       ),
+                  //       child: contentItem(contentNotifier, index),
+                  //     );
+                  //   },
+                  // ),
+                  ListView.builder(
                 itemCount: contentNotifiers.length,
                 itemBuilder: (context, index) {
                   final contentNotifier = contentNotifiers[index];
@@ -77,7 +92,7 @@ class ContentView extends StatelessWidget {
     });
   }
 
-  Widget contentItem(ContentNotifier contentNotifier) {
+  Widget contentItem(ContentNotifier contentNotifier, [int index = -1]) {
     return HookConsumer(builder: (context, ref, child) {
       useListenable(contentNotifier);
 
@@ -106,6 +121,40 @@ class ContentView extends StatelessWidget {
                     ),
                     const Spacer(),
                     ...status2(contentNotifier),
+                    PopupMenuButton(
+                      itemBuilder: (context) => [
+                        PopupMenuItem(
+                          onTap: () async {
+                            await contentNotifier.removeWithDB(ref);
+
+                            // AnimatedList.of(context).removeItem(
+                            //   index,
+                            //   (context, animation) {
+                            //     return FadeTransition(
+                            //       opacity: animation.drive(
+                            //         Tween(begin: 0.0, end: 1.0),
+                            //       ),
+                            //       child: contentItem(contentNotifier),
+                            //     );
+                            //   },
+                            // );
+                          },
+                          value: 'delete',
+                          child: Row(
+                            children: const [
+                              Icon(
+                                Icons.delete,
+                                color: Colors.red,
+                              ),
+                              Text(
+                                ' Delete',
+                                style: TextStyle(color: Colors.red),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
                   ],
                 ),
               ),
