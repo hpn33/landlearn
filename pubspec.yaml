@@ -35,6 +35,8 @@ dependencies:
   hive: ^2.0.4
   hive_flutter: ^1.1.0
 
+  translator: ^0.1.7
+
   moor: ^4.6.1+1
   moor_flutter: ^4.0.0
   moor_db_viewer: ^5.0.0

@@ -13,7 +13,9 @@
   - https://feeder.co/discover/18-great-gaming-feeds
   - https://www.gameinformer.com/rss
 - [ ] online translation
-  - [package for translation](https://pub.dev/packages/translator)
+  - [x] use [package for translation](https://pub.dev/packages/translator)
+  - [ ] store result
+  - [ ] open google translate ( https://translate.google.com/ ) in browser
 - [ ] import ( txt - subtitle (.srt) - by hand)
 - [ ] drag new content to app
   - [ ] https://pub.dev/packages/desktop_drop

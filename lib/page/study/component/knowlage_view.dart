@@ -8,6 +8,7 @@ import 'package:landlearn/page/study/logic/view_mode.dart';
 import 'package:landlearn/page/study/study.dart';
 import 'package:landlearn/service/models/content_notifier.dart';
 import 'package:landlearn/service/models/word_notifier.dart';
+import 'package:translator/translator.dart';
 
 import '../study_controller.dart';
 
@@ -115,7 +116,7 @@ class KnowlageView extends HookConsumerWidget {
               final viewMode = ref.watch(StudyPage.viewModeProvider);
               final isNormal = viewMode == ViewMode.normal;
 
-              // final overlayEntry = useState<OverlayEntry?>(null);
+              final overlayEntry = useState<OverlayEntry?>(null);
               final layerLink = useState(LayerLink());
 
               // useEffect(
@@ -199,21 +200,19 @@ class KnowlageView extends HookConsumerWidget {
                 return child;
               }
 
-              return
-                  // MouseRegion(
-                  // onEnter: (pointerHoverEvent) {
-                  //   showOverlay(context, overlayEntry, layerLink);
-                  // },
-                  // onExit: (pointerExitEvent) {
-                  //   hideOverlay(overlayEntry);
-                  // },
-                  // child:
-                  InkWell(
-                onTap: () {
-                  wordNotifier.toggleKnowToDB(ref);
+              return MouseRegion(
+                onEnter: (pointerHoverEvent) {
+                  showOverlay(context, overlayEntry, layerLink, word);
                 },
-                child: child,
-                // ),
+                onExit: (pointerExitEvent) {
+                  hideOverlay(overlayEntry);
+                },
+                child: InkWell(
+                  onTap: () {
+                    wordNotifier.toggleKnowToDB(ref);
+                  },
+                  child: child,
+                ),
               );
             },
           );
@@ -235,7 +234,8 @@ class KnowlageView extends HookConsumerWidget {
   void showOverlay(
       BuildContext context,
       ValueNotifier<OverlayEntry?> overlayEntry,
-      ValueNotifier<LayerLink> layerLink) {
+      ValueNotifier<LayerLink> layerLink,
+      word) {
     if (overlayEntry.value != null) {
       return;
     }
@@ -251,7 +251,7 @@ class KnowlageView extends HookConsumerWidget {
           link: layerLink.value,
           showWhenUnlinked: false,
           offset: Offset(0, size.height),
-          child: buildOverlay(context, overlayEntry),
+          child: buildOverlay(context, overlayEntry, word),
         ),
       ),
     );
@@ -266,18 +266,29 @@ class KnowlageView extends HookConsumerWidget {
     }
   }
 
-  Widget buildOverlay(BuildContext context, overlayEntry) {
-    return Material(
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.black.withOpacity(0.5),
-          borderRadius: BorderRadius.circular(5),
+  Widget buildOverlay(BuildContext context, overlayEntry, word) {
+    return HookBuilder(builder: (context) {
+      final label = useState('');
+
+      useEffect(() {
+        final translator = GoogleTranslator();
+        translator.translate(word, from: 'en', to: 'fa').then((v) {
+          label.value = v.toString();
+        });
+      }, []);
+
+      return Material(
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.black.withOpacity(0.5),
+            borderRadius: BorderRadius.circular(5),
+          ),
+          padding: const EdgeInsets.all(4),
+          width: 50,
+          height: 50,
+          child: Text(label.value, style: TextStyle(color: Colors.white)),
         ),
-        padding: const EdgeInsets.all(4),
-        width: 50,
-        height: 50,
-        child: const Text('test', style: TextStyle(color: Colors.white)),
-      ),
-    );
+      );
+    });
   }
 }
