@@ -53,8 +53,6 @@ class ContentView extends StatelessWidget {
     );
   }
 
-  static final animatedListKey = GlobalKey<AnimatedListState>();
-
   Widget contentListWidget(BuildContext context) {
     return HookConsumer(builder: (context, ref, child) {
       final contentNotifiers = ref.watch(contentHubProvider).contentNotifiers;
@@ -64,18 +62,12 @@ class ContentView extends StatelessWidget {
           Expanded(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              child: AnimatedList(
-                key: animatedListKey,
-                initialItemCount: contentNotifiers.length,
-                itemBuilder: (context, index, animation) {
+              child: ListView.builder(
+                itemCount: contentNotifiers.length,
+                itemBuilder: (context, index) {
                   final contentNotifier = contentNotifiers[index];
 
-                  return SlideTransition(
-                    position: animation.drive(
-                      Tween(begin: const Offset(100, 0), end: Offset.zero),
-                    ),
-                    child: contentItem(contentNotifier, index),
-                  );
+                  return contentItem(contentNotifier);
                 },
               ),
             ),
@@ -119,18 +111,6 @@ class ContentView extends StatelessWidget {
                         PopupMenuItem(
                           onTap: () async {
                             await contentNotifier.removeWithDB(ref);
-
-                            AnimatedList.of(context).removeItem(
-                              index,
-                              (context, animation) {
-                                return FadeTransition(
-                                  opacity: animation.drive(
-                                    Tween(begin: 0.0, end: 1.0),
-                                  ),
-                                  child: contentItem(contentNotifier),
-                                );
-                              },
-                            );
                           },
                           value: 'delete',
                           child: Row(

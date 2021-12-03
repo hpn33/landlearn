@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:landlearn/page/home/content_view/content_view.dart';
 import 'package:landlearn/service/db/database.dart';
 import 'package:landlearn/service/logic/analyze_content.dart';
 import 'package:landlearn/service/models/content_hub.dart';
@@ -15,7 +14,6 @@ Widget addContentDialog() {
       builder: (context, ref, child) {
         final titleController = useTextEditingController();
         final textController = useTextEditingController();
-        // final useSample = useState(false);
 
         return Container(
           width: 700,
@@ -49,11 +47,6 @@ Widget addContentDialog() {
                             contentHub.notify();
 
                             await analyzeContent(db, contentNotifier, wordHub);
-
-                            final index =
-                                contentHub.contentNotifiers.length - 1;
-                            ContentView.animatedListKey.currentState!
-                                .insertItem(index);
 
                             Navigator.pop(context);
                           },
