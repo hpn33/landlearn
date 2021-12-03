@@ -15,6 +15,8 @@
 - [ ] online translation
   - [package for translation](https://pub.dev/packages/translator)
 - [ ] import ( txt - subtitle (.srt) - by hand)
+- [ ] drag new content to app
+  - [ ] https://pub.dev/packages/desktop_drop
 
 ## Goal
 * [x] good for public and publish
@@ -52,7 +54,7 @@
 - [x] need some default story
 - [x] study page good edit flow ( !!! ) (research plz )
 - [x] edit flow - maybe remove analyze button
-- [ ] show word usage sample ( if exist )
+- [ ] show word usage sample ( ref ) ( if exist )
 - [ ] mobilize - mobile ui
 - [ ] نمایش نمونه های استفاده شده از کلمه در متن ( اگر موجود باشد )
 - [ ] رنگ بندی های متفاوت برای کلمات با وضعیت فهم متفاوت
@@ -63,6 +65,7 @@
   - [ ] پخش صدا کلمه
 - [ ] studyPage: View modes must be more useful ( less mode - more usablity ) read view and tooltip view in same mode - on mode change lost the location ( less mode for solution )
 - [x] delete option for content ( -_- )
+- [ ] more readable ( the focus is on the words and text almost ignored )
 
 ## publish
 - [x] default content
@@ -95,4 +98,4 @@
 ## import content panel
 - [ ] txt
 - [ ] .srt
-- [ ] cliboard
+- [x] cliboard

@@ -114,6 +114,49 @@ class KnowlageView extends HookConsumerWidget {
               final viewMode = ref.watch(StudyPage.viewModeProvider);
               final isNormal = viewMode == ViewMode.normal;
 
+              // const textStyle = TextStyle(
+              //   fontSize: 20,
+              //   fontWeight: FontWeight.w500,
+              // );
+
+              // final size = _textSize(word, textStyle);
+
+              // final child = Stack(
+              //   children: [
+              //     Padding(
+              //       padding: const EdgeInsets.symmetric(vertical: 1),
+              //       child: Container(
+              //         // padding: const EdgeInsets.all(0.1),
+              //         // decoration: isNormal
+              //         //     ? null
+              //         //     : BoxDecoration(
+              //         //         color:
+              //         //             wordNotifier.know ? Colors.green[100] : null,
+              //         //         borderRadius: BorderRadius.circular(5),
+              //         //       ),
+              //         child: Text(
+              //           word,
+              //           style: const TextStyle(
+              //             fontSize: 20,
+              //             fontWeight: FontWeight.w500,
+              //           ),
+              //         ),
+              //       ),
+              //     ),
+              //     if (!isNormal)
+              //       Positioned(
+              //         // right: 0,
+              //         bottom: 0,
+              //         child: Container(
+              //           height: 2,
+              //           width: size.width,
+              //           // padding: const EdgeInsets.all(0.1),
+              //           color: wordNotifier.know ? Colors.green[300] : null,
+              //         ),
+              //       ),
+              //   ],
+              // );
+
               final child = Padding(
                 padding: const EdgeInsets.symmetric(vertical: 1),
                 child: Container(
@@ -149,5 +192,15 @@ class KnowlageView extends HookConsumerWidget {
         },
       ),
     );
+  }
+
+  // Here it is!
+  Size _textSize(String text, TextStyle style) {
+    final TextPainter textPainter = TextPainter(
+        text: TextSpan(text: text, style: style),
+        maxLines: 1,
+        textDirection: TextDirection.ltr)
+      ..layout(minWidth: 0, maxWidth: double.infinity);
+    return textPainter.size;
   }
 }
