@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -114,6 +115,20 @@ class KnowlageView extends HookConsumerWidget {
               final viewMode = ref.watch(StudyPage.viewModeProvider);
               final isNormal = viewMode == ViewMode.normal;
 
+              // final overlayEntry = useState<OverlayEntry?>(null);
+              final layerLink = useState(LayerLink());
+
+              // useEffect(
+              //   () {
+              //     WidgetsBinding.instance!.addPostFrameCallback(
+              //       (_) => showOverlay(context, overlayEntry, layerLink),
+              //     );
+
+              //     // return () => hideOverlay(overlayEntry);
+              //   },
+              //   [],
+              // );
+
               // const textStyle = TextStyle(
               //   fontSize: 20,
               //   fontWeight: FontWeight.w500,
@@ -167,11 +182,14 @@ class KnowlageView extends HookConsumerWidget {
                           color: wordNotifier.know ? Colors.green[100] : null,
                           borderRadius: BorderRadius.circular(5),
                         ),
-                  child: Text(
-                    word,
-                    style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w500,
+                  child: CompositedTransformTarget(
+                    link: layerLink.value,
+                    child: Text(
+                      word,
+                      style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                   ),
                 ),
@@ -181,11 +199,21 @@ class KnowlageView extends HookConsumerWidget {
                 return child;
               }
 
-              return InkWell(
+              return
+                  // MouseRegion(
+                  // onEnter: (pointerHoverEvent) {
+                  //   showOverlay(context, overlayEntry, layerLink);
+                  // },
+                  // onExit: (pointerExitEvent) {
+                  //   hideOverlay(overlayEntry);
+                  // },
+                  // child:
+                  InkWell(
                 onTap: () {
                   wordNotifier.toggleKnowToDB(ref);
                 },
                 child: child,
+                // ),
               );
             },
           );
@@ -202,5 +230,54 @@ class KnowlageView extends HookConsumerWidget {
         textDirection: TextDirection.ltr)
       ..layout(minWidth: 0, maxWidth: double.infinity);
     return textPainter.size;
+  }
+
+  void showOverlay(
+      BuildContext context,
+      ValueNotifier<OverlayEntry?> overlayEntry,
+      ValueNotifier<LayerLink> layerLink) {
+    if (overlayEntry.value != null) {
+      return;
+    }
+
+    final overlay = Overlay.of(context)!;
+    final renderBox = context.findRenderObject()! as RenderBox;
+    final size = renderBox.size;
+
+    overlayEntry.value = OverlayEntry(
+      builder: (context) => Positioned(
+        width: 150,
+        child: CompositedTransformFollower(
+          link: layerLink.value,
+          showWhenUnlinked: false,
+          offset: Offset(0, size.height),
+          child: buildOverlay(context, overlayEntry),
+        ),
+      ),
+    );
+
+    overlay.insert(overlayEntry.value!);
+  }
+
+  void hideOverlay(ValueNotifier<OverlayEntry?> overlayEntry) {
+    if (overlayEntry.value != null) {
+      overlayEntry.value!.remove();
+      overlayEntry.value = null;
+    }
+  }
+
+  Widget buildOverlay(BuildContext context, overlayEntry) {
+    return Material(
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.black.withOpacity(0.5),
+          borderRadius: BorderRadius.circular(5),
+        ),
+        padding: const EdgeInsets.all(4),
+        width: 50,
+        height: 50,
+        child: const Text('test', style: TextStyle(color: Colors.white)),
+      ),
+    );
   }
 }

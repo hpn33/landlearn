@@ -99,3 +99,12 @@
 - [ ] txt
 - [ ] .srt
 - [x] cliboard
+
+
+## word oriented
+- [ ] word overlay panel
+  - [ ] ref
+  - [ ] translate
+  - [ ] note
+- [ ] word page
+- [ ] 
