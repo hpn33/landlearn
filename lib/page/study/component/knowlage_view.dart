@@ -274,17 +274,12 @@ class KnowlageView extends HookConsumerWidget {
     }
   }
 
+  static final trans = FutureProvider.autoDispose.family<Translation, String>(
+    (ref, word) => word.translate(from: 'en', to: 'fa'),
+  );
+
   Widget buildOverlay(BuildContext context, overlayEntry, word) {
-    return HookBuilder(builder: (context) {
-      final label = useState('');
-
-      useEffect(() {
-        final translator = GoogleTranslator();
-        translator.translate(word, from: 'en', to: 'fa').then((v) {
-          label.value = v.toString();
-        });
-      }, []);
-
+    return HookConsumer(builder: (context, ref, child) {
       return Material(
         child: Container(
           decoration: BoxDecoration(
@@ -294,7 +289,14 @@ class KnowlageView extends HookConsumerWidget {
           padding: const EdgeInsets.all(4),
           width: 50,
           height: 50,
-          child: Text(label.value, style: TextStyle(color: Colors.white)),
+          child: Text(
+            ref.watch(trans(word)).when(
+                  data: (d) => '$d',
+                  error: (e, s) => 'err',
+                  loading: () => '...',
+                ),
+            style: const TextStyle(color: Colors.white),
+          ),
         ),
       );
     });
