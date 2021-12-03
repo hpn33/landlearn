@@ -101,11 +101,13 @@ class ContentView extends StatelessWidget {
                 padding: const EdgeInsets.all(8.0),
                 child: Row(
                   children: [
-                    Text(
-                      contentNotifier.title,
-                      style: const TextStyle(fontSize: 20),
+                    Expanded(
+                      child: Text(
+                        contentNotifier.title,
+                        style: const TextStyle(fontSize: 20),
+                        overflow: TextOverflow.fade,
+                      ),
                     ),
-                    const Spacer(),
                     ...status2(contentNotifier),
                     PopupMenuButton(
                       itemBuilder: (context) => [
@@ -180,6 +182,7 @@ class ContentView extends StatelessWidget {
                       ],
                     ),
                   ),
+                  const SizedBox(width: 4),
                 ],
               ),
             ],
