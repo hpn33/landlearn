@@ -26,6 +26,11 @@ class AppbarWidget extends HookConsumerWidget {
           Text('uniqe ${contentNotifier.wordCount}'),
           const SizedBox(width: 10),
           toggleViewModeButton(),
+          const SizedBox(width: 10),
+          SizedBox(
+            width: 100,
+            child: percentStatus(contentNotifier),
+          ),
         ],
       ),
     );
@@ -67,6 +72,50 @@ class AppbarWidget extends HookConsumerWidget {
               isSelected: isSelected.value,
             );
           },
+        ),
+      ],
+    );
+  }
+
+  Widget percentStatus(ContentNotifier contentNotifier) {
+    return Column(
+      children: [
+        Row(
+          children: [
+            Expanded(
+              flex: contentNotifier.awarnessPercentOfAllWord.toInt(),
+              child: Container(
+                height: 3,
+                color: Colors.green[300],
+              ),
+            ),
+            Expanded(
+              flex: 100 - contentNotifier.awarnessPercentOfAllWord.toInt(),
+              child: Container(
+                height: 3,
+                color: Colors.grey[300],
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 1),
+        Row(
+          children: [
+            Expanded(
+              flex: contentNotifier.awarnessPercent.toInt(),
+              child: Container(
+                height: 3,
+                color: Colors.blue[300],
+              ),
+            ),
+            Expanded(
+              flex: 100 - contentNotifier.awarnessPercent.toInt(),
+              child: Container(
+                height: 3,
+                color: Colors.grey[300],
+              ),
+            ),
+          ],
         ),
       ],
     );
