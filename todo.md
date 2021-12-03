@@ -12,9 +12,9 @@
   - https://blog.feedspot.com/video_game_rss_feeds/
   - https://feeder.co/discover/18-great-gaming-feeds
   - https://www.gameinformer.com/rss
-- [ ] online translation
+- [x] online translation
   - [x] use [package for translation](https://pub.dev/packages/translator)
-  - [ ] store result
+  - [x] store result
   - [x] open google translate ( https://translate.google.com/ ) in browser
 - [ ] import ( txt - subtitle (.srt) - by hand)
 - [ ] drag new content to app

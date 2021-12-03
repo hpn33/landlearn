@@ -6,6 +6,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:landlearn/page/study/logic/view_mode.dart';
 import 'package:landlearn/page/study/study.dart';
+import 'package:landlearn/service/db/database.dart';
 import 'package:landlearn/service/models/content_notifier.dart';
 import 'package:landlearn/service/models/word_notifier.dart';
 import 'package:translator/translator.dart';
@@ -203,7 +204,12 @@ class KnowlageView extends HookConsumerWidget {
 
               return MouseRegion(
                 onEnter: (pointerHoverEvent) {
-                  showOverlay(context, overlayEntry, layerLink, word);
+                  showOverlay(
+                    context,
+                    overlayEntry,
+                    layerLink,
+                    wordNotifier,
+                  );
                 },
                 onExit: (pointerExitEvent) {
                   hideOverlay(overlayEntry);
@@ -243,7 +249,7 @@ class KnowlageView extends HookConsumerWidget {
       BuildContext context,
       ValueNotifier<OverlayEntry?> overlayEntry,
       ValueNotifier<LayerLink> layerLink,
-      word) {
+      WordNotifier word) {
     if (overlayEntry.value != null) {
       return;
     }
@@ -274,11 +280,31 @@ class KnowlageView extends HookConsumerWidget {
     }
   }
 
-  static final trans = FutureProvider.autoDispose.family<Translation, String>(
-    (ref, word) => word.translate(from: 'en', to: 'fa'),
+  static final translate = FutureProvider.family<Translation, WordNotifier>(
+    (ref, wordNotifier) async =>
+        wordNotifier.word.translate(from: 'en', to: 'fa'),
   );
 
-  Widget buildOverlay(BuildContext context, overlayEntry, word) {
+  static final repoTranslate = FutureProvider.family<String, WordNotifier>(
+    (ref, wordNotifier) async {
+      if (wordNotifier.value.onlineTranslation != null) {
+        return Future.value(wordNotifier.value.onlineTranslation!);
+      }
+
+      final translation = await ref.watch(translate(wordNotifier).future);
+
+      final db = ref.read(dbProvider);
+      await db.wordDao.updateOnlineTranslation(
+        wordNotifier.value,
+        translation.toString(),
+      );
+      wordNotifier.updateOnlineTranslation(translation.toString());
+
+      return translation.toString();
+    },
+  );
+
+  Widget buildOverlay(BuildContext context, overlayEntry, WordNotifier word) {
     return HookConsumer(builder: (context, ref, child) {
       return Material(
         child: Container(
@@ -290,8 +316,8 @@ class KnowlageView extends HookConsumerWidget {
           width: 50,
           height: 50,
           child: Text(
-            ref.watch(trans(word)).when(
-                  data: (d) => '$d',
+            ref.watch(repoTranslate(word)).when(
+                  data: (d) => d,
                   error: (e, s) => 'err',
                   loading: () => '...',
                 ),

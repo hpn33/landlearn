@@ -30,6 +30,9 @@ class WordDao extends DatabaseAccessor<Database> with _$WordDaoMixin {
   Future<bool> updateKnow(Word word) =>
       (update(words).replace(word.copyWith(know: !word.know)));
 
+  updateOnlineTranslation(Word word, String translation) =>
+      (update(words).replace(word.copyWith(onlineTranslation: translation)));
+
   Future<List<Word>> getAllByWord(List<String> wordList) {
     return (select(words)..where((tbl) => tbl.word.isIn(wordList))).get();
   }

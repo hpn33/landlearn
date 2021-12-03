@@ -10,6 +10,8 @@ class WordNotifier extends ValueNotifier<Word> {
   int get id => value.id;
   String get word => value.word;
   bool get know => value.know;
+  String? get note => value.note;
+  String? get onlineTranslation => value.onlineTranslation;
 
   // on every load change
   int _lastContentId = -1;
@@ -36,6 +38,23 @@ extension DB on WordNotifier {
     await db.wordDao.updateKnow(value);
 
     value = value.copyWith(know: !know);
+  }
+
+  Future<void> updateOnlineTranslationToDB(
+    WidgetRef ref,
+    String translation,
+  ) async {
+    final db = ref.read(dbProvider);
+
+    await db.wordDao.updateOnlineTranslation(value, translation);
+
+    value = value.copyWith(onlineTranslation: translation);
+  }
+}
+
+extension Update on WordNotifier {
+  void updateOnlineTranslation(String translation) {
+    value = value.copyWith(onlineTranslation: translation);
   }
 }
 
