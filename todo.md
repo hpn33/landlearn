@@ -45,6 +45,7 @@
 - [x] analyze after add content
 - [x] refresh content list view when add new content
 - [x] show knowage percent of all the content text
+- [ ] study page padding to text - space between scrollbar
 
 ## improvment
 - [ ] issue: analyze time need be faster ( make problem for load default data )
@@ -67,7 +68,7 @@
   - [ ] پخش صدا کلمه
 - [ ] studyPage: View modes must be more useful ( less mode - more usablity ) read view and tooltip view in same mode - on mode change lost the location ( less mode for solution )
 - [x] delete option for content ( -_- )
-- [ ] more readable ( the focus is on the words and text almost ignored )
+- [x] more readable ( the focus is on the words and text almost ignored )
 
 ## publish
 - [x] default content
@@ -106,7 +107,7 @@
 ## word oriented
 - [ ] word overlay panel
   - [ ] ref
-  - [ ] translate
+  - [x] translate
   - [ ] note
 - [ ] word page
 - [ ] 

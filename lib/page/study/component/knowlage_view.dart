@@ -40,6 +40,7 @@ class KnowlageView extends HookConsumerWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 24),
       child: ListView.builder(
+        padding: const EdgeInsets.only(right: 8),
         physics: const BouncingScrollPhysics(),
         itemCount: paragraphs.value.length,
         itemBuilder: (context, index) {
