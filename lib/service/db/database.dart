@@ -26,7 +26,7 @@ class Database extends _$Database {
   Database(QueryExecutor e) : super(e);
 
   @override
-  int get schemaVersion => 2;
+  int get schemaVersion => 3;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -41,9 +41,11 @@ class Database extends _$Database {
             newFrom = 2;
           }
 
-          // if (newFrom == 2) {
-
-          // }
+          if (newFrom == 2) {
+            await m.addColumn(words, words.note);
+            await m.addColumn(words, words.onlineTranslation);
+            newFrom = 3;
+          }
         },
         // beforeOpen: (details) async {
         // if (!details.wasCreated) {

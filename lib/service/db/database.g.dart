@@ -11,7 +11,14 @@ class Word extends DataClass implements Insertable<Word> {
   final int id;
   final String word;
   final bool know;
-  Word({required this.id, required this.word, required this.know});
+  final String? note;
+  final String? onlineTranslation;
+  Word(
+      {required this.id,
+      required this.word,
+      required this.know,
+      this.note,
+      this.onlineTranslation});
   factory Word.fromData(Map<String, dynamic> data, GeneratedDatabase db,
       {String? prefix}) {
     final effectivePrefix = prefix ?? '';
@@ -22,6 +29,10 @@ class Word extends DataClass implements Insertable<Word> {
           .mapFromDatabaseResponse(data['${effectivePrefix}word'])!,
       know: const BoolType()
           .mapFromDatabaseResponse(data['${effectivePrefix}know'])!,
+      note: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}note']),
+      onlineTranslation: const StringType().mapFromDatabaseResponse(
+          data['${effectivePrefix}online_translation']),
     );
   }
   @override
@@ -30,6 +41,12 @@ class Word extends DataClass implements Insertable<Word> {
     map['id'] = Variable<int>(id);
     map['word'] = Variable<String>(word);
     map['know'] = Variable<bool>(know);
+    if (!nullToAbsent || note != null) {
+      map['note'] = Variable<String?>(note);
+    }
+    if (!nullToAbsent || onlineTranslation != null) {
+      map['online_translation'] = Variable<String?>(onlineTranslation);
+    }
     return map;
   }
 
@@ -38,6 +55,10 @@ class Word extends DataClass implements Insertable<Word> {
       id: Value(id),
       word: Value(word),
       know: Value(know),
+      note: note == null && nullToAbsent ? const Value.absent() : Value(note),
+      onlineTranslation: onlineTranslation == null && nullToAbsent
+          ? const Value.absent()
+          : Value(onlineTranslation),
     );
   }
 
@@ -48,6 +69,9 @@ class Word extends DataClass implements Insertable<Word> {
       id: serializer.fromJson<int>(json['id']),
       word: serializer.fromJson<String>(json['word']),
       know: serializer.fromJson<bool>(json['know']),
+      note: serializer.fromJson<String?>(json['note']),
+      onlineTranslation:
+          serializer.fromJson<String?>(json['onlineTranslation']),
     );
   }
   @override
@@ -57,69 +81,98 @@ class Word extends DataClass implements Insertable<Word> {
       'id': serializer.toJson<int>(id),
       'word': serializer.toJson<String>(word),
       'know': serializer.toJson<bool>(know),
+      'note': serializer.toJson<String?>(note),
+      'onlineTranslation': serializer.toJson<String?>(onlineTranslation),
     };
   }
 
-  Word copyWith({int? id, String? word, bool? know}) => Word(
+  Word copyWith(
+          {int? id,
+          String? word,
+          bool? know,
+          String? note,
+          String? onlineTranslation}) =>
+      Word(
         id: id ?? this.id,
         word: word ?? this.word,
         know: know ?? this.know,
+        note: note ?? this.note,
+        onlineTranslation: onlineTranslation ?? this.onlineTranslation,
       );
   @override
   String toString() {
     return (StringBuffer('Word(')
           ..write('id: $id, ')
           ..write('word: $word, ')
-          ..write('know: $know')
+          ..write('know: $know, ')
+          ..write('note: $note, ')
+          ..write('onlineTranslation: $onlineTranslation')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode =>
-      $mrjf($mrjc(id.hashCode, $mrjc(word.hashCode, know.hashCode)));
+  int get hashCode => Object.hash(id, word, know, note, onlineTranslation);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is Word &&
           other.id == this.id &&
           other.word == this.word &&
-          other.know == this.know);
+          other.know == this.know &&
+          other.note == this.note &&
+          other.onlineTranslation == this.onlineTranslation);
 }
 
 class WordsCompanion extends UpdateCompanion<Word> {
   final Value<int> id;
   final Value<String> word;
   final Value<bool> know;
+  final Value<String?> note;
+  final Value<String?> onlineTranslation;
   const WordsCompanion({
     this.id = const Value.absent(),
     this.word = const Value.absent(),
     this.know = const Value.absent(),
+    this.note = const Value.absent(),
+    this.onlineTranslation = const Value.absent(),
   });
   WordsCompanion.insert({
     this.id = const Value.absent(),
     required String word,
     required bool know,
-  })   : word = Value(word),
+    this.note = const Value.absent(),
+    this.onlineTranslation = const Value.absent(),
+  })  : word = Value(word),
         know = Value(know);
   static Insertable<Word> custom({
     Expression<int>? id,
     Expression<String>? word,
     Expression<bool>? know,
+    Expression<String?>? note,
+    Expression<String?>? onlineTranslation,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (word != null) 'word': word,
       if (know != null) 'know': know,
+      if (note != null) 'note': note,
+      if (onlineTranslation != null) 'online_translation': onlineTranslation,
     });
   }
 
   WordsCompanion copyWith(
-      {Value<int>? id, Value<String>? word, Value<bool>? know}) {
+      {Value<int>? id,
+      Value<String>? word,
+      Value<bool>? know,
+      Value<String?>? note,
+      Value<String?>? onlineTranslation}) {
     return WordsCompanion(
       id: id ?? this.id,
       word: word ?? this.word,
       know: know ?? this.know,
+      note: note ?? this.note,
+      onlineTranslation: onlineTranslation ?? this.onlineTranslation,
     );
   }
 
@@ -135,6 +188,12 @@ class WordsCompanion extends UpdateCompanion<Word> {
     if (know.present) {
       map['know'] = Variable<bool>(know.value);
     }
+    if (note.present) {
+      map['note'] = Variable<String?>(note.value);
+    }
+    if (onlineTranslation.present) {
+      map['online_translation'] = Variable<String?>(onlineTranslation.value);
+    }
     return map;
   }
 
@@ -143,7 +202,9 @@ class WordsCompanion extends UpdateCompanion<Word> {
     return (StringBuffer('WordsCompanion(')
           ..write('id: $id, ')
           ..write('word: $word, ')
-          ..write('know: $know')
+          ..write('know: $know, ')
+          ..write('note: $note, ')
+          ..write('onlineTranslation: $onlineTranslation')
           ..write(')'))
         .toString();
   }
@@ -169,8 +230,18 @@ class $WordsTable extends Words with TableInfo<$WordsTable, Word> {
       typeName: 'INTEGER',
       requiredDuringInsert: true,
       defaultConstraints: 'CHECK (know IN (0, 1))');
+  final VerificationMeta _noteMeta = const VerificationMeta('note');
+  late final GeneratedColumn<String?> note = GeneratedColumn<String?>(
+      'note', aliasedName, true,
+      typeName: 'TEXT', requiredDuringInsert: false);
+  final VerificationMeta _onlineTranslationMeta =
+      const VerificationMeta('onlineTranslation');
+  late final GeneratedColumn<String?> onlineTranslation =
+      GeneratedColumn<String?>('online_translation', aliasedName, true,
+          typeName: 'TEXT', requiredDuringInsert: false);
   @override
-  List<GeneratedColumn> get $columns => [id, word, know];
+  List<GeneratedColumn> get $columns =>
+      [id, word, know, note, onlineTranslation];
   @override
   String get aliasedName => _alias ?? 'words';
   @override
@@ -194,6 +265,16 @@ class $WordsTable extends Words with TableInfo<$WordsTable, Word> {
           _knowMeta, know.isAcceptableOrUnknown(data['know']!, _knowMeta));
     } else if (isInserting) {
       context.missing(_knowMeta);
+    }
+    if (data.containsKey('note')) {
+      context.handle(
+          _noteMeta, note.isAcceptableOrUnknown(data['note']!, _noteMeta));
+    }
+    if (data.containsKey('online_translation')) {
+      context.handle(
+          _onlineTranslationMeta,
+          onlineTranslation.isAcceptableOrUnknown(
+              data['online_translation']!, _onlineTranslationMeta));
     }
     return context;
   }
@@ -295,8 +376,7 @@ class Content extends DataClass implements Insertable<Content> {
   }
 
   @override
-  int get hashCode => $mrjf($mrjc(id.hashCode,
-      $mrjc(title.hashCode, $mrjc(content.hashCode, data.hashCode))));
+  int get hashCode => Object.hash(id, title, content, data);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -405,7 +485,7 @@ class $ContentsTable extends Contents with TableInfo<$ContentsTable, Content> {
       'data', aliasedName, false,
       typeName: 'TEXT',
       requiredDuringInsert: false,
-      defaultValue: Constant('{}'));
+      defaultValue: const Constant('{}'));
   @override
   List<GeneratedColumn> get $columns => [id, title, content, data];
   @override

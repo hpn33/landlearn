@@ -50,8 +50,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   
-  moor_generator:
-  # isar_generator: any
+  moor_generator: ^4.6.0+1
   build_runner: ^2.1.5
 
   flutter_lints: ^1.0.4
