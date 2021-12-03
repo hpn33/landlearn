@@ -15,7 +15,7 @@
 - [ ] online translation
   - [x] use [package for translation](https://pub.dev/packages/translator)
   - [ ] store result
-  - [ ] open google translate ( https://translate.google.com/ ) in browser
+  - [x] open google translate ( https://translate.google.com/ ) in browser
 - [ ] import ( txt - subtitle (.srt) - by hand)
 - [ ] drag new content to app
   - [ ] https://pub.dev/packages/desktop_drop

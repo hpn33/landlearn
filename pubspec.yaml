@@ -36,6 +36,7 @@ dependencies:
   hive_flutter: ^1.1.0
 
   translator: ^0.1.7
+  url_launcher: ^6.0.17
 
   moor: ^4.6.1+1
   moor_flutter: ^4.0.0
