@@ -45,7 +45,7 @@
 - [x] analyze after add content
 - [x] refresh content list view when add new content
 - [x] show knowage percent of all the content text
-- [ ] study page padding to text - space between scrollbar
+- [x] study page padding to text - space between scrollbar
 
 ## improvment
 - [ ] issue: analyze time need be faster ( make problem for load default data )

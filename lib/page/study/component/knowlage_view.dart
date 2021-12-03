@@ -124,11 +124,7 @@ class KnowlageView extends HookConsumerWidget {
 
               // useEffect(
               //   () {
-              //     WidgetsBinding.instance!.addPostFrameCallback(
-              //       (_) => showOverlay(context, overlayEntry, layerLink),
-              //     );
-
-              //     // return () => hideOverlay(overlayEntry);
+              //     return () => hideOverlay(overlayEntry);
               //   },
               //   [],
               // );
@@ -142,6 +138,17 @@ class KnowlageView extends HookConsumerWidget {
 
               // final child = Stack(
               //   children: [
+              //     if (!isNormal)
+              //       Positioned(
+              //         // right: 0,
+              //         bottom: 3,
+              //         child: Container(
+              //           height: 8,
+              //           width: size.width,
+              //           // padding: const EdgeInsets.all(0.1),
+              //           color: wordNotifier.know ? Colors.green[200] : null,
+              //         ),
+              //       ),
               //     Padding(
               //       padding: const EdgeInsets.symmetric(vertical: 1),
               //       child: Container(
@@ -162,17 +169,6 @@ class KnowlageView extends HookConsumerWidget {
               //         ),
               //       ),
               //     ),
-              //     if (!isNormal)
-              //       Positioned(
-              //         // right: 0,
-              //         bottom: 0,
-              //         child: Container(
-              //           height: 2,
-              //           width: size.width,
-              //           // padding: const EdgeInsets.all(0.1),
-              //           color: wordNotifier.know ? Colors.green[300] : null,
-              //         ),
-              //       ),
               //   ],
               // );
 
@@ -183,7 +179,7 @@ class KnowlageView extends HookConsumerWidget {
                   decoration: isNormal
                       ? null
                       : BoxDecoration(
-                          color: wordNotifier.know ? Colors.green[100] : null,
+                          color: wordNotifier.know ? Colors.grey[300] : null,
                           borderRadius: BorderRadius.circular(5),
                         ),
                   child: CompositedTransformTarget(
@@ -305,19 +301,20 @@ class KnowlageView extends HookConsumerWidget {
     },
   );
 
-  Widget buildOverlay(BuildContext context, overlayEntry, WordNotifier word) {
+  Widget buildOverlay(
+      BuildContext context, overlayEntry, WordNotifier wordNotifier) {
     return HookConsumer(builder: (context, ref, child) {
       return Material(
         child: Container(
           decoration: BoxDecoration(
-            color: Colors.black.withOpacity(0.5),
+            color: Colors.blueGrey,
             borderRadius: BorderRadius.circular(5),
           ),
           padding: const EdgeInsets.all(4),
           width: 50,
           height: 50,
           child: Text(
-            ref.watch(repoTranslate(word)).when(
+            ref.watch(repoTranslate(wordNotifier)).when(
                   data: (d) => d,
                   error: (e, s) => 'err',
                   loading: () => '...',
