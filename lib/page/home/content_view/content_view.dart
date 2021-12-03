@@ -82,6 +82,7 @@ class ContentView extends StatelessWidget {
       useListenable(contentNotifier);
 
       final awarnessPercent = contentNotifier.awarnessPercent;
+      final awarnessPercentOfAllWord = contentNotifier.awarnessPercentOfAllWord;
 
       return Card(
         child: InkWell(
@@ -135,22 +136,46 @@ class ContentView extends StatelessWidget {
                 children: [
                   const Spacer(),
                   const Spacer(),
+                  const Spacer(),
                   Expanded(
-                    child: Row(
+                    child: Column(
                       children: [
-                        Expanded(
-                          flex: awarnessPercent.toInt(),
-                          child: Container(
-                            height: 3,
-                            color: Colors.green[300],
-                          ),
+                        Row(
+                          children: [
+                            Expanded(
+                              flex: awarnessPercentOfAllWord.toInt(),
+                              child: Container(
+                                height: 3,
+                                color: Colors.green[300],
+                              ),
+                            ),
+                            Expanded(
+                              flex: 100 - awarnessPercentOfAllWord.toInt(),
+                              child: Container(
+                                height: 3,
+                                color: Colors.grey[300],
+                              ),
+                            ),
+                          ],
                         ),
-                        Expanded(
-                          flex: 100 - awarnessPercent.toInt(),
-                          child: Container(
-                            height: 3,
-                            color: Colors.grey[300],
-                          ),
+                        const SizedBox(height: 1),
+                        Row(
+                          children: [
+                            Expanded(
+                              flex: awarnessPercent.toInt(),
+                              child: Container(
+                                height: 3,
+                                color: Colors.blue[300],
+                              ),
+                            ),
+                            Expanded(
+                              flex: 100 - awarnessPercent.toInt(),
+                              child: Container(
+                                height: 3,
+                                color: Colors.grey[300],
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
@@ -166,6 +191,13 @@ class ContentView extends StatelessWidget {
 
   List<Widget> status2(ContentNotifier contentNotifier) {
     return [
+      Text(contentNotifier.allWordCount.toString()),
+      const Text(' '),
+      StyledPercent(
+        awarnessPercent: contentNotifier.awarnessPercentOfAllWord,
+        color: Colors.blue[100],
+      ),
+      const Text(' '),
       Text(contentNotifier.wordCount.toString()),
       const Text(' '),
       StyledPercent(awarnessPercent: contentNotifier.awarnessPercent),

@@ -40,6 +40,7 @@
 - [x] tab key for change modes
 - [x] analyze after add content
 - [x] refresh content list view when add new content
+- [x] show knowage percent of all the content text
 
 ## improvment
 - [ ] issue: analyze time need be faster ( make problem for load default data )
