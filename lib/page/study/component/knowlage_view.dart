@@ -9,6 +9,7 @@ import 'package:landlearn/page/study/study.dart';
 import 'package:landlearn/service/db/database.dart';
 import 'package:landlearn/service/models/content_notifier.dart';
 import 'package:landlearn/service/models/word_notifier.dart';
+import 'package:landlearn/widget/my_overlay_panel.dart';
 import 'package:translator/translator.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -119,15 +120,7 @@ class KnowlageView extends HookConsumerWidget {
               final viewMode = ref.watch(StudyPage.viewModeProvider);
               final isNormal = viewMode == ViewMode.normal;
 
-              final overlayEntry = useState<OverlayEntry?>(null);
-              final layerLink = useState(LayerLink());
-
-              // useEffect(
-              //   () {
-              //     return () => hideOverlay(overlayEntry);
-              //   },
-              //   [],
-              // );
+              final myOverLayPanel = useMemoized(() => MyOverLayPanel());
 
               // const textStyle = TextStyle(
               //   fontSize: 20,
@@ -183,7 +176,7 @@ class KnowlageView extends HookConsumerWidget {
                           borderRadius: BorderRadius.circular(5),
                         ),
                   child: CompositedTransformTarget(
-                    link: layerLink.value,
+                    link: myOverLayPanel.layerLink,
                     child: Text(
                       word,
                       style: const TextStyle(
@@ -201,15 +194,10 @@ class KnowlageView extends HookConsumerWidget {
 
               return MouseRegion(
                 onEnter: (pointerHoverEvent) {
-                  showOverlay(
-                    context,
-                    overlayEntry,
-                    layerLink,
-                    wordNotifier,
-                  );
+                  myOverLayPanel.showOverlay(context, wordNotifier);
                 },
                 onExit: (pointerExitEvent) {
-                  hideOverlay(overlayEntry);
+                  myOverLayPanel.hideOverlay();
                 },
                 child: InkWell(
                   onTap: () {
@@ -241,88 +229,28 @@ class KnowlageView extends HookConsumerWidget {
       ..layout(minWidth: 0, maxWidth: double.infinity);
     return textPainter.size;
   }
-
-  void showOverlay(
-      BuildContext context,
-      ValueNotifier<OverlayEntry?> overlayEntry,
-      ValueNotifier<LayerLink> layerLink,
-      WordNotifier word) {
-    if (overlayEntry.value != null) {
-      return;
-    }
-
-    final overlay = Overlay.of(context)!;
-    final renderBox = context.findRenderObject()! as RenderBox;
-    final size = renderBox.size;
-
-    overlayEntry.value = OverlayEntry(
-      builder: (context) => Positioned(
-        width: 150,
-        child: CompositedTransformFollower(
-          link: layerLink.value,
-          showWhenUnlinked: false,
-          offset: Offset(0, size.height),
-          child: buildOverlay(context, overlayEntry, word),
-        ),
-      ),
-    );
-
-    overlay.insert(overlayEntry.value!);
-  }
-
-  void hideOverlay(ValueNotifier<OverlayEntry?> overlayEntry) {
-    if (overlayEntry.value != null) {
-      overlayEntry.value!.remove();
-      overlayEntry.value = null;
-    }
-  }
-
-  static final translate = FutureProvider.family<Translation, WordNotifier>(
-    (ref, wordNotifier) async =>
-        wordNotifier.word.translate(from: 'en', to: 'fa'),
-  );
-
-  static final repoTranslate = FutureProvider.family<String, WordNotifier>(
-    (ref, wordNotifier) async {
-      if (wordNotifier.value.onlineTranslation != null) {
-        return Future.value(wordNotifier.value.onlineTranslation!);
-      }
-
-      final translation = await ref.watch(translate(wordNotifier).future);
-
-      final db = ref.read(dbProvider);
-      await db.wordDao.updateOnlineTranslation(
-        wordNotifier.value,
-        translation.toString(),
-      );
-      wordNotifier.updateOnlineTranslation(translation.toString());
-
-      return translation.toString();
-    },
-  );
-
-  Widget buildOverlay(
-      BuildContext context, overlayEntry, WordNotifier wordNotifier) {
-    return HookConsumer(builder: (context, ref, child) {
-      return Material(
-        child: Container(
-          decoration: BoxDecoration(
-            color: Colors.blueGrey,
-            borderRadius: BorderRadius.circular(5),
-          ),
-          padding: const EdgeInsets.all(4),
-          width: 50,
-          height: 50,
-          child: Text(
-            ref.watch(repoTranslate(wordNotifier)).when(
-                  data: (d) => d,
-                  error: (e, s) => 'err',
-                  loading: () => '...',
-                ),
-            style: const TextStyle(color: Colors.white),
-          ),
-        ),
-      );
-    });
-  }
 }
+
+final translate = FutureProvider.family<Translation, WordNotifier>(
+  (ref, wordNotifier) async =>
+      wordNotifier.word.translate(from: 'en', to: 'fa'),
+);
+
+final repoTranslate = FutureProvider.family<String, WordNotifier>(
+  (ref, wordNotifier) async {
+    if (wordNotifier.value.onlineTranslation != null) {
+      return Future.value(wordNotifier.value.onlineTranslation!);
+    }
+
+    final translation = await ref.watch(translate(wordNotifier).future);
+
+    final db = ref.read(dbProvider);
+    await db.wordDao.updateOnlineTranslation(
+      wordNotifier.value,
+      translation.toString(),
+    );
+    wordNotifier.updateOnlineTranslation(translation.toString());
+
+    return translation.toString();
+  },
+);
