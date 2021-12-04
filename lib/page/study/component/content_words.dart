@@ -29,10 +29,6 @@ class ContentWordToggleWidget extends HookConsumerWidget {
       },
       [show],
     );
-// TODO not need
-    useEffect(() {
-      return animationController.dispose;
-    }, []);
 
     Widget child = show
         ? Expanded(

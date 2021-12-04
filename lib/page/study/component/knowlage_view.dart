@@ -8,7 +8,6 @@ import 'package:landlearn/page/study/study.dart';
 import 'package:landlearn/service/db/database.dart';
 import 'package:landlearn/service/models/content_notifier.dart';
 import 'package:landlearn/service/models/word_notifier.dart';
-import 'package:landlearn/widget/my_overlay_panel.dart';
 import 'package:landlearn/widget/my_overlay_panel_widget.dart';
 import 'package:translator/translator.dart';
 import 'package:url_launcher/url_launcher.dart';
