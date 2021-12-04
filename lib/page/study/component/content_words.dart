@@ -52,7 +52,7 @@ class ContentWordToggleWidget extends HookConsumerWidget {
   Widget openText() {
     return HookConsumer(
       builder: (BuildContext context, WidgetRef ref, Widget? child) {
-        final contentNotifier = ref.read(selectedContentStateProvider)!;
+        final contentNotifier = ref.read(selectedContentProvider)!;
 
         useListenable(contentNotifier);
 
@@ -110,7 +110,7 @@ class ContentWordWidget extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    final contentNotifier = ref.read(selectedContentStateProvider.state).state!;
+    final contentNotifier = ref.read(selectedContentProvider.state).state!;
 
     useListenable(contentNotifier);
 

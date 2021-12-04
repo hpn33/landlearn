@@ -42,7 +42,7 @@ class EditPanel extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, ref) {
     final textController = ref.watch(textControllerProvider);
-    final contentNotifier = ref.read(selectedContentStateProvider)!;
+    final contentNotifier = ref.read(selectedContentProvider)!;
 
     useListenable(contentNotifier);
 
@@ -65,8 +65,6 @@ class EditPanel extends HookConsumerWidget {
       useEffect(
         () {
           animationController.forward();
-
-          return () => animationController.dispose();
         },
         [],
       );
@@ -95,7 +93,7 @@ class EditPanel extends HookConsumerWidget {
                     ),
                     onPressed: () async {
                       ref
-                          .read(selectedContentStateProvider)!
+                          .read(selectedContentProvider)!
                           .updateContent(ref.read(textControllerProvider).text);
 
                       await analyze(ref);

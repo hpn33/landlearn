@@ -87,8 +87,7 @@ class ContentView extends StatelessWidget {
       return Card(
         child: InkWell(
           onTap: () {
-            ref.read(selectedContentStateProvider.state).state =
-                contentNotifier;
+            ref.read(selectedContentProvider.state).state = contentNotifier;
 
             Navigator.push(
               context,

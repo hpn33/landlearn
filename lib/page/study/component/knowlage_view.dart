@@ -19,7 +19,7 @@ class KnowlageView extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    final contentNotifier = ref.watch(selectedContentStateProvider)!;
+    final contentNotifier = ref.watch(selectedContentProvider)!;
 
     // load data
     final paragraphs = useState<List<Map<String, WordNotifier?>>>([]);

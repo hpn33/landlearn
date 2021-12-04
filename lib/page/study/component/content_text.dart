@@ -37,7 +37,7 @@ class ContentTextWidget extends HookConsumerWidget {
 
   Widget textView() {
     return HookConsumer(builder: (context, ref, child) {
-      final contentNotifier = ref.read(selectedContentStateProvider)!;
+      final contentNotifier = ref.read(selectedContentProvider)!;
 
       useListenable(contentNotifier);
 

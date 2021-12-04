@@ -12,7 +12,7 @@ class AppbarWidget extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    final contentNotifier = ref.read(selectedContentStateProvider)!;
+    final contentNotifier = ref.read(selectedContentProvider)!;
 
     useListenable(contentNotifier);
 
