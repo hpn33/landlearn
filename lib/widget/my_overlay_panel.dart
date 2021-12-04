@@ -3,6 +3,11 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:landlearn/page/study/component/knowlage_view.dart';
 import 'package:landlearn/service/models/word_notifier.dart';
 
+/// this three should be set
+/// ----
+/// showOverlay
+/// hideOverlay
+/// layerLink
 class MyOverLayPanel {
   OverlayEntry? overlayEntry;
   final layerLink = LayerLink();

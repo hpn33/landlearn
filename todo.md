@@ -46,6 +46,7 @@
 - [x] refresh content list view when add new content
 - [x] show knowage percent of all the content text
 - [x] study page padding to text - space between scrollbar
+- [ ] 
 
 ## improvment
 - [ ] issue: analyze time need be faster ( make problem for load default data )
@@ -97,6 +98,8 @@
 - [ ] ux
 - [x] performance
 - [x] key binding ( to change mode tab, digit1 normal, digit2 know )
+- [ ] show mean on below of word
+- [ ] 
 
 ## import content panel
 - [ ] txt

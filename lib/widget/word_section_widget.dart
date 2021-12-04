@@ -3,6 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:landlearn/service/models/word_category_notifier.dart';
 import 'package:landlearn/service/models/word_notifier.dart';
+import 'package:landlearn/widget/my_overlay_panel_widget.dart';
 
 class WordSectionWidget extends StatelessWidget {
   final String alphaChar;
@@ -69,36 +70,41 @@ class WordSectionWidget extends StatelessWidget {
     return HookConsumer(builder: (context, ref, child) {
       useListenable(wordNotifier);
 
-      return Card(
-        color: wordNotifier.know ? Colors.green[100] : null,
-        child: InkWell(
-          onTap: () {
-            wordNotifier.toggleKnowToDB(ref);
-          },
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(wordNotifier.word),
-                const SizedBox(width: 4),
-                Container(
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: wordNotifier.know ? Colors.white : Colors.grey[400],
-                  ),
-                  padding: const EdgeInsets.all(4),
-                  child: Center(
-                    child: Text(
-                      wordNotifier.totalCount.toString(),
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: wordNotifier.know ? Colors.black : Colors.white,
+      return MyOverlayPanelWidget(
+        wordNotifier: wordNotifier,
+        child: Card(
+          color: wordNotifier.know ? Colors.green[100] : null,
+          child: InkWell(
+            onTap: () {
+              wordNotifier.toggleKnowToDB(ref);
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(wordNotifier.word),
+                  const SizedBox(width: 4),
+                  Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color:
+                          wordNotifier.know ? Colors.white : Colors.grey[400],
+                    ),
+                    padding: const EdgeInsets.all(4),
+                    child: Center(
+                      child: Text(
+                        wordNotifier.totalCount.toString(),
+                        style: TextStyle(
+                          fontSize: 12,
+                          color:
+                              wordNotifier.know ? Colors.black : Colors.white,
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

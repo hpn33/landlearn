@@ -1,6 +1,5 @@
 import 'dart:ui';
 
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -10,6 +9,7 @@ import 'package:landlearn/service/db/database.dart';
 import 'package:landlearn/service/models/content_notifier.dart';
 import 'package:landlearn/service/models/word_notifier.dart';
 import 'package:landlearn/widget/my_overlay_panel.dart';
+import 'package:landlearn/widget/my_overlay_panel_widget.dart';
 import 'package:translator/translator.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -120,8 +120,6 @@ class KnowlageView extends HookConsumerWidget {
               final viewMode = ref.watch(StudyPage.viewModeProvider);
               final isNormal = viewMode == ViewMode.normal;
 
-              final myOverLayPanel = useMemoized(() => MyOverLayPanel());
-
               // const textStyle = TextStyle(
               //   fontSize: 20,
               //   fontWeight: FontWeight.w500,
@@ -175,31 +173,35 @@ class KnowlageView extends HookConsumerWidget {
                           color: wordNotifier.know ? Colors.grey[300] : null,
                           borderRadius: BorderRadius.circular(5),
                         ),
-                  child: CompositedTransformTarget(
-                    link: myOverLayPanel.layerLink,
-                    child: Text(
-                      word,
-                      style: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w500,
-                      ),
+                  // child: CompositedTransformTarget(
+                  //   link: myOverLayPanel.layerLink,
+                  child: Text(
+                    word,
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
                 ),
+                // ),
               );
 
               if (isNormal) {
                 return child;
               }
 
-              return MouseRegion(
-                onEnter: (pointerHoverEvent) {
-                  myOverLayPanel.showOverlay(context, wordNotifier);
-                },
-                onExit: (pointerExitEvent) {
-                  myOverLayPanel.hideOverlay();
-                },
-                child: InkWell(
+              return MyOverlayPanelWidget(
+                wordNotifier: wordNotifier,
+                child:
+                    // MouseRegion(
+                    //   onEnter: (pointerHoverEvent) {
+                    //     myOverLayPanel.showOverlay(context, wordNotifier);
+                    //   },
+                    //   onExit: (pointerExitEvent) {
+                    //     myOverLayPanel.hideOverlay();
+                    //   },
+                    // child:
+                    InkWell(
                   onTap: () {
                     wordNotifier.toggleKnowToDB(ref);
                   },
@@ -238,7 +240,7 @@ final translate = FutureProvider.family<Translation, WordNotifier>(
 
 final repoTranslate = FutureProvider.family<String, WordNotifier>(
   (ref, wordNotifier) async {
-    if (wordNotifier.value.onlineTranslation != null) {
+    if (wordNotifier.onlineTranslation != null) {
       return Future.value(wordNotifier.value.onlineTranslation!);
     }
 
