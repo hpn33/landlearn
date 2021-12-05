@@ -1,3 +1,32 @@
+## 0.2.0+2
+
+- **ADD**
+  - delete contents
+  - content count [UI]
+  - sutdyPage on key binding 
+    - tab: change mode ( normal - know )
+    - digit1: normal mode
+    - digit2: know mode
+  - show ratio of know/all [UI]
+  - translation [ONLINE]
+  - KnowMode: show translate of word
+
+- **IMPROV**
+  - UI
+  - studyPage:
+    - toggle word section
+    - better performance of text section
+  - keep state of word section when change content
+  - keep ui ratio when screen size change
+  - edit mode
+  - contentDialog: clipboard (copy - paste)
+
+- **FIX**
+  - refresh content list when add or delete
+  - overflow of content title
+  - remove animationController - extra dispose
+
+---
 
 ## 0.1.1+1
 - **DELETE**
