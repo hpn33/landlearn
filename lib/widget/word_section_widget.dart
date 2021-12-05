@@ -3,6 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:landlearn/service/models/word_category_notifier.dart';
 import 'package:landlearn/service/models/word_notifier.dart';
+import 'package:landlearn/util/open_browser.dart';
 import 'package:landlearn/widget/my_overlay_panel_widget.dart';
 
 class WordSectionWidget extends StatelessWidget {
@@ -77,6 +78,9 @@ class WordSectionWidget extends StatelessWidget {
           child: InkWell(
             onTap: () {
               wordNotifier.toggleKnowToDB(ref);
+            },
+            onLongPress: () {
+              openGoogleTranslateInBrowser(wordNotifier.word);
             },
             child: Padding(
               padding: const EdgeInsets.all(8.0),

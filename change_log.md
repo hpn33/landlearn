@@ -1,4 +1,4 @@
-## 0.2.0+2
+## 0.2.1+2
 
 - **ADD**
   - delete contents
@@ -10,6 +10,7 @@
   - show ratio of know/all [UI]
   - translation [ONLINE]
   - KnowMode: show translate of word
+  - HOLD on word: open google translate in browser
 
 - **IMPROV**
   - UI

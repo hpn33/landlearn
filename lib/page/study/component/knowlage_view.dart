@@ -8,9 +8,9 @@ import 'package:landlearn/page/study/study.dart';
 import 'package:landlearn/service/db/database.dart';
 import 'package:landlearn/service/models/content_notifier.dart';
 import 'package:landlearn/service/models/word_notifier.dart';
+import 'package:landlearn/util/open_browser.dart';
 import 'package:landlearn/widget/my_overlay_panel_widget.dart';
 import 'package:translator/translator.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../study_controller.dart';
 
@@ -205,11 +205,7 @@ class KnowlageView extends HookConsumerWidget {
                     wordNotifier.toggleKnowToDB(ref);
                   },
                   onLongPress: () async {
-                    final url =
-                        "https://translate.google.com/?sl=en&tl=fa&text=$word&op=translate";
-                    if (!await launch(url)) {
-                      throw 'Could not launch $url';
-                    }
+                    openGoogleTranslateInBrowser(wordNotifier.word);
                   },
                   child: child,
                 ),
