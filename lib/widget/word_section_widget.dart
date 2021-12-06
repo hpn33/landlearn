@@ -6,6 +6,8 @@ import 'package:landlearn/service/models/word_notifier.dart';
 import 'package:landlearn/util/open_browser.dart';
 import 'package:landlearn/widget/my_overlay_panel_widget.dart';
 
+import 'word_panel_open_widget.dart';
+
 class WordSectionWidget extends StatelessWidget {
   final String alphaChar;
   final WordCategoryNotifier wordCategoryNotifier;
@@ -71,43 +73,46 @@ class WordSectionWidget extends StatelessWidget {
     return HookConsumer(builder: (context, ref, child) {
       useListenable(wordNotifier);
 
-      return MyOverlayPanelWidget(
+      return WordPanelOpenWidget(
         wordNotifier: wordNotifier,
-        child: Card(
-          color: wordNotifier.know ? Colors.green[100] : null,
-          child: InkWell(
-            onTap: () {
-              wordNotifier.toggleKnowToDB(ref);
-            },
-            onLongPress: () {
-              openGoogleTranslateInBrowser(wordNotifier.word);
-            },
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(wordNotifier.word),
-                  const SizedBox(width: 4),
-                  Container(
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color:
-                          wordNotifier.know ? Colors.white : Colors.grey[400],
-                    ),
-                    padding: const EdgeInsets.all(4),
-                    child: Center(
-                      child: Text(
-                        wordNotifier.totalCount.toString(),
-                        style: TextStyle(
-                          fontSize: 12,
-                          color:
-                              wordNotifier.know ? Colors.black : Colors.white,
+        child: MyOverlayPanelWidget(
+          wordNotifier: wordNotifier,
+          child: Card(
+            color: wordNotifier.know ? Colors.green[100] : null,
+            child: InkWell(
+              onTap: () {
+                wordNotifier.toggleKnowToDB(ref);
+              },
+              onLongPress: () {
+                openGoogleTranslateInBrowser(wordNotifier.word);
+              },
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(wordNotifier.word),
+                    const SizedBox(width: 4),
+                    Container(
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color:
+                            wordNotifier.know ? Colors.white : Colors.grey[400],
+                      ),
+                      padding: const EdgeInsets.all(4),
+                      child: Center(
+                        child: Text(
+                          wordNotifier.totalCount.toString(),
+                          style: TextStyle(
+                            fontSize: 12,
+                            color:
+                                wordNotifier.know ? Colors.black : Colors.white,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
