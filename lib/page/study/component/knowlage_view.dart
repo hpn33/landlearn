@@ -10,6 +10,7 @@ import 'package:landlearn/service/models/content_notifier.dart';
 import 'package:landlearn/service/models/word_notifier.dart';
 import 'package:landlearn/util/open_browser.dart';
 import 'package:landlearn/widget/my_overlay_panel_widget.dart';
+import 'package:landlearn/widget/word_panel_open_widget.dart';
 import 'package:translator/translator.dart';
 
 import '../study_controller.dart';
@@ -189,25 +190,19 @@ class KnowlageView extends HookConsumerWidget {
                 return child;
               }
 
-              return MyOverlayPanelWidget(
+              return WordPanelOpenWidget(
                 wordNotifier: wordNotifier,
-                child:
-                    // MouseRegion(
-                    //   onEnter: (pointerHoverEvent) {
-                    //     myOverLayPanel.showOverlay(context, wordNotifier);
-                    //   },
-                    //   onExit: (pointerExitEvent) {
-                    //     myOverLayPanel.hideOverlay();
-                    //   },
-                    // child:
-                    InkWell(
-                  onTap: () {
-                    wordNotifier.toggleKnowToDB(ref);
-                  },
-                  onLongPress: () async {
-                    openGoogleTranslateInBrowser(wordNotifier.word);
-                  },
-                  child: child,
+                child: MyOverlayPanelWidget(
+                  wordNotifier: wordNotifier,
+                  child: InkWell(
+                    onTap: () {
+                      wordNotifier.toggleKnowToDB(ref);
+                    },
+                    onLongPress: () async {
+                      openGoogleTranslateInBrowser(wordNotifier.word);
+                    },
+                    child: child,
+                  ),
                 ),
               );
             },
