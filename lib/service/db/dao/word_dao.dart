@@ -18,7 +18,7 @@ class WordDao extends DatabaseAccessor<Database> with _$WordDaoMixin {
   Future<Word> add(String word) => into(words)
       .insertReturning(WordsCompanion.insert(word: word, know: false));
 
-  Future<bool> updating(Word word) => (update(words).replace(word));
+  Future<bool> updating(Word word) => update(words).replace(word);
 
   Stream<List<Word>> watchingIn({required Iterable<int> wordIds}) =>
       (select(words)..where((tbl) => tbl.id.isIn(wordIds))).watch();
@@ -28,16 +28,17 @@ class WordDao extends DatabaseAccessor<Database> with _$WordDaoMixin {
           .getSingleOrNull();
 
   Future<bool> updateKnow(Word word) =>
-      (update(words).replace(word.copyWith(know: !word.know)));
+      update(words).replace(word.copyWith(know: !word.know));
 
-  updateOnlineTranslation(Word word, String translation) =>
-      (update(words).replace(word.copyWith(onlineTranslation: translation)));
+  Future<bool> updateOnlineTranslation(Word word, String translation) =>
+      update(words).replace(word.copyWith(onlineTranslation: translation));
 
-  Future<List<Word>> getAllByWord(List<String> wordList) {
-    return (select(words)..where((tbl) => tbl.word.isIn(wordList))).get();
-  }
+  Future<List<Word>> getAllByWord(List<String> wordList) =>
+      (select(words)..where((tbl) => tbl.word.isIn(wordList))).get();
 
-  Future<List<Word>> getIn({required List<int> wordIds}) {
-    return (select(words)..where((tbl) => tbl.id.isIn(wordIds))).get();
-  }
+  Future<List<Word>> getIn({required List<int> wordIds}) =>
+      (select(words)..where((tbl) => tbl.id.isIn(wordIds))).get();
+
+  updateNote(Word word, String note) =>
+      update(words).replace(word.copyWith(note: note));
 }

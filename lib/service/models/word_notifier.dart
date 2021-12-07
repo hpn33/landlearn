@@ -48,7 +48,18 @@ extension DB on WordNotifier {
 
     await db.wordDao.updateOnlineTranslation(value, translation);
 
-    value = value.copyWith(onlineTranslation: translation);
+    updateOnlineTranslation(translation);
+  }
+
+  Future<void> updateNoteToDB(
+    WidgetRef ref,
+    String note,
+  ) async {
+    final db = ref.read(dbProvider);
+
+    await db.wordDao.updateNote(value, note);
+
+    value = value.copyWith(note: note);
   }
 }
 
