@@ -4,6 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:landlearn/page/study/component/knowlage_view.dart';
 import 'package:landlearn/service/providers.dart';
 import 'package:landlearn/service/models/word_notifier.dart';
+import 'package:landlearn/util/open_browser.dart';
 import 'package:landlearn/util/open_study_page.dart';
 
 class WordPanel extends StatelessWidget {
@@ -53,11 +54,17 @@ class WordPanel extends StatelessWidget {
           final translate = ref.watch(repoTranslate(wordNotifier)).when(
               data: (d) => d, error: (e, s) => 'err', loading: () => '...');
 
-          return Row(
-            children: [
-              const Spacer(),
-              Text(translate),
-            ],
+          return InkWell(
+            onTap: () => openGoogleTranslateInBrowser(wordNotifier.word),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                children: [
+                  const Spacer(),
+                  Text(translate),
+                ],
+              ),
+            ),
           );
         },
       );
