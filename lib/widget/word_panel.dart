@@ -202,28 +202,27 @@ class EditNotePanel extends HookConsumerWidget {
     final selectedWordNotifier = ref.read(selectedWordNotifierProvider)!;
     useListenable(selectedWordNotifier);
 
+    final note = selectedWordNotifier.note ?? '';
+
     final showAction = useState(false);
 
-    final textController =
-        useTextEditingController(text: selectedWordNotifier.note ?? '');
+    final textController = useTextEditingController(text: note);
     useListenable(textController);
 
     useEffect(
       () {
-        if (textController.text != (selectedWordNotifier.note ?? '')) {
-          textController.text = selectedWordNotifier.note ?? '';
+        if (textController.text != note) {
+          textController.text = note;
         }
 
-        showAction.value =
-            textController.text != (selectedWordNotifier.note ?? '');
+        showAction.value = textController.text != note;
       },
-      [selectedWordNotifier.note ?? ''],
+      [note],
     );
 
     useEffect(
       () {
-        showAction.value =
-            textController.text != (selectedWordNotifier.note ?? '');
+        showAction.value = textController.text != note;
       },
       [textController.text],
     );
