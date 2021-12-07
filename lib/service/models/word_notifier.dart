@@ -27,6 +27,7 @@ class WordNotifier extends ValueNotifier<Word> {
 
   // contentId, wordData
   final wordDataCatch = <int, WordData>{};
+  final contentCatch = <int, ContentNotifier>{};
 
   WordNotifier(Word wordObject) : super(wordObject);
 }
@@ -80,5 +81,8 @@ extension Func on WordNotifier {
     addListener(() => contentNotifier.notify());
 
     wordDataCatch[contentNotifier.id] = wordData;
+    if (!contentCatch.containsKey(contentNotifier.id)) {
+      contentCatch[contentNotifier.id] = contentNotifier;
+    }
   }
 }

@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:landlearn/page/study/component/knowlage_view.dart';
-import 'package:landlearn/service/models/word_notifier.dart';
 import 'package:landlearn/service/providers.dart';
+import 'package:landlearn/service/models/word_notifier.dart';
+import 'package:landlearn/util/open_study_page.dart';
 
 class WordPanel extends StatelessWidget {
   const WordPanel({Key? key}) : super(key: key);
@@ -81,9 +82,6 @@ class WordPanel extends StatelessWidget {
             [note],
           );
 
-          // final sampleText = useState(
-          //     'a long long text that is here to you can see what is for, a long long text that is here to you can see what is for,a long long text that is here to you can see what is for, a long long text that is here to you can see what is for');
-
           return Container(
             margin: const EdgeInsets.symmetric(vertical: 8),
             decoration: BoxDecoration(
@@ -123,8 +121,10 @@ class WordPanel extends StatelessWidget {
         },
       );
 
-  Widget refsSection() => HookBuilder(
-        builder: (context) {
+  Widget refsSection() => HookConsumer(
+        builder: (context, ref, child) {
+          final refs =
+              ref.read(selectedWordNotifierProvider)!.contentCatch.values;
           final show = useState(false);
 
           return Container(
@@ -142,10 +142,10 @@ class WordPanel extends StatelessWidget {
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Row(
-                      children: const [
-                        Text('refs'),
-                        Spacer(),
-                        Text('99'),
+                      children: [
+                        const Text('where use'),
+                        const Spacer(),
+                        Text('${refs.length}'),
                       ],
                     ),
                   ),
@@ -156,10 +156,25 @@ class WordPanel extends StatelessWidget {
                       ? Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Column(
-                            children: const [
-                              Text('refs'),
-                              Text('refs'),
-                              Text('refs'),
+                            children: [
+                              for (final contentNotifier in refs)
+                                InkWell(
+                                  onTap: () {
+                                    openStudyPage(
+                                        context, ref, contentNotifier);
+                                  },
+                                  child: Container(
+                                    width: double.infinity,
+                                    padding: const EdgeInsets.all(8.0),
+                                    margin:
+                                        const EdgeInsets.symmetric(vertical: 2),
+                                    decoration: BoxDecoration(
+                                      color: Colors.grey[100],
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    child: Text(contentNotifier.title),
+                                  ),
+                                ),
                             ],
                           ),
                         )

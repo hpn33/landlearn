@@ -3,7 +3,11 @@
 ## Feature
 - [x] collect Contents ( text and word )
 - [x] manage contents ( crud )
-- [ ] word oriented feature ( mean - refrence - know level )
+- [ ] word oriented
+  - [x] note
+  - [x] where use
+  - [x] online translation
+  - [ ] know level (???)
 - [ ] rech editor ( show knowlage level - ... )
 - [ ] backup and data usablility for others ( json - bit file (for less file size) )
 - [ ] ( online ) content provider
@@ -109,8 +113,10 @@
 
 ## word oriented
 - [ ] word overlay panel
-  - [ ] ref
+  - [x] where use
   - [x] translate
-  - [ ] note
+  - [ ] open on browser
+  - [x] note
+  - [ ] 
 - [ ] word page
 - [ ] 

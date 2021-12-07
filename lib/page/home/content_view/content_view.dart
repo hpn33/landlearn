@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:landlearn/page/dialog/add_content_dialog.dart';
-import 'package:landlearn/page/study/study.dart';
-import 'package:landlearn/page/study/study_controller.dart';
 import 'package:landlearn/service/models/content_hub.dart';
 import 'package:landlearn/service/models/content_notifier.dart';
+import 'package:landlearn/util/open_study_page.dart';
 import 'package:landlearn/widget/styled_percent_widget.dart';
 
 class ContentView extends StatelessWidget {
@@ -87,12 +86,7 @@ class ContentView extends StatelessWidget {
       return Card(
         child: InkWell(
           onTap: () {
-            ref.read(selectedContentProvider.state).state = contentNotifier;
-
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (c) => const StudyPage()),
-            );
+            openStudyPage(context, ref, contentNotifier);
           },
           child: Column(
             children: [
