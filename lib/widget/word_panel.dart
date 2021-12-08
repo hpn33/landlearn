@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -40,10 +42,14 @@ class WordPanel extends StatelessWidget {
         builder: (BuildContext context, WidgetRef ref, Widget? child) {
           final word = ref.read(selectedWordNotifierProvider)!.word;
 
-          return Row(
-            children: [
-              Text(word),
-            ],
+          return Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              children: [
+                Text(word, style: const TextStyle(fontSize: 24)),
+                const Spacer(),
+              ],
+            ),
           );
         },
       );
@@ -54,16 +60,18 @@ class WordPanel extends StatelessWidget {
           final translate = ref.watch(repoTranslate(wordNotifier)).when(
               data: (d) => d, error: (e, s) => 'err', loading: () => '...');
 
-          return InkWell(
-            onTap: () => openGoogleTranslateInBrowser(wordNotifier.word),
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                children: [
-                  const Spacer(),
-                  Text(translate),
-                ],
-              ),
+          return Padding(
+            padding: const EdgeInsets.all(4.0),
+            child: Row(
+              children: [
+                const Spacer(),
+                TextButton(
+                  onPressed: () =>
+                      openGoogleTranslateInBrowser(wordNotifier.word),
+                  child: const Text('Google Translation'),
+                ),
+                Text(translate),
+              ],
             ),
           );
         },
@@ -73,23 +81,23 @@ class WordPanel extends StatelessWidget {
         builder: (context, ref, child) {
           final wordNotifier = ref.read(selectedWordNotifierProvider)!;
           useListenable(wordNotifier);
-          final note = wordNotifier.note;
+
+          final note = wordNotifier.note ?? '';
+          final noteIsEmpty = note.isEmpty;
 
           final show = useState(false);
 
-          final textController = useTextEditingController(
-            text: (note ?? '').isEmpty ? 'Note' : (note ?? ''),
-          );
+          final textController = useTextEditingController(text: note);
 
           useEffect(
             () {
-              textController.text =
-                  (note ?? '').isEmpty ? 'Note' : (note ?? '');
+              textController.text = note;
             },
             [note],
           );
 
           return Container(
+            width: double.infinity,
             margin: const EdgeInsets.symmetric(vertical: 8),
             decoration: BoxDecoration(
               color: Colors.grey[200],
@@ -97,31 +105,52 @@ class WordPanel extends StatelessWidget {
             ),
             child: InkWell(
               onTap: () {
+                if (noteIsEmpty) {
+                  showDialog(
+                    context: context,
+                    builder: (context) => const EditNotePanel(),
+                  );
+                  return;
+                }
+
                 show.value = !show.value;
               },
-              onLongPress: () {
+              onDoubleTap: () {
                 showDialog(
                   context: context,
                   builder: (context) => const EditNotePanel(),
                 );
               },
-              child: Row(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: AnimatedSize(
-                      duration: const Duration(milliseconds: 150),
-                      child: show.value
-                          ? Text(textController.text)
-                          : Text(
-                              textController.text,
-                              maxLines: 1,
-                              softWrap: false,
-                              overflow: TextOverflow.ellipsis,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: AnimatedSize(
+                  duration: const Duration(milliseconds: 100),
+                  child: show.value
+                      ? Text(textController.text)
+                      : noteIsEmpty
+                          ? const Text(
+                              'empty note',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: Colors.grey,
+                              ),
+                            )
+                          : Row(
+                              children: [
+                                Text(
+                                  textController.text,
+                                  maxLines: 1,
+                                  softWrap: false,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    color: Colors.grey[700],
+                                  ),
+                                ),
+                                const Spacer(),
+                                if (note.contains('\n')) const Text('...'),
+                              ],
                             ),
-                    ),
-                  ),
-                ],
+                ),
               ),
             ),
           );
@@ -130,8 +159,9 @@ class WordPanel extends StatelessWidget {
 
   Widget refsSection() => HookConsumer(
         builder: (context, ref, child) {
-          final refs =
-              ref.read(selectedWordNotifierProvider)!.contentCatch.values;
+          final selectedWordNotifier = ref.read(selectedWordNotifierProvider)!;
+          final refs = selectedWordNotifier.contentCatch.values;
+
           final show = useState(false);
 
           return Container(
@@ -150,7 +180,7 @@ class WordPanel extends StatelessWidget {
                     padding: const EdgeInsets.all(8.0),
                     child: Row(
                       children: [
-                        const Text('where use'),
+                        const Text('refs'),
                         const Spacer(),
                         Text('${refs.length}'),
                       ],
@@ -179,7 +209,15 @@ class WordPanel extends StatelessWidget {
                                       color: Colors.grey[100],
                                       borderRadius: BorderRadius.circular(8),
                                     ),
-                                    child: Text(contentNotifier.title),
+                                    child: Row(
+                                      children: [
+                                        Text(contentNotifier.title),
+                                        const Spacer(),
+                                        Text(selectedWordNotifier
+                                            .getContentCount(contentNotifier.id)
+                                            .toString()),
+                                      ],
+                                    ),
                                   ),
                                 ),
                             ],
