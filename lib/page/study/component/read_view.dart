@@ -3,20 +3,19 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:landlearn/page/study/logic/view_mode.dart';
 import 'package:landlearn/page/study/study.dart';
+import 'package:landlearn/page/study/study_controller.dart';
 import 'package:landlearn/service/models/content_notifier.dart';
 import 'package:landlearn/service/models/word_notifier.dart';
 import 'package:landlearn/util/open_browser.dart';
 import 'package:landlearn/widget/my_overlay_panel_widget.dart';
 import 'package:landlearn/widget/word_panel_open_widget.dart';
 
-import '../study_controller.dart';
-
 class ReadView extends HookConsumerWidget {
   const ReadView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, ref) {
-    final contentNotifier = ref.watch(selectedContentProvider)!;
+    final contentNotifier = ref.watch(studyVMProvider).selectedContent!;
 
     // load data
     final paragraphs = useState<List<Map<String, WordNotifier?>>>([]);
@@ -115,6 +114,13 @@ class ReadView extends HookConsumerWidget {
             builder: (context, ref, child) {
               final viewMode = ref.watch(StudyPage.viewModeProvider);
               final isNormal = viewMode == ViewMode.normal;
+
+              // useOnAppLifecycleStateChange((p, c) {
+              //   print(p);
+              //   print(c);
+              // });
+
+              // print(useAppLifecycleState());
 
               // const textStyle = TextStyle(
               //   fontSize: 20,

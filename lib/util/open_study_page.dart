@@ -11,14 +11,7 @@ void openStudyPage(
   ContentNotifier contentNotifier, {
   WordNotifier? selectedWord,
 }) {
-  ref.read(selectedContentProvider.state).state = contentNotifier;
-  ref.read(StudyPage.selectedWordListProvider.state).state = [];
-
-  if (selectedWord != null) {
-    selectedWord.setSelection(true);
-
-    ref.read(StudyPage.selectedWordListProvider.state).state = [selectedWord];
-  }
+  ref.read(studyVMProvider).init(contentNotifier, selectedWord);
 
   Navigator.push(
     context,

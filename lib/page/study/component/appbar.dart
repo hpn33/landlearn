@@ -6,20 +6,28 @@ import 'package:landlearn/service/models/content_notifier.dart';
 import '../study_controller.dart';
 import 'toggle_view_mode.dart';
 
-class AppbarWidget extends HookConsumerWidget {
-  const AppbarWidget({Key? key}) : super(key: key);
+class AppbarStudy extends HookConsumerWidget {
+  const AppbarStudy({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, ref) {
-    final contentNotifier = ref.read(selectedContentProvider)!;
+    final studyVM = ref.read(studyVMProvider);
+    final contentNotifier = studyVM.selectedContent;
 
-    useListenable(contentNotifier);
+    useListenable(contentNotifier ?? ChangeNotifier());
+
+    if (contentNotifier == null) {
+      return Container();
+    }
 
     return Material(
       elevation: 6,
       child: Row(
         children: [
-          const BackButton(),
+          BackButton(onPressed: () {
+            studyVM.dispose();
+            Navigator.pop(context);
+          }),
           Text('count ${contentNotifier.allWordCount}'),
           const SizedBox(width: 10),
           Text('uniqe ${contentNotifier.wordCount}'),

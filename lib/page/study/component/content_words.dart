@@ -52,9 +52,13 @@ class ContentWordToggleWidget extends HookConsumerWidget {
   Widget openText() {
     return HookConsumer(
       builder: (BuildContext context, WidgetRef ref, Widget? child) {
-        final contentNotifier = ref.read(selectedContentProvider)!;
+        final contentNotifier = ref.read(studyVMProvider).selectedContent;
 
-        useListenable(contentNotifier);
+        useListenable(contentNotifier ?? ChangeNotifier());
+
+        if (contentNotifier == null) {
+          return Container();
+        }
 
         return SizedBox(
           width: 50,
@@ -110,7 +114,7 @@ class ContentWordWidget extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    final contentNotifier = ref.read(selectedContentProvider.state).state!;
+    final contentNotifier = ref.read(studyVMProvider).selectedContent!;
 
     useListenable(contentNotifier);
 

@@ -38,7 +38,7 @@ class ContentTextWidget extends HookConsumerWidget {
 
   Widget textView() {
     return HookConsumer(builder: (context, ref, child) {
-      final contentNotifier = ref.read(selectedContentProvider)!;
+      final contentNotifier = ref.read(studyVMProvider).selectedContent!;
 
       useListenable(contentNotifier);
 
@@ -60,10 +60,12 @@ class ContentTextWidget extends HookConsumerWidget {
 
   Widget selectedWord() => AnimatedSize(
         duration: const Duration(milliseconds: 100),
-        child: Consumer(
+        child: HookConsumer(
           builder: (context, ref, child) {
-            final selectedWordList =
-                ref.watch(StudyPage.selectedWordListProvider);
+            final studyVM = ref.read(studyVMProvider);
+            final selectedWordList = studyVM.selectedWords;
+
+            useListenable(studyVM.selectionNotifer);
 
             if (selectedWordList.isEmpty) {
               return Container();
@@ -72,7 +74,6 @@ class ContentTextWidget extends HookConsumerWidget {
             return Padding(
               padding: const EdgeInsets.all(16.0),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   for (final wordNotifier in selectedWordList)
                     InputChip(
@@ -81,10 +82,8 @@ class ContentTextWidget extends HookConsumerWidget {
                         wordNotifier.setSelection(false);
 
                         ref
-                            .read(StudyPage.selectedWordListProvider.state)
-                            .state = [
-                          ...selectedWordList..remove(wordNotifier)
-                        ];
+                            .read(studyVMProvider)
+                            .removeSelectedWrod(wordNotifier);
                       },
                       label: Text(wordNotifier.word),
                     ),

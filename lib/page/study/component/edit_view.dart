@@ -41,7 +41,7 @@ class EditPanel extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, ref) {
     final textController = ref.watch(textControllerProvider);
-    final contentNotifier = ref.read(selectedContentProvider)!;
+    final contentNotifier = ref.read(studyVMProvider).selectedContent!;
 
     useListenable(contentNotifier);
 
@@ -92,7 +92,8 @@ class EditPanel extends HookConsumerWidget {
                     ),
                     onPressed: () async {
                       ref
-                          .read(selectedContentProvider)!
+                          .read(studyVMProvider)
+                          .selectedContent!
                           .updateContent(ref.read(textControllerProvider).text);
 
                       await analyze(ref);
