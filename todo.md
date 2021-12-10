@@ -98,8 +98,14 @@
 
 ## Study Page
 - [x] modes???
-- [ ] ui
-- [ ] ux
+  - [ ] edit
+  - [ ] views
+    - [ ] read only
+    - [ ] know
+    - [ ] unknow
+- [ ] ui/ux
+  - [ ] underline guide
+    - [ ] dot orange underline for almost know level
 - [x] performance
 - [x] key binding ( to change mode tab, digit1 normal, digit2 know )
 - [ ] show mean on below of word
@@ -117,7 +123,7 @@
   - [x] translate
   - [x] open on browser
   - [x] note
-  - [ ] know level
+  - [x] know level
 - [ ] word page
 - [ ] 
 

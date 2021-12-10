@@ -36,15 +36,32 @@ class WordPanel extends StatelessWidget {
     );
   }
 
-  Widget wordSection() => Consumer(
+  Widget wordSection() => HookConsumer(
         builder: (BuildContext context, WidgetRef ref, Widget? child) {
-          final word = ref.read(selectedWordNotifierProvider)!.word;
+          final wordNotifier = ref.read(selectedWordNotifierProvider)!;
+          useListenable(wordNotifier);
 
           return Padding(
             padding: const EdgeInsets.all(8.0),
             child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(word, style: const TextStyle(fontSize: 24)),
+                InkWell(
+                  onTap: () => wordNotifier.toggleKnowToDB(ref),
+                  borderRadius: BorderRadius.circular(8),
+                  child: Container(
+                    width: 10,
+                    height: 30,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      color:
+                          wordNotifier.know ? Colors.green : Colors.grey[300],
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 4),
+                Text(wordNotifier.word, style: const TextStyle(fontSize: 24)),
                 const Spacer(),
               ],
             ),
@@ -83,7 +100,7 @@ class WordPanel extends StatelessWidget {
           final note = wordNotifier.note ?? '';
           final noteIsEmpty = note.isEmpty;
 
-          final show = useState(false);
+          // final show = useState(false);
 
           final textController = useTextEditingController(text: note);
 
@@ -102,53 +119,67 @@ class WordPanel extends StatelessWidget {
               borderRadius: BorderRadius.circular(8),
             ),
             child: InkWell(
+              borderRadius: BorderRadius.circular(8),
               onTap: () {
-                if (noteIsEmpty) {
-                  showDialog(
-                    context: context,
-                    builder: (context) => const EditNotePanel(),
-                  );
-                  return;
-                }
-
-                show.value = !show.value;
-              },
-              onDoubleTap: () {
+                // if (noteIsEmpty) {
                 showDialog(
                   context: context,
                   builder: (context) => const EditNotePanel(),
                 );
+                // return;
+                // }
+
+                // show.value = !show.value;
               },
+              // onDoubleTap: () {
+              //   showDialog(
+              //     context: context,
+              //     builder: (context) => const EditNotePanel(),
+              //   );
+              // },
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: AnimatedSize(
-                  duration: const Duration(milliseconds: 100),
-                  child: show.value
-                      ? Text(textController.text)
-                      : noteIsEmpty
-                          ? const Text(
-                              'empty note',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                color: Colors.grey,
-                              ),
-                            )
-                          : Row(
-                              children: [
-                                Text(
-                                  textController.text,
-                                  maxLines: 1,
-                                  softWrap: false,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                    color: Colors.grey[700],
-                                  ),
+                    duration: const Duration(milliseconds: 100),
+                    child:
+                        // show.value
+                        // ? Text(textController.text)
+                        // :
+                        // onSave: () {
+                        //   wordNotifier.updateNote(textController.text);
+                        //   show.value = false;
+                        // },
+
+                        noteIsEmpty
+                            ? const Text(
+                                'empty note',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: Colors.grey,
                                 ),
-                                const Spacer(),
-                                if (note.contains('\n')) const Text('...'),
-                              ],
-                            ),
-                ),
+                              )
+                            : Text(textController.text)
+
+                    // Stack(
+                    //     children: [
+                    //       Text(
+                    //         textController.text,
+                    //         maxLines: 3,
+                    //         softWrap: false,
+                    //         overflow: TextOverflow.ellipsis,
+                    //         // style: TextStyle(
+                    //         // color: Colors.grey[700],
+                    //         // ),
+                    //       ),
+                    //       const Spacer(),
+                    //       if (note.contains('\n'))
+                    //         Positioned(
+                    //             bottom: 0,
+                    //             right: 0,
+                    //             child: const Text('...')),
+                    //     ],
+                    //   ),
+                    ),
               ),
             ),
           );
@@ -160,7 +191,7 @@ class WordPanel extends StatelessWidget {
           final selectedWordNotifier = ref.read(selectedWordNotifierProvider)!;
           final refs = selectedWordNotifier.contentCatch.values;
 
-          final show = useState(false);
+          // final show = useState(false);
 
           return Container(
             margin: const EdgeInsets.symmetric(vertical: 8),
@@ -170,59 +201,61 @@ class WordPanel extends StatelessWidget {
             ),
             child: Column(
               children: [
-                InkWell(
-                  onTap: () {
-                    show.value = !show.value;
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      children: [
-                        const Text('refs'),
-                        const Spacer(),
-                        Text('${refs.length}'),
-                      ],
-                    ),
+                // InkWell(
+                //   onTap: () {
+                //     show.value = !show.value;
+                //   },
+                // child:
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    children: [
+                      const Text('refs'),
+                      const Spacer(),
+                      Text('${refs.length}'),
+                    ],
                   ),
                 ),
-                AnimatedSize(
-                  duration: const Duration(milliseconds: 150),
-                  child: show.value
-                      ? Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Column(
-                            children: [
-                              for (final contentNotifier in refs)
-                                InkWell(
-                                  onTap: () {
-                                    openStudyPage(
-                                        context, ref, contentNotifier);
-                                  },
-                                  child: Container(
-                                    width: double.infinity,
-                                    padding: const EdgeInsets.all(8.0),
-                                    margin:
-                                        const EdgeInsets.symmetric(vertical: 2),
-                                    decoration: BoxDecoration(
-                                      color: Colors.grey[100],
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                    child: Row(
-                                      children: [
-                                        Text(contentNotifier.title),
-                                        const Spacer(),
-                                        Text(selectedWordNotifier
-                                            .getContentCount(contentNotifier.id)
-                                            .toString()),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                            ],
+                // ),
+                // AnimatedSize(
+                //   duration: const Duration(milliseconds: 150),
+                //   child:
+                //  show.value
+                //     ?
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    children: [
+                      for (final contentNotifier in refs)
+                        InkWell(
+                          onTap: () {
+                            openStudyPage(context, ref, contentNotifier);
+                          },
+                          child: Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.all(8.0),
+                            margin: const EdgeInsets.symmetric(vertical: 2),
+                            decoration: BoxDecoration(
+                              color: Colors.grey[100],
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Row(
+                              children: [
+                                Text(contentNotifier.title),
+                                const Spacer(),
+                                Text(selectedWordNotifier
+                                    .getContentCount(contentNotifier.id)
+                                    .toString()),
+                              ],
+                            ),
                           ),
-                        )
-                      : Container(),
-                ),
+                        ),
+                    ],
+                  ),
+                )
+                // : Container()
+                ,
+                // ),
               ],
             ),
           );
@@ -311,3 +344,12 @@ class EditNotePanel extends HookConsumerWidget {
     );
   }
 }
+
+
+// int lineCount(String text, int maxLines, {TextStyle? style}) {
+//   final span = TextSpan(text: text, style: style);
+//   final tp = TextPainter(text: span, maxLines: 3);
+//   tp.layout(maxWidth: size.maxWidth);
+
+// return 
+// }
