@@ -3,7 +3,6 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:landlearn/page/study/study_controller.dart';
 import 'package:landlearn/service/models/content_notifier.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class EditView extends StatelessWidget {
   const EditView({Key? key}) : super(key: key);
