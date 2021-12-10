@@ -115,8 +115,26 @@
 - [ ] word overlay panel
   - [x] where use
   - [x] translate
-  - [ ] open on browser
+  - [x] open on browser
   - [x] note
-  - [ ] 
+  - [ ] know level
 - [ ] word page
 - [ ] 
+
+
+## ui
+- [ ] look good ( search - what can do? )
+  - [ ] choose good color pallet
+  - [ ] https://www.youtube.com/watch?v=HwdweCX5aMI&t=67s
+  - [ ] sample animation https://www.youtube.com/watch?v=gaKvL88Zws0
+  - [ ] flex_color_scheme: ^4.1.1
+
+
+## gamification
+- [ ] know level of word count ( like anilist.co )
+- [ ] know level of content percent knowlage
+- [ ] achivement
+
+
+## check 
+- [ ] https://pub.dev/packages/dart_code_metrics
