@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:landlearn/page/study/logic/view_mode.dart';
-import 'package:landlearn/page/study/study.dart';
 import 'package:landlearn/service/models/content_notifier.dart';
 
 import '../study_controller.dart';
+import 'toggle_view_mode.dart';
 
 class AppbarWidget extends HookConsumerWidget {
   const AppbarWidget({Key? key}) : super(key: key);
@@ -25,7 +24,7 @@ class AppbarWidget extends HookConsumerWidget {
           const SizedBox(width: 10),
           Text('uniqe ${contentNotifier.wordCount}'),
           const SizedBox(width: 10),
-          toggleViewModeButton(),
+          const ToggleViewModeButton(),
           const SizedBox(width: 10),
           SizedBox(
             width: 100,
@@ -33,47 +32,6 @@ class AppbarWidget extends HookConsumerWidget {
           ),
         ],
       ),
-    );
-  }
-
-  Widget toggleViewModeButton() {
-    const viewModeItems = [
-      Tooltip(message: 'Normal', child: Icon(Icons.remove_red_eye)),
-      Tooltip(message: 'Clear', child: Icon(Icons.toll_outlined)),
-      Tooltip(message: 'Edit', child: Icon(Icons.edit)),
-    ];
-
-    return Row(
-      children: [
-        const Text('Views '),
-        HookConsumer(
-          builder: (BuildContext context, WidgetRef ref, Widget? child) {
-            final viewMode = ref.watch(StudyPage.viewModeProvider.state);
-
-            final isSelected = useState(<bool>[]);
-
-            useEffect(
-              () {
-                final index = ViewMode.values.indexOf(viewMode.state);
-                isSelected.value =
-                    List.generate(viewModeItems.length, (i) => i == index);
-              },
-              [viewMode.state],
-            );
-
-            return ToggleButtons(
-              children: viewModeItems,
-              onPressed: (int index) async {
-                isSelected.value =
-                    List.generate(viewModeItems.length, (i) => index == i);
-
-                viewMode.state = ViewMode.values[index];
-              },
-              isSelected: isSelected.value,
-            );
-          },
-        ),
-      ],
     );
   }
 

@@ -23,20 +23,29 @@ class StudyPage extends HookConsumerWidget {
         LogicalKeySet(LogicalKeyboardKey.tab): ToggleViewModeIntent(),
         LogicalKeySet(LogicalKeyboardKey.digit1): ViewModeNormalIntent(),
         LogicalKeySet(LogicalKeyboardKey.digit2): ViewModeKnowIntent(),
+        LogicalKeySet(LogicalKeyboardKey.digit3): ViewModeUnknowIntent(),
       },
       child: Actions(
         actions: {
           ToggleViewModeIntent: CallbackAction(onInvoke: (intent) {
-            ref.read(viewModeProvider.state).state =
-                ref.read(viewModeProvider) == ViewMode.normal
-                    ? ViewMode.clearKnowladge
-                    : ViewMode.normal;
+            final mode = ref.read(viewModeProvider.state);
+
+            if (mode.state == ViewMode.normal) {
+              mode.state = ViewMode.know;
+            } else if (mode.state == ViewMode.know) {
+              mode.state = ViewMode.unknow;
+            } else if (mode.state == ViewMode.unknow) {
+              mode.state = ViewMode.normal;
+            }
           }),
           ViewModeNormalIntent: CallbackAction(onInvoke: (intent) {
             ref.read(viewModeProvider.state).state = ViewMode.normal;
           }),
           ViewModeKnowIntent: CallbackAction(onInvoke: (intent) {
-            ref.read(viewModeProvider.state).state = ViewMode.clearKnowladge;
+            ref.read(viewModeProvider.state).state = ViewMode.know;
+          }),
+          ViewModeUnknowIntent: CallbackAction(onInvoke: (intent) {
+            ref.read(viewModeProvider.state).state = ViewMode.unknow;
           }),
         },
         child: Material(
@@ -76,3 +85,5 @@ class ToggleViewModeIntent extends Intent {}
 class ViewModeNormalIntent extends Intent {}
 
 class ViewModeKnowIntent extends Intent {}
+
+class ViewModeUnknowIntent extends Intent {}

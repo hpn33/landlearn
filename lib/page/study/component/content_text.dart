@@ -6,7 +6,7 @@ import 'package:landlearn/page/study/logic/view_mode.dart';
 import '../study.dart';
 import '../study_controller.dart';
 import 'edit_view.dart';
-import 'knowlage_view.dart';
+import 'read_view.dart';
 
 class ContentTextWidget extends HookConsumerWidget {
   const ContentTextWidget({Key? key}) : super(key: key);
@@ -31,7 +31,7 @@ class ContentTextWidget extends HookConsumerWidget {
     return Column(
       children: [
         selectedWord(),
-        const Expanded(child: KnowlageView()),
+        const Expanded(child: ReadView()),
       ],
     );
   }

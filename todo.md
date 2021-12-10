@@ -62,7 +62,7 @@
 - [x] need some default story
 - [x] study page good edit flow ( !!! ) (research plz )
 - [x] edit flow - maybe remove analyze button
-- [ ] show word usage sample ( ref ) ( if exist )
+- [x] show word usage sample ( ref ) ( if exist )
 - [ ] mobilize - mobile ui
 - [ ] نمایش نمونه های استفاده شده از کلمه در متن ( اگر موجود باشد )
 - [ ] رنگ بندی های متفاوت برای کلمات با وضعیت فهم متفاوت
@@ -124,8 +124,8 @@
   - [x] open on browser
   - [x] note
   - [x] know level
-- [ ] word page
-- [ ] 
+  - [x] refs
+- [x] select word and show on text
 
 
 ## ui

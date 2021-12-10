@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:landlearn/page/study/component/knowlage_view.dart';
+import 'package:landlearn/page/study/component/read_view_repo.dart';
 import 'package:landlearn/service/providers.dart';
 import 'package:landlearn/service/models/word_notifier.dart';
 import 'package:landlearn/util/open_browser.dart';

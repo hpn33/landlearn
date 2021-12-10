@@ -3,18 +3,16 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:landlearn/page/study/logic/view_mode.dart';
 import 'package:landlearn/page/study/study.dart';
-import 'package:landlearn/service/db/database.dart';
 import 'package:landlearn/service/models/content_notifier.dart';
 import 'package:landlearn/service/models/word_notifier.dart';
 import 'package:landlearn/util/open_browser.dart';
 import 'package:landlearn/widget/my_overlay_panel_widget.dart';
 import 'package:landlearn/widget/word_panel_open_widget.dart';
-import 'package:translator/translator.dart';
 
 import '../study_controller.dart';
 
-class KnowlageView extends HookConsumerWidget {
-  const KnowlageView({Key? key}) : super(key: key);
+class ReadView extends HookConsumerWidget {
+  const ReadView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, ref) {
@@ -161,35 +159,71 @@ class KnowlageView extends HookConsumerWidget {
               //   ],
               // );
 
+              Widget text = Text(
+                word,
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w500,
+                ),
+              );
+
+              if (isNormal) {
+                text = Stack(
+                  children: [
+                    Positioned(
+                      bottom: 1,
+                      child: Container(
+                        width: _textSize(
+                          word,
+                          const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ).width,
+                        height: 3,
+                        color: wordNotifier.selected ? Colors.blue[400] : null,
+                      ),
+                    ),
+                    text,
+                  ],
+                );
+              }
+
               final child = Padding(
                 padding: const EdgeInsets.symmetric(vertical: 1),
                 child: Container(
                   padding: const EdgeInsets.all(0.1),
                   decoration: isNormal
                       ? null
-                      : BoxDecoration(
-                          color: wordNotifier.selected
-                              ? Colors.blue[200]
-                              : wordNotifier.know
-                                  ? Colors.grey[300]
-                                  : null,
-                          borderRadius: BorderRadius.circular(5),
-                        ),
+                      : viewMode == ViewMode.know
+                          ? BoxDecoration(
+                              color: wordNotifier.selected
+                                  ? Colors.blue[200]
+                                  : wordNotifier.know
+                                      ? Colors.grey[300]
+                                      : null,
+                              borderRadius: BorderRadius.circular(5),
+                            )
+                          : BoxDecoration(
+                              color: wordNotifier.selected
+                                  ? Colors.blue[200]
+                                  : wordNotifier.know
+                                      ? null
+                                      : Colors.yellow[200],
+                              borderRadius: BorderRadius.circular(5),
+                            ),
                   // child: CompositedTransformTarget(
                   //   link: myOverLayPanel.layerLink,
-                  child: Text(
-                    word,
-                    style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
+                  child: text,
                 ),
                 // ),
               );
 
               if (isNormal) {
-                return child;
+                return WordPanelOpenWidget(
+                  wordNotifier: wordNotifier,
+                  child: child,
+                );
               }
 
               return WordPanelOpenWidget(
@@ -216,35 +250,15 @@ class KnowlageView extends HookConsumerWidget {
 
   // Here it is!
   Size _textSize(String text, TextStyle style) {
-    final TextPainter textPainter = TextPainter(
-        text: TextSpan(text: text, style: style),
-        maxLines: 1,
-        textDirection: TextDirection.ltr)
-      ..layout(minWidth: 0, maxWidth: double.infinity);
+    final textPainter = TextPainter(
+      text: TextSpan(text: text, style: style),
+      maxLines: 1,
+      textDirection: TextDirection.ltr,
+    )..layout(
+        minWidth: 0,
+        maxWidth: double.infinity,
+      );
+
     return textPainter.size;
   }
 }
-
-final translate = FutureProvider.family<Translation, WordNotifier>(
-  (ref, wordNotifier) async =>
-      wordNotifier.word.translate(from: 'en', to: 'fa'),
-);
-
-final repoTranslate = FutureProvider.family<String, WordNotifier>(
-  (ref, wordNotifier) async {
-    if (wordNotifier.onlineTranslation != null) {
-      return Future.value(wordNotifier.value.onlineTranslation!);
-    }
-
-    final translation = await ref.watch(translate(wordNotifier).future);
-
-    final db = ref.read(dbProvider);
-    await db.wordDao.updateOnlineTranslation(
-      wordNotifier.value,
-      translation.toString(),
-    );
-    wordNotifier.updateOnlineTranslation(translation.toString());
-
-    return translation.toString();
-  },
-);

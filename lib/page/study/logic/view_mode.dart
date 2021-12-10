@@ -1,5 +1,6 @@
 enum ViewMode {
   normal,
-  clearKnowladge,
+  know,
+  unknow,
   edit,
 }
