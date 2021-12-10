@@ -37,7 +37,7 @@ class KnowlageView extends HookConsumerWidget {
     );
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 24),
+      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 16),
       child: ListView.builder(
         padding: const EdgeInsets.only(right: 8),
         physics: const BouncingScrollPhysics(),
@@ -168,7 +168,11 @@ class KnowlageView extends HookConsumerWidget {
                   decoration: isNormal
                       ? null
                       : BoxDecoration(
-                          color: wordNotifier.know ? Colors.grey[300] : null,
+                          color: wordNotifier.selected
+                              ? Colors.blue[200]
+                              : wordNotifier.know
+                                  ? Colors.grey[300]
+                                  : null,
                           borderRadius: BorderRadius.circular(5),
                         ),
                   // child: CompositedTransformTarget(

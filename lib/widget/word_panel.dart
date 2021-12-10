@@ -229,7 +229,12 @@ class WordPanel extends StatelessWidget {
                       for (final contentNotifier in refs)
                         InkWell(
                           onTap: () {
-                            openStudyPage(context, ref, contentNotifier);
+                            openStudyPage(
+                              context,
+                              ref,
+                              contentNotifier,
+                              selectedWord: selectedWordNotifier,
+                            );
                           },
                           child: Container(
                             width: double.infinity,

@@ -28,11 +28,12 @@ class ContentTextWidget extends HookConsumerWidget {
       return const EditView();
     }
 
-    // if (viewMode == ViewMode.clearKnowladge) {
-    return const KnowlageView();
-    // }
-
-    // return textView();
+    return Column(
+      children: [
+        selectedWord(),
+        const Expanded(child: KnowlageView()),
+      ],
+    );
   }
 
   Widget textView() {
@@ -56,4 +57,41 @@ class ContentTextWidget extends HookConsumerWidget {
       );
     });
   }
+
+  Widget selectedWord() => AnimatedSize(
+        duration: const Duration(milliseconds: 100),
+        child: Consumer(
+          builder: (context, ref, child) {
+            final selectedWordList =
+                ref.watch(StudyPage.selectedWordListProvider);
+
+            if (selectedWordList.isEmpty) {
+              return Container();
+            }
+
+            return Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  for (final wordNotifier in selectedWordList)
+                    InputChip(
+                      deleteIconColor: Colors.grey,
+                      onDeleted: () {
+                        wordNotifier.setSelection(false);
+
+                        ref
+                            .read(StudyPage.selectedWordListProvider.state)
+                            .state = [
+                          ...selectedWordList..remove(wordNotifier)
+                        ];
+                      },
+                      label: Text(wordNotifier.word),
+                    ),
+                ],
+              ),
+            );
+          },
+        ),
+      );
 }

@@ -4,13 +4,15 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:landlearn/page/study/component/content_text.dart';
 import 'package:landlearn/page/study/component/content_words.dart';
 import 'package:landlearn/page/study/logic/view_mode.dart';
+import 'package:landlearn/service/models/word_notifier.dart';
 
 import 'component/appbar.dart';
 
 class StudyPage extends HookConsumerWidget {
-  static final viewModeProvider =
-      StateProvider.autoDispose((ref) => ViewMode.normal);
+  static final viewModeProvider = StateProvider((ref) => ViewMode.normal);
   static final showContentWordsProvider = StateProvider((ref) => false);
+  static final selectedWordListProvider =
+      StateProvider((ref) => <WordNotifier>[]);
 
   const StudyPage({Key? key}) : super(key: key);
 

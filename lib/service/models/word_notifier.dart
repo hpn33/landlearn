@@ -7,6 +7,12 @@ import 'content_notifier.dart';
 import 'word_data.dart';
 
 class WordNotifier extends ValueNotifier<Word> {
+  bool selected = false;
+  void setSelection(bool select) {
+    selected = select;
+    notifyListeners();
+  }
+
   int get id => value.id;
   String get word => value.word;
   bool get know => value.know;
