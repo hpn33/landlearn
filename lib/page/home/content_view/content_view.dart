@@ -16,6 +16,10 @@ class ContentView extends StatelessWidget {
       padding: const EdgeInsets.all(8.0),
       child: Column(
         children: [
+          SizedBox(
+            height: 150,
+            child: _status(),
+          ),
           toolBar(context),
           Expanded(
             child: contentListWidget(context),
@@ -24,6 +28,186 @@ class ContentView extends StatelessWidget {
       ),
     );
   }
+
+  Widget _status() => HookConsumer(
+        builder: (BuildContext context, ref, child) {
+          final contentHub = ref.read(contentHubProvider);
+          useListenable(contentHub);
+
+          final awarness = contentHub.contentNotifiers
+                  .map((e) => e.awarnessPercentOfAllWord)
+                  .fold<double>(0.0,
+                      (previousValue, element) => previousValue + element) /
+              contentHub.contentNotifiers.length;
+
+          const scale = 100;
+          const padding = 25 * scale;
+
+          final topRange =
+              int.parse(getTopRange(contentHub.contentNotifiers.length));
+          final belowRange =
+              int.parse(getBelowRange(contentHub.contentNotifiers.length));
+
+          final range = topRange - belowRange;
+
+          final fill = ((contentHub.contentNotifiers.length - belowRange) /
+                  range *
+                  100) *
+              scale;
+
+          final unfill =
+              ((topRange - contentHub.contentNotifiers.length) / range * 100) *
+                  scale;
+
+          return Container(
+            margin: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Column(
+              children: [
+                Expanded(
+                  flex: 2,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      titer(
+                        'Total Content',
+                        contentHub.contentNotifiers.length.toString(),
+                      ),
+                      titer(
+                        'Awarness',
+                        awarness.toStringAsFixed(2) + '%',
+                      ),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.grey[100],
+                      borderRadius: const BorderRadius.only(
+                        bottomLeft: Radius.circular(8),
+                        bottomRight: Radius.circular(8),
+                      ),
+                    ),
+                    child: Column(
+                      children: [
+                        const Spacer(),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(getBelowRange(contentHub.contents.length)),
+                                Container(
+                                  width: 2,
+                                  height: 5,
+                                  color: Colors.grey,
+                                ),
+                              ],
+                            ),
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(contentHub.contents.length.toString()),
+                                const SizedBox(
+                                  width: 2,
+                                  height: 5,
+                                  // color: Colors.grey,
+                                ),
+                              ],
+                            ),
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(getTopRange(contentHub.contents.length)),
+                                Container(
+                                  width: 2,
+                                  height: 5,
+                                  color: Colors.grey,
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.grey[300],
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          height: 10,
+                          child: Row(
+                            children: [
+                              // Expanded(
+                              //   flex: 17,
+                              //   child: Container(
+                              //     decoration: BoxDecoration(
+                              //       color: Colors.red[400],
+                              //       borderRadius: BorderRadius.circular(8),
+                              //     ),
+                              //   ),
+                              // ),
+                              Expanded(
+                                flex: padding + fill.toInt()
+                                // 66
+                                ,
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.blue[400],
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                flex:
+                                    //66
+                                    padding + unfill.toInt(),
+                                child: const SizedBox(),
+                              ),
+                              // Expanded(
+                              //   flex: 17,
+                              //   child: Container(
+                              //     decoration: BoxDecoration(
+                              //       color: Colors.red[400],
+                              //       borderRadius: BorderRadius.circular(8),
+                              //     ),
+                              //   ),
+                              // ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+      );
+
+  Widget titer(String title, String number) => Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            number,
+            style: const TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          Text(
+            title,
+            style: const TextStyle(
+              fontSize: 11,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ],
+      );
 
   Widget toolBar(BuildContext context) {
     return Card(
@@ -249,5 +433,27 @@ class ContentView extends StatelessWidget {
         ),
       ),
     ];
+  }
+
+  String getBelowRange(int length) {
+    final s = length.toString();
+
+    if (s.length == 1) {
+      return '0';
+    }
+
+    return s.substring(0, 1) +
+        List.generate(s.length - 1, (index) => '0').join();
+  }
+
+  String getTopRange(int length) {
+    final s = length.toString();
+    final fn = int.parse(s.substring(0, 1));
+
+    if (s.length == 1) {
+      return '10';
+    }
+    return (fn + 1).toString() +
+        List.generate(s.length - 1, (index) => '0').join();
   }
 }

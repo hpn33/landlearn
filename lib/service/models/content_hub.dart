@@ -49,6 +49,7 @@ class ContentHub extends ChangeNotifier {
   }
 
   void remove(ContentNotifier contentNotifier) {
+    contents.remove(contentNotifier.value);
     contentNotifiers.remove(contentNotifier);
 
     notify();

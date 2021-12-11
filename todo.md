@@ -50,7 +50,7 @@
 - [x] refresh content list view when add new content
 - [x] show knowage percent of all the content text
 - [x] study page padding to text - space between scrollbar
-- [ ] 
+- [x] contentHub remove content and contentNotifier after delete
 
 ## improvment
 - [ ] issue: analyze time need be faster ( make problem for load default data )
