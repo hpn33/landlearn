@@ -12,13 +12,16 @@ class ContentView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        toolBar(context),
-        Expanded(
-          child: contentListWidget(context),
-        ),
-      ],
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        children: [
+          toolBar(context),
+          Expanded(
+            child: contentListWidget(context),
+          ),
+        ],
+      ),
     );
   }
 
@@ -52,29 +55,30 @@ class ContentView extends StatelessWidget {
     );
   }
 
-  Widget contentListWidget(BuildContext context) {
-    return HookConsumer(builder: (context, ref, child) {
-      final contentNotifiers = ref.watch(contentHubProvider).contentNotifiers;
+  Widget contentListWidget(BuildContext context) => HookConsumer(
+        builder: (context, ref, child) {
+          final contentNotifiers =
+              ref.watch(contentHubProvider).contentNotifiers;
 
-      return Row(
-        children: [
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              child: ListView.builder(
-                itemCount: contentNotifiers.length,
-                itemBuilder: (context, index) {
-                  final contentNotifier = contentNotifiers[index];
+          return Row(
+            children: [
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: ListView.builder(
+                    itemCount: contentNotifiers.length,
+                    itemBuilder: (context, index) {
+                      final contentNotifier = contentNotifiers[index];
 
-                  return contentItem(contentNotifier);
-                },
+                      return contentItem(contentNotifier);
+                    },
+                  ),
+                ),
               ),
-            ),
-          ),
-        ],
+            ],
+          );
+        },
       );
-    });
-  }
 
   Widget contentItem(ContentNotifier contentNotifier, [int index = -1]) {
     return HookConsumer(builder: (context, ref, child) {

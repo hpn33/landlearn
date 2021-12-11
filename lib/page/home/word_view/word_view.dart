@@ -11,13 +11,16 @@ class WordView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        toolBar(context),
-        Expanded(
-          child: listViewWidget(),
-        ),
-      ],
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        children: [
+          toolBar(context),
+          Expanded(
+            child: listViewWidget(),
+          ),
+        ],
+      ),
     );
   }
 

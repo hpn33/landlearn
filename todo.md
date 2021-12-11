@@ -134,6 +134,8 @@
   - [ ] https://www.youtube.com/watch?v=HwdweCX5aMI&t=67s
   - [ ] sample animation https://www.youtube.com/watch?v=gaKvL88Zws0
   - [ ] flex_color_scheme: ^4.1.1
+- sample https://www.glasswire.com/
+- sample https://anilist.co
 
 
 ## gamification

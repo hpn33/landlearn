@@ -11,23 +11,33 @@ class HomePage extends HookWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
+      color: const Color.fromARGB(255, 237, 241, 245),
       child: Column(
         children: [
-          Row(
-            children: [
-              IconButton(
-                icon: const Icon(Icons.settings),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const SettingPage()),
-                  );
-                },
-              ),
-            ],
-          ),
+          _appbar(context),
           Expanded(child: getChild(context)),
+        ],
+      ),
+    );
+  }
+
+  Widget _appbar(BuildContext context) {
+    return Container(
+      color: const Color(0xff5c728A),
+      child: Row(
+        children: [
+          IconButton(
+            icon: const Icon(
+              Icons.settings,
+              color: Colors.white,
+            ),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const SettingPage()),
+              );
+            },
+          ),
         ],
       ),
     );
