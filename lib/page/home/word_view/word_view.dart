@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:landlearn/service/models/word_hub.dart';
 import 'package:landlearn/widget/styled_percent_widget.dart';
@@ -108,26 +109,29 @@ class WordView extends StatelessWidget {
   Widget listViewWidget() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8),
-      child: Row(
-        children: [
-          Expanded(
-            child: HookConsumer(builder: (context, ref, child) {
-              final wordCategories =
-                  ref.watch(wordHubProvider).wordCategories.entries;
+      child: HookConsumer(builder: (context, ref, child) {
+        final wordCategories =
+            ref.watch(wordHubProvider).wordCategories.entries;
 
-              return ListView.builder(
-                itemCount: wordCategories.length,
-                itemBuilder: (context, index) {
-                  final alphaChar = wordCategories.elementAt(index).key;
-                  final category = wordCategories.elementAt(index).value;
+        final scrollController = useScrollController();
 
-                  return WordSectionWidget(alphaChar, category);
-                },
-              );
-            }),
+        return Scrollbar(
+          controller: scrollController,
+          isAlwaysShown: true,
+          child: Padding(
+            padding: const EdgeInsets.only(right: 12.0),
+            child: ListView.builder(
+              itemCount: wordCategories.length,
+              itemBuilder: (context, index) {
+                final alphaChar = wordCategories.elementAt(index).key;
+                final category = wordCategories.elementAt(index).value;
+
+                return WordSectionWidget(alphaChar, category);
+              },
+            ),
           ),
-        ],
-      ),
+        );
+      }),
     );
   }
 }

@@ -423,22 +423,21 @@ class ContentView extends StatelessWidget {
           final contentNotifiers =
               ref.watch(contentHubProvider).contentNotifiers;
 
-          return Row(
-            children: [
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  child: ListView.builder(
-                    itemCount: contentNotifiers.length,
-                    itemBuilder: (context, index) {
-                      final contentNotifier = contentNotifiers[index];
+          final scrollController = useScrollController();
+          return Scrollbar(
+            controller: scrollController,
+            isAlwaysShown: true,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12.0),
+              child: ListView.builder(
+                itemCount: contentNotifiers.length,
+                itemBuilder: (context, index) {
+                  final contentNotifier = contentNotifiers[index];
 
-                      return contentItem(contentNotifier);
-                    },
-                  ),
-                ),
+                  return contentItem(contentNotifier);
+                },
               ),
-            ],
+            ),
           );
         },
       );
