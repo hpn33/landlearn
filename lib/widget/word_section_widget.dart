@@ -17,55 +17,54 @@ class WordSectionWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Row(
-          children: [
-            SizedBox(
-              width: 250,
-              child: Card(
-                color: Colors.grey[200],
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    children: [
-                      Text(alphaChar),
-                      const Spacer(),
-                      Text(wordCategoryNotifier.knowCount.toString()),
-                      const Text('/'),
-                      Text(wordCategoryNotifier.length.toString()),
-                    ],
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 10),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16),
+            child: Row(
+              children: [
+                Text(
+                  alphaChar,
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
-              ),
-            ),
-          ],
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 6.0),
-          child: HookBuilder(builder: (context) {
-            useListenable(wordCategoryNotifier);
-
-            // return ListView.builder(
-            //   itemCount: wordCategoryNotifier.list.length,
-            //   shrinkWrap: true,
-            //   itemBuilder: (context, index) {
-            //     final word = wordCategoryNotifier.list[index];
-
-            //     return wordItem(word);
-            //   },
-            // );
-
-            return Wrap(
-              // alignment: WrapAlignment.center,
-              children: [
-                for (final word in wordCategoryNotifier.list) wordItem(word),
+                const Spacer(),
+                Text(
+                  wordCategoryNotifier.knowCount.toString(),
+                  style: const TextStyle(
+                    decoration: TextDecoration.underline,
+                    decorationColor: Colors.green,
+                    decorationThickness: 4,
+                  ),
+                ),
+                const Text('/'),
+                Text(wordCategoryNotifier.length.toString()),
               ],
-            );
-          }),
-        ),
-        const SizedBox(height: 30),
-      ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 6.0),
+            child: HookBuilder(builder: (context) {
+              useListenable(wordCategoryNotifier);
+
+              return Wrap(
+                children: [
+                  for (final word in wordCategoryNotifier.list) wordItem(word),
+                ],
+              );
+            }),
+          ),
+          const SizedBox(height: 30),
+        ],
+      ),
     );
   }
 
@@ -78,7 +77,8 @@ class WordSectionWidget extends StatelessWidget {
         child: MyOverlayPanelWidget(
           wordNotifier: wordNotifier,
           child: Card(
-            color: wordNotifier.know ? Colors.green[100] : null,
+            elevation: 0,
+            color: wordNotifier.know ? Colors.green[100] : Colors.grey[200],
             child: InkWell(
               onTap: () {
                 wordNotifier.toggleKnowToDB(ref);

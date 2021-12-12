@@ -4,6 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:landlearn/page/dialog/add_content_dialog.dart';
 import 'package:landlearn/service/models/content_hub.dart';
 import 'package:landlearn/service/models/content_notifier.dart';
+import 'package:landlearn/service/models/word_hub.dart';
 import 'package:landlearn/util/open_study_page.dart';
 import 'package:landlearn/widget/styled_percent_widget.dart';
 
@@ -17,7 +18,8 @@ class ContentView extends StatelessWidget {
       child: Column(
         children: [
           const SizedBox(height: 10),
-          _status(),
+          _wordStatus(),
+          _contentStatus(),
           const SizedBox(height: 15),
           toolBar(context),
           // const SizedBox(height: 10),
@@ -29,7 +31,173 @@ class ContentView extends StatelessWidget {
     );
   }
 
-  Widget _status() => SizedBox(
+  Widget _wordStatus() => SizedBox(
+        height: 120,
+        child: HookConsumer(
+          builder: (BuildContext context, ref, child) {
+            final wordHub = ref.read(wordHubProvider);
+            useListenable(wordHub);
+
+            final wordCount = wordHub.wordNotifiers.length;
+            final wordKnowedCount =
+                wordHub.wordNotifiers.where((e) => e.know).length;
+
+            // final awarness = wordHub.wordNotifiers
+            //         .map((e) => e.awarnessPercentOfAllWord)
+            //         .fold<double>(0.0,
+            //             (previousValue, element) => previousValue + element) /
+            //     contentHub.contentNotifiers.length;
+
+            const scale = 100;
+            const padding = 25 * scale;
+
+            final topRange = int.parse(getTopRange(wordCount));
+            final belowRange = int.parse(getBelowRange(wordCount));
+
+            final range = topRange - belowRange;
+
+            final fill = ((wordCount - belowRange) / range * 100) * scale;
+
+            final unfill = ((topRange - wordCount) / range * 100) * scale;
+
+            return Container(
+              margin: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Column(
+                children: [
+                  Expanded(
+                    flex: 2,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        titer(
+                          'Total Word',
+                          wordCount.toString(),
+                        ),
+                        titer(
+                          'Knowed',
+                          wordKnowedCount.toString(),
+                        ),
+                        titer(
+                          'Awarness',
+                          (wordKnowedCount / wordCount * 100)
+                                  .toStringAsFixed(2) +
+                              '%',
+                        ),
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.grey[100],
+                        borderRadius: const BorderRadius.only(
+                          bottomLeft: Radius.circular(8),
+                          bottomRight: Radius.circular(8),
+                        ),
+                      ),
+                      child: Column(
+                        children: [
+                          const Spacer(),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(belowRange.toString()),
+                                  Container(
+                                    width: 2,
+                                    height: 5,
+                                    color: Colors.grey,
+                                  ),
+                                ],
+                              ),
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(wordCount.toString()),
+                                  const SizedBox(
+                                    width: 2,
+                                    height: 5,
+                                    // color: Colors.grey,
+                                  ),
+                                ],
+                              ),
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(topRange.toString()),
+                                  Container(
+                                    width: 2,
+                                    height: 5,
+                                    color: Colors.grey,
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                          Container(
+                            decoration: BoxDecoration(
+                              color: Colors.grey[300],
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            height: 10,
+                            child: Row(
+                              children: [
+                                // Expanded(
+                                //   flex: 17,
+                                //   child: Container(
+                                //     decoration: BoxDecoration(
+                                //       color: Colors.red[400],
+                                //       borderRadius: BorderRadius.circular(8),
+                                //     ),
+                                //   ),
+                                // ),
+                                Expanded(
+                                  flex: padding + fill.toInt()
+                                  // 66
+                                  ,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.blue[400],
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                  ),
+                                ),
+                                Expanded(
+                                  flex:
+                                      //66
+                                      padding + unfill.toInt(),
+                                  child: const SizedBox(),
+                                ),
+                                // Expanded(
+                                //   flex: 17,
+                                //   child: Container(
+                                //     decoration: BoxDecoration(
+                                //       color: Colors.red[400],
+                                //       borderRadius: BorderRadius.circular(8),
+                                //     ),
+                                //   ),
+                                // ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
+      );
+
+  Widget _contentStatus() => SizedBox(
         height: 120,
         child: HookConsumer(
           builder: (BuildContext context, ref, child) {

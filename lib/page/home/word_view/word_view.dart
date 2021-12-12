@@ -12,10 +12,22 @@ class WordView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(20.0),
+      padding: const EdgeInsets.symmetric(horizontal: 36.0, vertical: 8),
       child: Column(
         children: [
-          toolBar(context),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 8),
+            child: toolBar(context),
+          ),
+          // Padding(
+          //   padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 8),
+          //   child: Column(
+          //     children: [
+          //       toolBar(context),
+          //       statusOfWord(),
+          //     ],
+          //   ),
+          // ),
           Expanded(
             child: listViewWidget(),
           ),
@@ -25,25 +37,24 @@ class WordView extends StatelessWidget {
   }
 
   Widget toolBar(BuildContext context) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-        child: Row(
-          children: [
-            statusOfWord(),
-            const Spacer(),
-            IconButton(
-              icon: const Icon(Icons.add),
-              onPressed: () {
-                showDialog(
-                  context: context,
-                  builder: (c) => addWordDialog(),
-                );
-              },
-            ),
-          ],
+    return Row(
+      children: [
+        const Text(
+          'Words',
+          style: TextStyle(fontSize: 16),
         ),
-      ),
+        // statusOfWord(),
+        const Spacer(),
+        IconButton(
+          icon: const Icon(Icons.add),
+          onPressed: () {
+            showDialog(
+              context: context,
+              builder: (c) => addWordDialog(),
+            );
+          },
+        ),
+      ],
     );
   }
 
@@ -58,15 +69,27 @@ class WordView extends StatelessWidget {
 
         return Row(
           children: [
-            Text('$totalCount'),
-            // Text('/$unknowCount'),
             // const SizedBox(width: 8),
-            Text('/$knowCount'),
-            const Text(' '),
             StyledPercent(
               awarnessPercent: (knowCount / totalCount * 100),
               fractionDigits: 2,
             ),
+            const SizedBox(width: 8),
+
+            Text(
+              '$knowCount',
+              style: const TextStyle(
+                decoration: TextDecoration.underline,
+                decorationThickness: 3,
+                decorationColor: Colors.green,
+              ),
+            ),
+            Text('/$totalCount'),
+            const SizedBox(width: 8),
+
+            // Text('/$unknowCount'),
+            // const SizedBox(width: 8),
+
             // Card(
             //   color: Colors.green[200],
             //   child: Padding(
