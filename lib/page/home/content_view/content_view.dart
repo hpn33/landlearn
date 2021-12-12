@@ -16,11 +16,11 @@ class ContentView extends StatelessWidget {
       padding: const EdgeInsets.all(8.0),
       child: Column(
         children: [
-          SizedBox(
-            height: 150,
-            child: _status(),
-          ),
+          const SizedBox(height: 10),
+          _status(),
+          const SizedBox(height: 15),
           toolBar(context),
+          // const SizedBox(height: 10),
           Expanded(
             child: contentListWidget(context),
           ),
@@ -29,164 +29,169 @@ class ContentView extends StatelessWidget {
     );
   }
 
-  Widget _status() => HookConsumer(
-        builder: (BuildContext context, ref, child) {
-          final contentHub = ref.read(contentHubProvider);
-          useListenable(contentHub);
+  Widget _status() => SizedBox(
+        height: 120,
+        child: HookConsumer(
+          builder: (BuildContext context, ref, child) {
+            final contentHub = ref.read(contentHubProvider);
+            useListenable(contentHub);
 
-          final awarness = contentHub.contentNotifiers
-                  .map((e) => e.awarnessPercentOfAllWord)
-                  .fold<double>(0.0,
-                      (previousValue, element) => previousValue + element) /
-              contentHub.contentNotifiers.length;
+            final awarness = contentHub.contentNotifiers
+                    .map((e) => e.awarnessPercentOfAllWord)
+                    .fold<double>(0.0,
+                        (previousValue, element) => previousValue + element) /
+                contentHub.contentNotifiers.length;
 
-          const scale = 100;
-          const padding = 25 * scale;
+            const scale = 100;
+            const padding = 25 * scale;
 
-          final topRange =
-              int.parse(getTopRange(contentHub.contentNotifiers.length));
-          final belowRange =
-              int.parse(getBelowRange(contentHub.contentNotifiers.length));
+            final topRange =
+                int.parse(getTopRange(contentHub.contentNotifiers.length));
+            final belowRange =
+                int.parse(getBelowRange(contentHub.contentNotifiers.length));
 
-          final range = topRange - belowRange;
+            final range = topRange - belowRange;
 
-          final fill = ((contentHub.contentNotifiers.length - belowRange) /
-                  range *
-                  100) *
-              scale;
+            final fill = ((contentHub.contentNotifiers.length - belowRange) /
+                    range *
+                    100) *
+                scale;
 
-          final unfill =
-              ((topRange - contentHub.contentNotifiers.length) / range * 100) *
-                  scale;
+            final unfill = ((topRange - contentHub.contentNotifiers.length) /
+                    range *
+                    100) *
+                scale;
 
-          return Container(
-            margin: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Column(
-              children: [
-                Expanded(
-                  flex: 2,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      titer(
-                        'Total Content',
-                        contentHub.contentNotifiers.length.toString(),
-                      ),
-                      titer(
-                        'Awarness',
-                        awarness.toStringAsFixed(2) + '%',
-                      ),
-                    ],
-                  ),
-                ),
-                Expanded(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.grey[100],
-                      borderRadius: const BorderRadius.only(
-                        bottomLeft: Radius.circular(8),
-                        bottomRight: Radius.circular(8),
-                      ),
-                    ),
-                    child: Column(
+            return Container(
+              margin: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Column(
+                children: [
+                  Expanded(
+                    flex: 2,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        const Spacer(),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(getBelowRange(contentHub.contents.length)),
-                                Container(
-                                  width: 2,
-                                  height: 5,
-                                  color: Colors.grey,
-                                ),
-                              ],
-                            ),
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(contentHub.contents.length.toString()),
-                                const SizedBox(
-                                  width: 2,
-                                  height: 5,
-                                  // color: Colors.grey,
-                                ),
-                              ],
-                            ),
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(getTopRange(contentHub.contents.length)),
-                                Container(
-                                  width: 2,
-                                  height: 5,
-                                  color: Colors.grey,
-                                ),
-                              ],
-                            ),
-                          ],
+                        titer(
+                          'Total Content',
+                          contentHub.contentNotifiers.length.toString(),
                         ),
-                        Container(
-                          decoration: BoxDecoration(
-                            color: Colors.grey[300],
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          height: 10,
-                          child: Row(
-                            children: [
-                              // Expanded(
-                              //   flex: 17,
-                              //   child: Container(
-                              //     decoration: BoxDecoration(
-                              //       color: Colors.red[400],
-                              //       borderRadius: BorderRadius.circular(8),
-                              //     ),
-                              //   ),
-                              // ),
-                              Expanded(
-                                flex: padding + fill.toInt()
-                                // 66
-                                ,
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    color: Colors.blue[400],
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                ),
-                              ),
-                              Expanded(
-                                flex:
-                                    //66
-                                    padding + unfill.toInt(),
-                                child: const SizedBox(),
-                              ),
-                              // Expanded(
-                              //   flex: 17,
-                              //   child: Container(
-                              //     decoration: BoxDecoration(
-                              //       color: Colors.red[400],
-                              //       borderRadius: BorderRadius.circular(8),
-                              //     ),
-                              //   ),
-                              // ),
-                            ],
-                          ),
+                        titer(
+                          'Awarness',
+                          awarness.toStringAsFixed(2) + '%',
                         ),
                       ],
                     ),
                   ),
-                ),
-              ],
-            ),
-          );
-        },
+                  Expanded(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.grey[100],
+                        borderRadius: const BorderRadius.only(
+                          bottomLeft: Radius.circular(8),
+                          bottomRight: Radius.circular(8),
+                        ),
+                      ),
+                      child: Column(
+                        children: [
+                          const Spacer(),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(getBelowRange(
+                                      contentHub.contents.length)),
+                                  Container(
+                                    width: 2,
+                                    height: 5,
+                                    color: Colors.grey,
+                                  ),
+                                ],
+                              ),
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(contentHub.contents.length.toString()),
+                                  const SizedBox(
+                                    width: 2,
+                                    height: 5,
+                                    // color: Colors.grey,
+                                  ),
+                                ],
+                              ),
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(getTopRange(contentHub.contents.length)),
+                                  Container(
+                                    width: 2,
+                                    height: 5,
+                                    color: Colors.grey,
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                          Container(
+                            decoration: BoxDecoration(
+                              color: Colors.grey[300],
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            height: 10,
+                            child: Row(
+                              children: [
+                                // Expanded(
+                                //   flex: 17,
+                                //   child: Container(
+                                //     decoration: BoxDecoration(
+                                //       color: Colors.red[400],
+                                //       borderRadius: BorderRadius.circular(8),
+                                //     ),
+                                //   ),
+                                // ),
+                                Expanded(
+                                  flex: padding + fill.toInt()
+                                  // 66
+                                  ,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.blue[400],
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                  ),
+                                ),
+                                Expanded(
+                                  flex:
+                                      //66
+                                      padding + unfill.toInt(),
+                                  child: const SizedBox(),
+                                ),
+                                // Expanded(
+                                //   flex: 17,
+                                //   child: Container(
+                                //     decoration: BoxDecoration(
+                                //       color: Colors.red[400],
+                                //       borderRadius: BorderRadius.circular(8),
+                                //     ),
+                                //   ),
+                                // ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
       );
 
   Widget titer(String title, String number) => Column(
@@ -195,14 +200,14 @@ class ContentView extends StatelessWidget {
           Text(
             number,
             style: const TextStyle(
-              fontSize: 18,
+              fontSize: 16,
               fontWeight: FontWeight.bold,
             ),
           ),
           Text(
             title,
             style: const TextStyle(
-              fontSize: 11,
+              fontSize: 10,
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -210,32 +215,38 @@ class ContentView extends StatelessWidget {
       );
 
   Widget toolBar(BuildContext context) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 6.0),
-        child: Row(
-          children: [
-            Consumer(
-              builder: (context, ref, child) {
-                final count =
-                    ref.watch(contentHubProvider).contentNotifiers.length;
+    return
+        //  Card(
+        // child:
+        Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 12.0),
+      child: Row(
+        children: [
+          // Consumer(
+          //   builder: (context, ref, child) {
+          //     final count =
+          //         ref.watch(contentHubProvider).contentNotifiers.length;
 
-                return Text('$count');
-              },
-            ),
-            const Spacer(),
-            IconButton(
-              icon: const Icon(Icons.add),
-              onPressed: () {
-                showDialog(
-                  context: context,
-                  builder: (c) => addContentDialog(),
-                );
-              },
-            ),
-          ],
-        ),
+          //     return Text('$count');
+          //   },
+          // ),
+          const Text(
+            'Contents',
+            style: TextStyle(fontSize: 16),
+          ),
+          const Spacer(),
+          IconButton(
+            icon: const Icon(Icons.add),
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (c) => addContentDialog(),
+              );
+            },
+          ),
+        ],
       ),
+      // ),
     );
   }
 
@@ -272,6 +283,8 @@ class ContentView extends StatelessWidget {
       final awarnessPercentOfAllWord = contentNotifier.awarnessPercentOfAllWord;
 
       return Card(
+        elevation: 0,
+        margin: const EdgeInsets.symmetric(vertical: 4),
         child: InkWell(
           onTap: () {
             openStudyPage(context, ref, contentNotifier);
