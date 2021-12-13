@@ -3,10 +3,12 @@ import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:landlearn/page/study/component/content_text.dart';
 import 'package:landlearn/page/study/component/content_words.dart';
+import 'package:landlearn/page/study/component/persent_status.dart';
 import 'package:landlearn/page/study/logic/view_mode.dart';
 import 'package:landlearn/page/study/study_controller.dart';
+import 'package:landlearn/service/models/content_notifier.dart';
 
-import 'component/appbar.dart';
+import 'component/toggle_view_mode.dart';
 
 class StudyPage extends HookConsumerWidget {
   static final viewModeProvider = StateProvider((ref) => ViewMode.normal);
@@ -16,6 +18,8 @@ class StudyPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
+    final contentNotifier = ref.read(studyVMProvider).selectedContent!;
+
     return WillPopScope(
       onWillPop: () {
         ref.read(studyVMProvider).dispose();
@@ -55,7 +59,7 @@ class StudyPage extends HookConsumerWidget {
           child: Material(
             child: Column(
               children: [
-                const AppbarStudy(),
+                // const AppbarStudy(),
                 Expanded(
                   child: Center(
                     child: SizedBox(
@@ -66,11 +70,48 @@ class StudyPage extends HookConsumerWidget {
                           : null,
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
-                        children: const [
-                          Expanded(
+                        children: [
+                          SizedBox(
+                            // color: Colors.blue[200],
+                            width: 55,
+                            child: Column(
+                              children: [
+                                const BackButton(),
+                                const ToggleViewModeButton2(),
+                                const Spacer(),
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 6,
+                                    vertical: 12,
+                                  ),
+                                  margin:
+                                      const EdgeInsets.symmetric(vertical: 8),
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey[200],
+                                    borderRadius: BorderRadius.circular(5),
+                                    // border: Border.all(
+                                    // color: Colors.grey[300],
+                                    // width: 1,
+                                    // ),
+                                  ),
+                                  child: Column(
+                                    children: [
+                                      const PercentStatusWidget(),
+                                      const SizedBox(height: 16),
+                                      Text(
+                                        '${contentNotifier.allWordCount}\nCount',
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const Expanded(
                             child: ContentTextWidget(),
                           ),
-                          ContentWordToggleWidget(),
+                          const ContentWordToggleWidget(),
                         ],
                       ),
                     ),

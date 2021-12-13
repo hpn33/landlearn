@@ -64,12 +64,12 @@
 - [x] edit flow - maybe remove analyze button
 - [x] show word usage sample ( ref ) ( if exist )
 - [ ] mobilize - mobile ui
-- [ ] نمایش نمونه های استفاده شده از کلمه در متن ( اگر موجود باشد )
+- [x] نمایش نمونه های استفاده شده از کلمه در متن ( اگر موجود باشد )
 - [ ] رنگ بندی های متفاوت برای کلمات با وضعیت فهم متفاوت
 - [ ] نمایش کلمات جدید ( فقط در این محتوا وجود دارد )
 - [ ] ترجمه کلمه
-  - [ ] نوشتن ترجمه مورد نظر
-  - [ ] وصل شدن به یه منبع انلاین برای ترجمه ( به زبان های مختلف )
+  - [x] نوشتن ترجمه مورد نظر
+  - [x] وصل شدن به یه منبع انلاین برای ترجمه ( به زبان های مختلف )
   - [ ] پخش صدا کلمه
 - [ ] studyPage: View modes must be more useful ( less mode - more usablity ) read view and tooltip view in same mode - on mode change lost the location ( less mode for solution )
 - [x] delete option for content ( -_- )
@@ -97,18 +97,19 @@
 - [x] toggle section ( text and words)
 
 ## Study Page
-- [x] modes???
-  - [ ] edit
-  - [ ] views
-    - [ ] read only
-    - [ ] know
-    - [ ] unknow
+- [x] modes
+  - [x] edit
+  - [x] views
+    - read only
+    - know
+    - unknow
 - [ ] ui/ux
   - [ ] underline guide
     - [ ] dot orange underline for almost know level
 - [x] performance
 - [x] key binding ( to change mode tab, digit1 normal, digit2 know )
 - [ ] show mean on below of word
+- [ ] select word
 - [ ] 
 
 ## import content panel

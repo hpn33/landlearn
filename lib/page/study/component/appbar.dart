@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:landlearn/page/study/component/persent_status.dart';
 import 'package:landlearn/service/models/content_notifier.dart';
 
 import '../study_controller.dart';
@@ -34,56 +35,12 @@ class AppbarStudy extends HookConsumerWidget {
           const SizedBox(width: 10),
           const ToggleViewModeButton(),
           const SizedBox(width: 10),
-          SizedBox(
+          const SizedBox(
             width: 100,
-            child: percentStatus(contentNotifier),
+            child: PercentStatusWidget(),
           ),
         ],
       ),
-    );
-  }
-
-  Widget percentStatus(ContentNotifier contentNotifier) {
-    return Column(
-      children: [
-        Row(
-          children: [
-            Expanded(
-              flex: contentNotifier.awarnessPercentOfAllWord.toInt(),
-              child: Container(
-                height: 3,
-                color: Colors.green[300],
-              ),
-            ),
-            Expanded(
-              flex: 100 - contentNotifier.awarnessPercentOfAllWord.toInt(),
-              child: Container(
-                height: 3,
-                color: Colors.grey[300],
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 1),
-        Row(
-          children: [
-            Expanded(
-              flex: contentNotifier.awarnessPercent.toInt(),
-              child: Container(
-                height: 3,
-                color: Colors.blue[300],
-              ),
-            ),
-            Expanded(
-              flex: 100 - contentNotifier.awarnessPercent.toInt(),
-              child: Container(
-                height: 3,
-                color: Colors.grey[300],
-              ),
-            ),
-          ],
-        ),
-      ],
     );
   }
 }
