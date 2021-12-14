@@ -30,7 +30,7 @@
 
 ## Ver 0.3.0
 - [x] show mean below of word
-- [ ] toggle overlay panel
+- [x] toggle overlay panel
 - [x] show select with under line in any mode
 - [ ] diff mode for word view & content view ( home page ) and search bar -mostUse -lastuse 
 - [ ] import .srt file

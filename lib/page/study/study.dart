@@ -13,7 +13,8 @@ import 'component/toggle_view_mode.dart';
 class StudyPage extends HookConsumerWidget {
   static final viewModeProvider = StateProvider((ref) => ViewMode.normal);
   static final showContentWordsProvider = StateProvider((ref) => false);
-  static final showMeanProvider = StateProvider((ref) => false);
+  static final showSubtitleProvider = StateProvider((ref) => false);
+  static final showOverlayProvider = StateProvider((ref) => true);
 
   const StudyPage({Key? key}) : super(key: key);
 
@@ -61,6 +62,7 @@ class StudyPage extends HookConsumerWidget {
   Widget _bar() => HookConsumer(
         builder: (context, ref, child) {
           final contentNotifier = ref.read(studyVMProvider).selectedContent!;
+          final showSubtitle = ref.watch(showSubtitleProvider);
 
           return SizedBox(
             // color: Colors.blue[200],
@@ -81,10 +83,27 @@ class StudyPage extends HookConsumerWidget {
                     children: [
                       const Text('Subtitle'),
                       Checkbox(
-                        value: ref.watch(showMeanProvider),
+                        value: showSubtitle,
                         onChanged: (a) {
-                          ref.read(showMeanProvider.state).state = a!;
+                          ref.read(showSubtitleProvider.state).state = a!;
                         },
+                      ),
+                    ],
+                  ),
+                ),
+
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 2.0),
+                  child: Column(
+                    children: [
+                      const Text('Overlay'),
+                      Checkbox(
+                        value: ref.watch(showOverlayProvider),
+                        onChanged: showSubtitle
+                            ? null
+                            : (a) {
+                                ref.read(showOverlayProvider.state).state = a!;
+                              },
                       ),
                     ],
                   ),

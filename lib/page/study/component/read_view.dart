@@ -119,7 +119,7 @@ class ReadView extends HookConsumerWidget {
 
               child = _showSubtitle(
                 child,
-                ref.watch(StudyPage.showMeanProvider),
+                ref.watch(StudyPage.showSubtitleProvider),
                 wordNotifier,
               );
 
@@ -164,7 +164,8 @@ class ReadView extends HookConsumerWidget {
           child: _child,
         );
 
-        if (!ref.watch(StudyPage.showMeanProvider)) {
+        if (!ref.watch(StudyPage.showSubtitleProvider) &&
+            ref.watch(StudyPage.showOverlayProvider)) {
           _child = MyOverlayPanelWidget(
             wordNotifier: wordNotifier,
             child: _child,
