@@ -465,7 +465,10 @@ class ContentView extends StatelessWidget {
                     Expanded(
                       child: Text(
                         contentNotifier.title,
-                        style: const TextStyle(fontSize: 20),
+                        style: const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                        ),
                         overflow: TextOverflow.fade,
                       ),
                     ),
