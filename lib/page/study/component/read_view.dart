@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:landlearn/page/study/component/read_view_repo.dart';
 import 'package:landlearn/page/study/logic/view_mode.dart';
 import 'package:landlearn/page/study/study.dart';
 import 'package:landlearn/page/study/study_controller.dart';
@@ -90,22 +91,6 @@ class ReadView extends HookConsumerWidget {
               return Text(word);
             }
 
-            // if (word == ' ') {
-            //   return Padding(
-            //     padding: const EdgeInsets.symmetric(vertical: 1),
-            //     child: Container(
-            //       padding: const EdgeInsets.all(0.1),
-            //       child: const Text(
-            //         ' ',
-            //         style: TextStyle(
-            //           fontSize: 20,
-            //           fontWeight: FontWeight.w500,
-            //         ),
-            //       ),
-            //     ),
-            //   );
-            // }
-
             return Text('($word)');
           }
 
@@ -115,56 +100,6 @@ class ReadView extends HookConsumerWidget {
               final viewMode = ref.watch(StudyPage.viewModeProvider);
               final isNormal = viewMode == ViewMode.normal;
 
-              // useOnAppLifecycleStateChange((p, c) {
-              //   print(p);
-              //   print(c);
-              // });
-
-              // print(useAppLifecycleState());
-
-              // const textStyle = TextStyle(
-              //   fontSize: 20,
-              //   fontWeight: FontWeight.w500,
-              // );
-
-              // final size = _textSize(word, textStyle);
-
-              // final child = Stack(
-              //   children: [
-              //     if (!isNormal)
-              //       Positioned(
-              //         // right: 0,
-              //         bottom: 3,
-              //         child: Container(
-              //           height: 8,
-              //           width: size.width,
-              //           // padding: const EdgeInsets.all(0.1),
-              //           color: wordNotifier.know ? Colors.green[200] : null,
-              //         ),
-              //       ),
-              //     Padding(
-              //       padding: const EdgeInsets.symmetric(vertical: 1),
-              //       child: Container(
-              //         // padding: const EdgeInsets.all(0.1),
-              //         // decoration: isNormal
-              //         //     ? null
-              //         //     : BoxDecoration(
-              //         //         color:
-              //         //             wordNotifier.know ? Colors.green[100] : null,
-              //         //         borderRadius: BorderRadius.circular(5),
-              //         //       ),
-              //         child: Text(
-              //           word,
-              //           style: const TextStyle(
-              //             fontSize: 20,
-              //             fontWeight: FontWeight.w500,
-              //           ),
-              //         ),
-              //       ),
-              //     ),
-              //   ],
-              // );
-
               Widget text = Text(
                 word,
                 style: const TextStyle(
@@ -173,6 +108,7 @@ class ReadView extends HookConsumerWidget {
                 ),
               );
 
+              // selection
               if (isNormal) {
                 text = Stack(
                   children: [
@@ -195,7 +131,7 @@ class ReadView extends HookConsumerWidget {
                 );
               }
 
-              final child = Padding(
+              Widget child = Padding(
                 padding: const EdgeInsets.symmetric(vertical: 1),
                 child: Container(
                   padding: const EdgeInsets.all(0.1),
@@ -218,39 +154,81 @@ class ReadView extends HookConsumerWidget {
                                       : Colors.yellow[200],
                               borderRadius: BorderRadius.circular(5),
                             ),
-                  // child: CompositedTransformTarget(
-                  //   link: myOverLayPanel.layerLink,
                   child: text,
                 ),
-                // ),
               );
 
-              if (isNormal) {
-                return WordPanelOpenWidget(
-                  wordNotifier: wordNotifier,
-                  child: child,
+              if (ref.watch(StudyPage.showMeanProvider)) {
+                child = Column(
+                  children: [
+                    child,
+                    _showMean(wordNotifier),
+                  ],
                 );
               }
 
-              return WordPanelOpenWidget(
-                wordNotifier: wordNotifier,
-                child: MyOverlayPanelWidget(
+              return Card(
+                margin: const EdgeInsets.all(1),
+                elevation: 0,
+                color:
+                    // isNormal
+                    // ?
+                    Colors.grey[100]
+                // : wordNotifier.selected
+                //     ? Colors.blue[200]
+                //     : wordNotifier.know
+                //         ? Colors.green[100]
+                //         : Colors.yellow[200]
+                ,
+                child: _options(
+                  child: child,
                   wordNotifier: wordNotifier,
-                  child: InkWell(
-                    onTap: () {
-                      wordNotifier.toggleKnowToDB(ref);
-                    },
-                    onLongPress: () async {
-                      openGoogleTranslateInBrowser(wordNotifier.word);
-                    },
-                    child: child,
-                  ),
                 ),
               );
             },
           );
         },
       ),
+    );
+  }
+
+  Widget _options({
+    required Widget child,
+    required WordNotifier wordNotifier,
+  }) {
+    return Consumer(
+      builder: (context, ref, c) {
+        final viewMode = ref.watch(StudyPage.viewModeProvider);
+        final isNormal = viewMode == ViewMode.normal;
+
+        Widget _child = child;
+
+        _child = InkWell(
+          onTap: isNormal
+              ? () {}
+              : () {
+                  wordNotifier.toggleKnowToDB(ref);
+                },
+          onLongPress: isNormal
+              ? null
+              : () async {
+                  openGoogleTranslateInBrowser(wordNotifier.word);
+                },
+          child: _child,
+        );
+
+        if (!ref.watch(StudyPage.showMeanProvider)) {
+          _child = MyOverlayPanelWidget(
+            wordNotifier: wordNotifier,
+            child: _child,
+          );
+        }
+
+        return WordPanelOpenWidget(
+          wordNotifier: wordNotifier,
+          child: _child,
+        );
+      },
     );
   }
 
@@ -266,5 +244,35 @@ class ReadView extends HookConsumerWidget {
       );
 
     return textPainter.size;
+  }
+
+  Widget _showMean(WordNotifier wordNotifier) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.grey[200],
+        borderRadius: const BorderRadius.only(
+          bottomLeft: Radius.circular(8),
+          bottomRight: Radius.circular(8),
+        ),
+      ),
+      margin: const EdgeInsets.symmetric(vertical: 5),
+      child: HookConsumer(
+        builder: (context, ref, child) {
+          final text = ref.watch(repoTranslate(wordNotifier)).when(
+                data: (d) => d,
+                error: (e, s) => 'err',
+                loading: () => '...',
+              );
+
+          return Padding(
+            padding: const EdgeInsets.all(1.0),
+            child: Text(
+              text,
+              style: const TextStyle(fontSize: 11),
+            ),
+          );
+        },
+      ),
+    );
   }
 }

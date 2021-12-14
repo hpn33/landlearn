@@ -6,7 +6,7 @@ import 'package:landlearn/page/study/logic/view_mode.dart';
 import '../study.dart';
 
 const viewModeItems = [
-  Tooltip(message: 'Normal', child: Icon(Icons.remove_red_eye_outlined)),
+  Tooltip(message: 'Read Only', child: Icon(Icons.remove_red_eye_outlined)),
   Tooltip(message: 'Know', child: Icon(Icons.thumb_up_alt_outlined)),
   Tooltip(message: 'Unknow', child: Icon(Icons.thumb_down_alt_outlined)),
 ];
