@@ -100,7 +100,7 @@ class ReadView extends HookConsumerWidget {
               final viewMode = ref.watch(StudyPage.viewModeProvider);
               final isNormal = viewMode == ViewMode.normal;
 
-              Widget text = Text(
+              final text = Text(
                 word,
                 style: const TextStyle(
                   fontSize: 20,
@@ -108,78 +108,25 @@ class ReadView extends HookConsumerWidget {
                 ),
               );
 
-              // selection
-              if (isNormal) {
-                text = Stack(
-                  children: [
-                    Positioned(
-                      bottom: 1,
-                      child: Container(
-                        width: _textSize(
-                          word,
-                          const TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ).width,
-                        height: 3,
-                        color: wordNotifier.selected ? Colors.blue[400] : null,
-                      ),
-                    ),
-                    text,
-                  ],
-                );
-              }
+              Widget child = _selection(text, wordNotifier, word);
 
-              Widget child = Padding(
-                padding: const EdgeInsets.symmetric(vertical: 1),
-                child: Container(
-                  padding: const EdgeInsets.all(0.1),
-                  decoration: isNormal
-                      ? null
-                      : viewMode == ViewMode.know
-                          ? BoxDecoration(
-                              color: wordNotifier.selected
-                                  ? Colors.blue[200]
-                                  : wordNotifier.know
-                                      ? Colors.grey[300]
-                                      : null,
-                              borderRadius: BorderRadius.circular(5),
-                            )
-                          : BoxDecoration(
-                              color: wordNotifier.selected
-                                  ? Colors.blue[200]
-                                  : wordNotifier.know
-                                      ? null
-                                      : Colors.yellow[200],
-                              borderRadius: BorderRadius.circular(5),
-                            ),
-                  child: text,
-                ),
+              child = _knowBackgroundColor(
+                child,
+                isNormal,
+                viewMode,
+                wordNotifier,
               );
 
-              if (ref.watch(StudyPage.showMeanProvider)) {
-                child = Column(
-                  children: [
-                    child,
-                    _showMean(wordNotifier),
-                  ],
-                );
-              }
+              child = _showSubtitle(
+                child,
+                ref.watch(StudyPage.showMeanProvider),
+                wordNotifier,
+              );
 
               return Card(
                 margin: const EdgeInsets.all(1),
                 elevation: 0,
-                color:
-                    // isNormal
-                    // ?
-                    Colors.grey[100]
-                // : wordNotifier.selected
-                //     ? Colors.blue[200]
-                //     : wordNotifier.know
-                //         ? Colors.green[100]
-                //         : Colors.yellow[200]
-                ,
+                color: Colors.grey[100],
                 child: _options(
                   child: child,
                   wordNotifier: wordNotifier,
@@ -246,7 +193,74 @@ class ReadView extends HookConsumerWidget {
     return textPainter.size;
   }
 
-  Widget _showMean(WordNotifier wordNotifier) {
+  Widget _selection(Widget text, WordNotifier wordNotifier, String word) {
+    if (!wordNotifier.selected) {
+      return text;
+    }
+
+    return Stack(
+      children: [
+        Positioned(
+          bottom: 1,
+          child: Container(
+            width: _textSize(
+              word,
+              const TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.w500,
+              ),
+            ).width,
+            height: 3,
+            color: wordNotifier.selected ? Colors.blue[400] : null,
+          ),
+        ),
+        text,
+      ],
+    );
+  }
+
+  Widget _knowBackgroundColor(
+    Widget child,
+    bool isNormal,
+    ViewMode viewMode,
+    WordNotifier wordNotifier,
+  ) {
+    final decoration = isNormal
+        ? null
+        : viewMode == ViewMode.know
+            ? BoxDecoration(
+                color: wordNotifier.know ? Colors.grey[300] : null,
+                borderRadius: BorderRadius.circular(5),
+              )
+            : BoxDecoration(
+                color: wordNotifier.know ? null : Colors.yellow[200],
+                borderRadius: BorderRadius.circular(5),
+              );
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 1),
+      child: Container(
+        padding: const EdgeInsets.all(0.1),
+        decoration: decoration,
+        child: child,
+      ),
+    );
+  }
+
+  Widget _showSubtitle(Widget child, bool showMean, WordNotifier wordNotifier) {
+    if (!showMean) {
+      return child;
+    }
+
+    return Column(
+      children: [
+        child,
+        _subtitle(wordNotifier),
+      ],
+    );
+  }
+
+  Widget _subtitle(WordNotifier wordNotifier) {
     return Container(
       decoration: BoxDecoration(
         color: Colors.grey[200],
