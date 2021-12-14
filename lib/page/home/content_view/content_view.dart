@@ -5,7 +5,6 @@ import 'package:landlearn/page/dialog/add_content_dialog.dart';
 import 'package:landlearn/service/models/content_hub.dart';
 import 'package:landlearn/service/models/content_notifier.dart';
 import 'package:landlearn/util/open_study_page.dart';
-import 'package:landlearn/widget/content_status.dart';
 import 'package:landlearn/widget/styled_percent_widget.dart';
 
 class ContentView extends StatelessWidget {
@@ -17,35 +16,22 @@ class ContentView extends StatelessWidget {
       padding: const EdgeInsets.all(8.0),
       child: Column(
         children: [
-          const ContentStatus(),
           const SizedBox(height: 15),
           toolBar(context),
-          // const SizedBox(height: 10),
-          // Expanded(
-          // child:
-          contentListWidget(context),
-          // ),
+          const SizedBox(height: 10),
+          Expanded(
+            child: contentListWidget(context),
+          ),
         ],
       ),
     );
   }
 
   Widget toolBar(BuildContext context) {
-    return
-        //  Card(
-        // child:
-        Padding(
+    return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12.0),
       child: Row(
         children: [
-          // Consumer(
-          //   builder: (context, ref, child) {
-          //     final count =
-          //         ref.watch(contentHubProvider).contentNotifiers.length;
-
-          //     return Text('$count');
-          //   },
-          // ),
           const Text(
             'Contents',
             style: TextStyle(fontSize: 16),
@@ -62,7 +48,6 @@ class ContentView extends StatelessWidget {
           ),
         ],
       ),
-      // ),
     );
   }
 
@@ -73,31 +58,21 @@ class ContentView extends StatelessWidget {
 
           final scrollController = useScrollController();
 
-          return
-              // Scrollbar(
-              //   controller: scrollController,
-              //   isAlwaysShown: true,
-              //   child:
-              Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12.0),
-            child:
-                //  Column(
-                //   children: [
-                //     for (final contentNotifier in contentNotifiers)
-                //       contentItem(contentNotifier)
-                //   ],
-                // ),
+          return Scrollbar(
+            controller: scrollController,
+            isAlwaysShown: true,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12.0),
+              child: ListView.builder(
+                shrinkWrap: true,
+                itemCount: contentNotifiers.length,
+                itemBuilder: (context, index) {
+                  final contentNotifier = contentNotifiers[index];
 
-                ListView.builder(
-              shrinkWrap: true,
-              itemCount: contentNotifiers.length,
-              itemBuilder: (context, index) {
-                final contentNotifier = contentNotifiers[index];
-
-                return contentItem(contentNotifier);
-              },
+                  return contentItem(contentNotifier);
+                },
+              ),
             ),
-            // ),
           );
         },
       );
