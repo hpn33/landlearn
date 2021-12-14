@@ -26,6 +26,13 @@
 
 ## Goal
 * [x] good for public and publish
+* [ ] nextVER (0.3.0) -
+
+## Ver 0.3.0
+- [ ] show mean below of word
+- [ ] diff mode for word view & content view ( home page ) and search bar -mostUse -lastuse 
+- [ ] import .srt file
+- [ ] 
 
 ## TODO
 * [ ] import .srt convert to content
@@ -140,8 +147,8 @@
 
 
 ## gamification
-- [ ] know level of word count ( like anilist.co )
-- [ ] know level of content percent knowlage
+- [x] know level of word count ( like anilist.co )
+- [x] know level of content percent knowlage
 - [ ] achivement
 
 

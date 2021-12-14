@@ -20,15 +20,6 @@ class WordView extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 8),
             child: toolBar(context),
           ),
-          // Padding(
-          //   padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 8),
-          //   child: Column(
-          //     children: [
-          //       toolBar(context),
-          //       statusOfWord(),
-          //     ],
-          //   ),
-          // ),
           Expanded(
             child: listViewWidget(),
           ),
