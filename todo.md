@@ -60,6 +60,7 @@
 - [x] show knowage percent of all the content text
 - [x] study page padding to text - space between scrollbar
 - [x] contentHub remove content and contentNotifier after delete
+- [ ] word move when toggle overlay checkbox
 
 ## improvment
 - [ ] issue: analyze time need be faster ( make problem for load default data )

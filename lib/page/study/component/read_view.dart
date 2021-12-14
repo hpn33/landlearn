@@ -270,7 +270,7 @@ class ReadView extends HookConsumerWidget {
           bottomRight: Radius.circular(8),
         ),
       ),
-      margin: const EdgeInsets.symmetric(vertical: 5),
+      margin: const EdgeInsets.only(top: 4),
       child: HookConsumer(
         builder: (context, ref, child) {
           final text = ref.watch(repoTranslate(wordNotifier)).when(
