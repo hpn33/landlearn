@@ -4,6 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:landlearn/service/models/word_hub.dart';
 import 'package:landlearn/widget/styled_percent_widget.dart';
 import 'package:landlearn/widget/word_section_widget.dart';
+import 'package:landlearn/widget/word_status.dart';
 
 import '../../dialog/add_word_dialog.dart';
 
@@ -16,8 +17,10 @@ class WordView extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 36.0, vertical: 8),
       child: Column(
         children: [
+          const WordStatus(),
+          const SizedBox(height: 15),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 8),
+            padding: const EdgeInsets.symmetric(horizontal: 24.0),
             child: toolBar(context),
           ),
           Expanded(
@@ -106,21 +109,24 @@ class WordView extends StatelessWidget {
 
         final scrollController = useScrollController();
 
-        return Scrollbar(
-          controller: scrollController,
-          isAlwaysShown: true,
-          child: Padding(
-            padding: const EdgeInsets.only(right: 12.0),
-            child: ListView.builder(
-              itemCount: wordCategories.length,
-              itemBuilder: (context, index) {
-                final alphaChar = wordCategories.elementAt(index).key;
-                final category = wordCategories.elementAt(index).value;
+        return
+            // Scrollbar(
+            //   controller: scrollController,
+            //   isAlwaysShown: true,
+            //   child:
+            Padding(
+          padding: const EdgeInsets.only(right: 12.0),
+          child: ListView.builder(
+            shrinkWrap: true,
+            itemCount: wordCategories.length,
+            itemBuilder: (context, index) {
+              final alphaChar = wordCategories.elementAt(index).key;
+              final category = wordCategories.elementAt(index).value;
 
-                return WordSectionWidget(alphaChar, category);
-              },
-            ),
+              return WordSectionWidget(alphaChar, category);
+            },
           ),
+          // ),
         );
       }),
     );

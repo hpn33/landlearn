@@ -13,7 +13,7 @@ class DeskHomePage extends StatelessWidget {
       child: Row(
         children: const [
           Expanded(flex: 4, child: WordView()),
-          Expanded(flex: 3, child: ContentView()),
+          Expanded(flex: 3, child: SingleChildScrollView(child: ContentView())),
         ],
       ),
     );
