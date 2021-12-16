@@ -84,6 +84,7 @@
 - [ ] studyPage: View modes must be more useful ( less mode - more usablity ) read view and tooltip view in same mode - on mode change lost the location ( less mode for solution )
 - [x] delete option for content ( -_- )
 - [x] more readable ( the focus is on the words and text almost ignored )
+- [ ] (UI) study page: better undrestanding of awarness of text and words
 
 ## publish
 - [x] default content

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:landlearn/page/dialog/add_content_dialog.dart';
+import 'package:landlearn/page/study/component/persent_status.dart';
 import 'package:landlearn/service/models/content_hub.dart';
 import 'package:landlearn/service/models/content_notifier.dart';
 import 'package:landlearn/util/open_study_page.dart';
@@ -107,7 +108,8 @@ class ContentView extends StatelessWidget {
                         overflow: TextOverflow.fade,
                       ),
                     ),
-                    ...status2(contentNotifier),
+                    // ...status2(contentNotifier),
+                    Column(children: status3(contentNotifier)),
                     PopupMenuButton(
                       itemBuilder: (context) => [
                         PopupMenuItem(
@@ -133,62 +135,45 @@ class ContentView extends StatelessWidget {
                   ],
                 ),
               ),
-              Row(
-                children: [
-                  const Spacer(),
-                  const Spacer(),
-                  const Spacer(),
-                  Expanded(
-                    child: Column(
-                      children: [
-                        Row(
-                          children: [
-                            Expanded(
-                              flex: awarnessPercentOfAllWord.toInt(),
-                              child: Container(
-                                height: 3,
-                                color: Colors.green[300],
-                              ),
-                            ),
-                            Expanded(
-                              flex: 100 - awarnessPercentOfAllWord.toInt(),
-                              child: Container(
-                                height: 3,
-                                color: Colors.grey[300],
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 1),
-                        Row(
-                          children: [
-                            Expanded(
-                              flex: awarnessPercent.toInt(),
-                              child: Container(
-                                height: 3,
-                                color: Colors.blue[300],
-                              ),
-                            ),
-                            Expanded(
-                              flex: 100 - awarnessPercent.toInt(),
-                              child: Container(
-                                height: 3,
-                                color: Colors.grey[300],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(width: 4),
-                ],
-              ),
+              // Row(
+              //   children: [
+              //     const Spacer(),
+              //     const Spacer(),
+              //     const Spacer(),
+              //     Expanded(
+              //       child: percentStatus(contentNotifier),
+              //     ),
+              //     const SizedBox(width: 4),
+              //   ],
+              // ),
             ],
           ),
         ),
       );
     });
+  }
+
+  List<Widget> status3(ContentNotifier contentNotifier) {
+    return [
+      Row(children: [
+        Text(contentNotifier.allWordCount.toString()),
+        const Text(' '),
+        StyledPercent(
+          awarnessPercent: contentNotifier.awarnessPercentOfAllWord,
+          color: Colors.blue[100],
+        ),
+      ]),
+      const SizedBox(height: 2),
+      SizedBox(width: 60, child: percentStatus(contentNotifier)),
+      const SizedBox(height: 2),
+
+      Row(children: [
+        Text(contentNotifier.wordCount.toString()),
+        const Text(' '),
+        StyledPercent(awarnessPercent: contentNotifier.awarnessPercent),
+      ]),
+      // const Text(' '),
+    ];
   }
 
   List<Widget> status2(ContentNotifier contentNotifier) {
@@ -251,5 +236,50 @@ class ContentView extends StatelessWidget {
         ),
       ),
     ];
+  }
+
+  Widget percentStatus(ContentNotifier contentNotifier) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Row(
+          children: [
+            Expanded(
+              flex: contentNotifier.awarnessPercentOfAllWord.toInt(),
+              child: Container(
+                height: 3,
+                color: Colors.green[300],
+              ),
+            ),
+            Expanded(
+              flex: 100 - contentNotifier.awarnessPercentOfAllWord.toInt(),
+              child: Container(
+                height: 3,
+                color: Colors.grey[300],
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 1),
+        Row(
+          children: [
+            Expanded(
+              flex: contentNotifier.awarnessPercent.toInt(),
+              child: Container(
+                height: 3,
+                color: Colors.blue[300],
+              ),
+            ),
+            Expanded(
+              flex: 100 - contentNotifier.awarnessPercent.toInt(),
+              child: Container(
+                height: 3,
+                color: Colors.grey[300],
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
   }
 }
