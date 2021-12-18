@@ -23,10 +23,11 @@ Future<void> loadDefaultData(
   WordHub wordHub,
   ContentHub contentHub,
 ) async {
+  final newContent = <Content>[];
+
   // insert new content
   for (final fileTitle in materials) {
     final matchContent = contentHub.contents.where((c) => c.title == fileTitle);
-
     if (matchContent.isNotEmpty) {
       continue;
     }
@@ -34,15 +35,18 @@ Future<void> loadDefaultData(
     final assets =
         await rootBundle.loadString('assets/material/$fileTitle.txt');
 
-    await db.contentDao.add(fileTitle, assets);
+    newContent.add(await db.contentDao.add(fileTitle, assets));
+  }
+
+  if (newContent.isEmpty) {
+    return;
   }
 
   // load
-  final contents = await db.contentDao.getAll();
-  contentHub.load(wordHub, contents);
+  final analyzeList = contentHub.addLoad(wordHub, newContent);
 
   // analyze
-  for (final contentNotifier in contentHub.contentNotifiers) {
+  for (final contentNotifier in analyzeList) {
     await analyzeContent(db, contentNotifier, wordHub);
     contentHub.notify();
     await Future.delayed(const Duration(milliseconds: 100));

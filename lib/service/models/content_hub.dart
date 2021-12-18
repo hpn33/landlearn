@@ -18,11 +18,22 @@ class ContentHub extends ChangeNotifier {
     }
 
     for (final content in contents) {
-      addContent(content, wordHub);
+      addByContent(content, wordHub);
     }
   }
 
-  ContentNotifier addContent(Content content, WordHub wordHub) {
+  Iterable<ContentNotifier> addLoad(
+    WordHub wordHub,
+    List<Content> analyzeList,
+  ) sync* {
+    contents.addAll(analyzeList);
+
+    for (final content in analyzeList) {
+      yield addByContent(content, wordHub);
+    }
+  }
+
+  ContentNotifier addByContent(Content content, WordHub wordHub) {
     final contentNotifier = ContentNotifier(content);
     contentNotifier.loadData(wordHub);
 

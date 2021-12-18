@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+const versionString = '0.2.1+2';
+
 const alphabeta = [
   'a',
   'b',

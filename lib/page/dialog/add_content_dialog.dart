@@ -43,7 +43,7 @@ Widget addContentDialog() {
                             final wordHub = ref.read(wordHubProvider);
 
                             final contentNotifier =
-                                contentHub.addContent(content, wordHub);
+                                contentHub.addByContent(content, wordHub);
                             contentHub.notify();
 
                             await analyzeContent(db, contentNotifier, wordHub);

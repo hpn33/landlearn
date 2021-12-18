@@ -6,7 +6,6 @@ import 'package:landlearn/service/db/database.dart';
 import 'package:landlearn/service/logic/load_default_data.dart';
 import 'package:landlearn/service/models/content_hub.dart';
 import 'package:landlearn/service/models/word_hub.dart';
-import 'package:landlearn/util/util.dart';
 
 class LoadPage extends HookConsumerWidget {
   const LoadPage({Key? key}) : super(key: key);
@@ -39,10 +38,10 @@ class LoadPage extends HookConsumerWidget {
 
     await loadData(db, wordHub, contentHub);
 
-    if (Hive.box('configs').get('first_time_$versionString')) {
+    if (Hive.box('configs').get('first_time')) {
       await loadDefaultData(db, wordHub, contentHub);
 
-      await Hive.box('configs').put('first_time$versionString', false);
+      await Hive.box('configs').put('first_time', false);
     }
   }
 
