@@ -34,7 +34,7 @@
 - [x] show select with under line in any mode
 - [ ] diff mode for word view & content view ( home page ) and search bar -mostUse -lastuse 
 - [ ] import .srt file
-- [ ] 
+- [ ] dev & version info
 
 ## TODO
 * [ ] import .srt convert to content

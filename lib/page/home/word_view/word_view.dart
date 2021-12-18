@@ -21,6 +21,7 @@ class WordView extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 24.0),
             child: toolBar(context),
           ),
+          _search(),
           Expanded(
             child: listViewWidget(),
           ),
@@ -122,6 +123,20 @@ class WordView extends StatelessWidget {
           ),
         );
       }),
+    );
+  }
+
+  Widget _search() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+      child: TextField(
+        decoration: InputDecoration(
+          hintText: 'Search',
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
+        ),
+      ),
     );
   }
 }
