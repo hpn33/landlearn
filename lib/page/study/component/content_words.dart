@@ -132,7 +132,11 @@ class ContentWordWidget extends HookConsumerWidget {
                 itemBuilder: (context, index) {
                   final categoryRow = wordCategoris.entries.elementAt(index);
 
-                  return WordSectionWidget(categoryRow.key, categoryRow.value);
+                  return WordSectionWidget(
+                    key: Key(categoryRow.key),
+                    alphaChar: categoryRow.key,
+                    wordCategoryNotifier: categoryRow.value,
+                  );
                 },
               ),
             ),

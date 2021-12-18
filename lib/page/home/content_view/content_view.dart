@@ -113,62 +113,60 @@ class ContentView extends StatelessWidget {
     });
   }
 
-  Widget _search() {
-    return HookConsumer(
-      builder: (context, ref, child) {
-        final searchController =
-            useTextEditingController(text: ref.read(searchProvider));
+  Widget _search() => HookConsumer(
+        builder: (context, ref, child) {
+          final searchController =
+              useTextEditingController(text: ref.read(searchProvider));
 
-        return Container(
-          margin: const EdgeInsets.all(16.0),
-          padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(5),
-          ),
-          child: Row(
-            children: [
-              Expanded(
-                child: TextField(
-                  controller: searchController,
-                  decoration: const InputDecoration(
-                    hintText: 'Search',
-                    border: InputBorder.none,
+          return Container(
+            margin: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(5),
+            ),
+            child: Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: searchController,
+                    decoration: const InputDecoration(
+                      hintText: 'Search',
+                      border: InputBorder.none,
+                    ),
+                    onChanged: (value) {
+                      ref.read(searchProvider.state).state = value;
+                    },
                   ),
-                  onChanged: (value) {
-                    ref.read(searchProvider.state).state = value;
+                ),
+                HookBuilder(
+                  builder: (context) {
+                    useListenable(searchController);
+
+                    return Row(
+                      children: [
+                        if (searchController.text.isNotEmpty)
+                          IconButton(
+                            icon: const Icon(Icons.clear),
+                            onPressed: () {
+                              searchController.clear();
+                              ref.read(searchProvider.state).state = '';
+                            },
+                          ),
+                        if (searchController.text.isEmpty)
+                          const Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: Icon(Icons.search),
+                          ),
+                      ],
+                    );
                   },
                 ),
-              ),
-              HookBuilder(
-                builder: (context) {
-                  useListenable(searchController);
-
-                  return Row(
-                    children: [
-                      if (searchController.text.isNotEmpty)
-                        IconButton(
-                          icon: const Icon(Icons.clear),
-                          onPressed: () {
-                            searchController.clear();
-                            ref.read(searchProvider.state).state = '';
-                          },
-                        ),
-                      if (searchController.text.isEmpty)
-                        const Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Icon(Icons.search),
-                        ),
-                    ],
-                  );
-                },
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
+              ],
+            ),
+          );
+        },
+      );
 
   Widget contentListWidget(BuildContext context) => HookConsumer(
         builder: (context, ref, child) {

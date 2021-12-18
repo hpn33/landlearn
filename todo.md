@@ -62,6 +62,7 @@
 - [x] contentHub remove content and contentNotifier after delete
 - [ ] fix: word move when toggle overlay checkbox
 - [ ] dublicat content
+- [ ] refresh for online translation
 
 ## improvment
 - [ ] issue: analyze time need be faster ( make problem for load default data )

@@ -1,34 +1,39 @@
 import 'package:flutter/foundation.dart';
-import 'package:landlearn/service/db/database.dart';
 
 import 'word_notifier.dart';
 
 class WordCategoryNotifier extends ChangeNotifier {
-  final List<WordNotifier> list = [];
+  final List<WordNotifier> words = [];
 
-  void add(Word word) => addNotifier(WordNotifier(word));
+  // void add(Word word) => addNotifier(WordNotifier(word));
 
   void addNotifier(WordNotifier word) {
-    final selection = list.where((element) => element.word == word.word);
+    final selection = words.where((element) => element.word == word.word);
 
     if (selection.isEmpty) {
-      list.add(word);
+      words.add(word);
     }
 
     final wordNotifier =
-        list.where((element) => element.word == word.word).first;
+        words.where((element) => element.word == word.word).first;
 
     wordNotifier.addListener(() => notifyListeners());
 
     notifyListeners();
   }
 
-  void sort() => list.sort((a, b) => a.word.compareTo(b.word));
+  void sort() => words.sort((a, b) => a.word.compareTo(b.word));
 
   void notify() => notifyListeners();
+
+  void addAll(List<WordNotifier> list) {
+    for (final word in list) {
+      addNotifier(word);
+    }
+  }
 }
 
 extension Gets on WordCategoryNotifier {
-  int get length => list.length;
-  int get knowCount => list.where((element) => element.know).length;
+  int get length => words.length;
+  int get knowCount => words.where((element) => element.know).length;
 }

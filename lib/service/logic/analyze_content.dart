@@ -76,7 +76,7 @@ Future<WordNotifier> getOrAddWord(
   String alphaChar,
   WordData wordData,
 ) async {
-  final selection = wordHub.wordCategories[alphaChar]!.list
+  final selection = wordHub.wordCategories[alphaChar]!.words
       .where((element) => element.word == wordData.word)
       .toList();
 

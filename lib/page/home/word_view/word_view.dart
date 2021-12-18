@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:landlearn/service/models/word_category_notifier.dart';
 import 'package:landlearn/service/models/word_hub.dart';
 import 'package:landlearn/widget/styled_percent_widget.dart';
 import 'package:landlearn/widget/word_section_widget.dart';
@@ -9,6 +10,32 @@ import '../../dialog/add_word_dialog.dart';
 
 class WordView extends StatelessWidget {
   const WordView({Key? key}) : super(key: key);
+
+  static final searchProvider = StateProvider((ref) => '');
+  static final searchedWordProvider =
+      StateProvider<Map<String, WordCategoryNotifier>>((ref) {
+    final wordCategory = ref.watch(wordHubProvider).wordCategories;
+    final searchInput = ref.watch(searchProvider);
+
+    if (searchInput.isEmpty) {
+      return wordCategory;
+    }
+
+    final searchResult = <String, WordCategoryNotifier>{};
+
+    for (final row in wordCategory.entries) {
+      final words = row.value.words;
+      final filteredWords = words
+          .where((word) => word.word.toLowerCase().contains(searchInput))
+          .toList();
+
+      if (filteredWords.isNotEmpty) {
+        searchResult[row.key] = WordCategoryNotifier()..addAll(filteredWords);
+      }
+    }
+
+    return searchResult;
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -103,8 +130,7 @@ class WordView extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8),
       child: HookConsumer(builder: (context, ref, child) {
-        final wordCategories =
-            ref.watch(wordHubProvider).wordCategories.entries;
+        final wordCategories = ref.watch(searchedWordProvider).entries;
 
         final scrollController = useScrollController();
 
@@ -113,12 +139,19 @@ class WordView extends StatelessWidget {
           child: ListView.builder(
             // shrinkWrap: true,
             controller: scrollController,
-            itemCount: wordCategories.length,
+            itemCount: wordCategories
+                .map((e) => e.value.words)
+                .where((element) => element.isNotEmpty)
+                .length,
             itemBuilder: (context, index) {
               final alphaChar = wordCategories.elementAt(index).key;
               final category = wordCategories.elementAt(index).value;
 
-              return WordSectionWidget(alphaChar, category);
+              return WordSectionWidget(
+                key: ValueKey(alphaChar),
+                alphaChar: alphaChar,
+                wordCategoryNotifier: category,
+              );
             },
           ),
         );
@@ -126,17 +159,58 @@ class WordView extends StatelessWidget {
     );
   }
 
-  Widget _search() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-      child: TextField(
-        decoration: InputDecoration(
-          hintText: 'Search',
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
-        ),
-      ),
-    );
-  }
+  Widget _search() => HookConsumer(
+        builder: (context, ref, child) {
+          final searchController =
+              useTextEditingController(text: ref.read(searchProvider));
+
+          return Container(
+            margin: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(5),
+            ),
+            child: Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: searchController,
+                    decoration: const InputDecoration(
+                      hintText: 'Search',
+                      border: InputBorder.none,
+                    ),
+                    onChanged: (value) {
+                      ref.read(searchProvider.state).state = value;
+                    },
+                  ),
+                ),
+                HookBuilder(
+                  builder: (context) {
+                    useListenable(searchController);
+
+                    return Row(
+                      children: [
+                        if (searchController.text.isNotEmpty)
+                          IconButton(
+                            icon: const Icon(Icons.clear),
+                            onPressed: () {
+                              searchController.clear();
+                              ref.read(searchProvider.state).state = '';
+                            },
+                          ),
+                        if (searchController.text.isEmpty)
+                          const Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: Icon(Icons.search),
+                          ),
+                      ],
+                    );
+                  },
+                ),
+              ],
+            ),
+          );
+        },
+      );
 }

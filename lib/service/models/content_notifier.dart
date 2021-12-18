@@ -62,7 +62,7 @@ class ContentNotifier extends ValueNotifier<Content> {
     wordNotifiers.clear();
 
     for (var element in wordCategoris.values) {
-      element.list.clear();
+      element.words.clear();
     }
   }
 
@@ -184,7 +184,7 @@ extension Util on ContentNotifier {
       return null;
     }
 
-    final category = wordCategoris[firstChar]!.list;
+    final category = wordCategoris[firstChar]!.words;
     final selection = category.where((element) => element.word == lowerCase);
 
     if (selection.isEmpty) {

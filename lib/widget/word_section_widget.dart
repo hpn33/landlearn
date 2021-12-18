@@ -12,8 +12,11 @@ class WordSectionWidget extends StatelessWidget {
   final String alphaChar;
   final WordCategoryNotifier wordCategoryNotifier;
 
-  const WordSectionWidget(this.alphaChar, this.wordCategoryNotifier, {Key? key})
-      : super(key: key);
+  const WordSectionWidget({
+    Key? key,
+    required this.alphaChar,
+    required this.wordCategoryNotifier,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +60,7 @@ class WordSectionWidget extends StatelessWidget {
 
               return Wrap(
                 children: [
-                  for (final word in wordCategoryNotifier.list) wordItem(word),
+                  for (final word in wordCategoryNotifier.words) wordItem(word),
                 ],
               );
             }),

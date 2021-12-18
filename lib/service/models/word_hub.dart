@@ -12,7 +12,7 @@ class WordHub extends ChangeNotifier {
 
   final List<WordNotifier> _wordNotifiers = [];
   List<WordNotifier> get wordNotifiers => wordCategories.values
-      .map((e) => e.list)
+      .map((e) => e.words)
       .expand((element) => element)
       .toList();
 
@@ -46,7 +46,7 @@ class WordHub extends ChangeNotifier {
     words.clear();
     _wordNotifiers.clear();
     for (var e in wordCategories.values) {
-      e.list.clear();
+      e.words.clear();
     }
     notifyListeners();
   }
