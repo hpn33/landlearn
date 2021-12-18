@@ -3,8 +3,8 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:landlearn/page/setting_page/setting_page.dart';
 import 'package:landlearn/util/util.dart';
 
-import 'desk.dart';
-import 'mobile.dart';
+import 'home_desk.dart';
+import 'home_mobile.dart';
 
 class HomePage extends HookWidget {
   const HomePage({Key? key}) : super(key: key);
