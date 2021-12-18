@@ -17,11 +17,9 @@ final repoTranslate = FutureProvider.family<String, WordNotifier>(
     final translation = await ref.watch(translate(wordNotifier).future);
 
     final db = ref.read(dbProvider);
-    await db.wordDao.updateOnlineTranslation(
-      wordNotifier.value,
-      translation.toString(),
-    );
+
     wordNotifier.updateOnlineTranslation(translation.toString());
+    await db.wordDao.up(wordNotifier.value);
 
     return translation.toString();
   },

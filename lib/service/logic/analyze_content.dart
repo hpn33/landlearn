@@ -38,10 +38,9 @@ Future<void> analyzeContent(
   }
 
   // load word data of content to db
-  final newData = contentNotifier.toJson();
 
-  await db.contentDao.updateData(contentNotifier.value, newData);
   contentNotifier.updateData();
+  await db.contentDao.up(contentNotifier.value);
 
   contentNotifier.loadData(wordHub);
 }

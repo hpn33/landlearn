@@ -21,6 +21,9 @@ class ContentNotifier extends ValueNotifier<Content> {
   String get content => value.content;
   String get data => value.data;
 
+  DateTime get createAt => value.createdAt;
+  DateTime get updateAt => value.updatedAt;
+
   final wordDatas = <WordData>[];
   final wordNotifiers = <WordNotifier>[];
   final wordCategoris = <String, WordCategoryNotifier>{
@@ -216,5 +219,15 @@ extension DB on ContentNotifier {
     await db.contentDao.remove(this);
 
     contentHub.remove(this);
+  }
+
+  Future<void> updateTime(WidgetRef ref) async {
+    final db = ref.read(dbProvider);
+
+    final time = DateTime.now();
+
+    value = value.copyWith(updatedAt: time);
+
+    await db.contentDao.up(value, time);
   }
 }

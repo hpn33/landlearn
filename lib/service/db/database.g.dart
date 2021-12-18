@@ -13,12 +13,16 @@ class Word extends DataClass implements Insertable<Word> {
   final bool know;
   final String? note;
   final String? onlineTranslation;
+  final DateTime createdAt;
+  final DateTime updatedAt;
   Word(
       {required this.id,
       required this.word,
       required this.know,
       this.note,
-      this.onlineTranslation});
+      this.onlineTranslation,
+      required this.createdAt,
+      required this.updatedAt});
   factory Word.fromData(Map<String, dynamic> data, GeneratedDatabase db,
       {String? prefix}) {
     final effectivePrefix = prefix ?? '';
@@ -33,6 +37,10 @@ class Word extends DataClass implements Insertable<Word> {
           .mapFromDatabaseResponse(data['${effectivePrefix}note']),
       onlineTranslation: const StringType().mapFromDatabaseResponse(
           data['${effectivePrefix}online_translation']),
+      createdAt: const DateTimeType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}created_at'])!,
+      updatedAt: const DateTimeType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}updated_at'])!,
     );
   }
   @override
@@ -47,6 +55,8 @@ class Word extends DataClass implements Insertable<Word> {
     if (!nullToAbsent || onlineTranslation != null) {
       map['online_translation'] = Variable<String?>(onlineTranslation);
     }
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
     return map;
   }
 
@@ -59,6 +69,8 @@ class Word extends DataClass implements Insertable<Word> {
       onlineTranslation: onlineTranslation == null && nullToAbsent
           ? const Value.absent()
           : Value(onlineTranslation),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
     );
   }
 
@@ -72,6 +84,8 @@ class Word extends DataClass implements Insertable<Word> {
       note: serializer.fromJson<String?>(json['note']),
       onlineTranslation:
           serializer.fromJson<String?>(json['onlineTranslation']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
     );
   }
   @override
@@ -83,6 +97,8 @@ class Word extends DataClass implements Insertable<Word> {
       'know': serializer.toJson<bool>(know),
       'note': serializer.toJson<String?>(note),
       'onlineTranslation': serializer.toJson<String?>(onlineTranslation),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
     };
   }
 
@@ -91,13 +107,17 @@ class Word extends DataClass implements Insertable<Word> {
           String? word,
           bool? know,
           String? note,
-          String? onlineTranslation}) =>
+          String? onlineTranslation,
+          DateTime? createdAt,
+          DateTime? updatedAt}) =>
       Word(
         id: id ?? this.id,
         word: word ?? this.word,
         know: know ?? this.know,
         note: note ?? this.note,
         onlineTranslation: onlineTranslation ?? this.onlineTranslation,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
       );
   @override
   String toString() {
@@ -106,13 +126,16 @@ class Word extends DataClass implements Insertable<Word> {
           ..write('word: $word, ')
           ..write('know: $know, ')
           ..write('note: $note, ')
-          ..write('onlineTranslation: $onlineTranslation')
+          ..write('onlineTranslation: $onlineTranslation, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, word, know, note, onlineTranslation);
+  int get hashCode => Object.hash(
+      id, word, know, note, onlineTranslation, createdAt, updatedAt);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -121,7 +144,9 @@ class Word extends DataClass implements Insertable<Word> {
           other.word == this.word &&
           other.know == this.know &&
           other.note == this.note &&
-          other.onlineTranslation == this.onlineTranslation);
+          other.onlineTranslation == this.onlineTranslation &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt);
 }
 
 class WordsCompanion extends UpdateCompanion<Word> {
@@ -130,12 +155,16 @@ class WordsCompanion extends UpdateCompanion<Word> {
   final Value<bool> know;
   final Value<String?> note;
   final Value<String?> onlineTranslation;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
   const WordsCompanion({
     this.id = const Value.absent(),
     this.word = const Value.absent(),
     this.know = const Value.absent(),
     this.note = const Value.absent(),
     this.onlineTranslation = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
   });
   WordsCompanion.insert({
     this.id = const Value.absent(),
@@ -143,6 +172,8 @@ class WordsCompanion extends UpdateCompanion<Word> {
     required bool know,
     this.note = const Value.absent(),
     this.onlineTranslation = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
   })  : word = Value(word),
         know = Value(know);
   static Insertable<Word> custom({
@@ -151,6 +182,8 @@ class WordsCompanion extends UpdateCompanion<Word> {
     Expression<bool>? know,
     Expression<String?>? note,
     Expression<String?>? onlineTranslation,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -158,6 +191,8 @@ class WordsCompanion extends UpdateCompanion<Word> {
       if (know != null) 'know': know,
       if (note != null) 'note': note,
       if (onlineTranslation != null) 'online_translation': onlineTranslation,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
     });
   }
 
@@ -166,13 +201,17 @@ class WordsCompanion extends UpdateCompanion<Word> {
       Value<String>? word,
       Value<bool>? know,
       Value<String?>? note,
-      Value<String?>? onlineTranslation}) {
+      Value<String?>? onlineTranslation,
+      Value<DateTime>? createdAt,
+      Value<DateTime>? updatedAt}) {
     return WordsCompanion(
       id: id ?? this.id,
       word: word ?? this.word,
       know: know ?? this.know,
       note: note ?? this.note,
       onlineTranslation: onlineTranslation ?? this.onlineTranslation,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
     );
   }
 
@@ -194,6 +233,12 @@ class WordsCompanion extends UpdateCompanion<Word> {
     if (onlineTranslation.present) {
       map['online_translation'] = Variable<String?>(onlineTranslation.value);
     }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
     return map;
   }
 
@@ -204,7 +249,9 @@ class WordsCompanion extends UpdateCompanion<Word> {
           ..write('word: $word, ')
           ..write('know: $know, ')
           ..write('note: $note, ')
-          ..write('onlineTranslation: $onlineTranslation')
+          ..write('onlineTranslation: $onlineTranslation, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt')
           ..write(')'))
         .toString();
   }
@@ -239,9 +286,21 @@ class $WordsTable extends Words with TableInfo<$WordsTable, Word> {
   late final GeneratedColumn<String?> onlineTranslation =
       GeneratedColumn<String?>('online_translation', aliasedName, true,
           typeName: 'TEXT', requiredDuringInsert: false);
+  final VerificationMeta _createdAtMeta = const VerificationMeta('createdAt');
+  late final GeneratedColumn<DateTime?> createdAt = GeneratedColumn<DateTime?>(
+      'created_at', aliasedName, false,
+      typeName: 'INTEGER',
+      requiredDuringInsert: false,
+      clientDefault: () => DateTime.now());
+  final VerificationMeta _updatedAtMeta = const VerificationMeta('updatedAt');
+  late final GeneratedColumn<DateTime?> updatedAt = GeneratedColumn<DateTime?>(
+      'updated_at', aliasedName, false,
+      typeName: 'INTEGER',
+      requiredDuringInsert: false,
+      clientDefault: () => DateTime.now());
   @override
   List<GeneratedColumn> get $columns =>
-      [id, word, know, note, onlineTranslation];
+      [id, word, know, note, onlineTranslation, createdAt, updatedAt];
   @override
   String get aliasedName => _alias ?? 'words';
   @override
@@ -276,6 +335,14 @@ class $WordsTable extends Words with TableInfo<$WordsTable, Word> {
           onlineTranslation.isAcceptableOrUnknown(
               data['online_translation']!, _onlineTranslationMeta));
     }
+    if (data.containsKey('created_at')) {
+      context.handle(_createdAtMeta,
+          createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(_updatedAtMeta,
+          updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta));
+    }
     return context;
   }
 
@@ -298,11 +365,15 @@ class Content extends DataClass implements Insertable<Content> {
   final String title;
   final String content;
   final String data;
+  final DateTime createdAt;
+  final DateTime updatedAt;
   Content(
       {required this.id,
       required this.title,
       required this.content,
-      required this.data});
+      required this.data,
+      required this.createdAt,
+      required this.updatedAt});
   factory Content.fromData(Map<String, dynamic> data, GeneratedDatabase db,
       {String? prefix}) {
     final effectivePrefix = prefix ?? '';
@@ -315,6 +386,10 @@ class Content extends DataClass implements Insertable<Content> {
           .mapFromDatabaseResponse(data['${effectivePrefix}content'])!,
       data: const StringType()
           .mapFromDatabaseResponse(data['${effectivePrefix}data'])!,
+      createdAt: const DateTimeType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}created_at'])!,
+      updatedAt: const DateTimeType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}updated_at'])!,
     );
   }
   @override
@@ -324,6 +399,8 @@ class Content extends DataClass implements Insertable<Content> {
     map['title'] = Variable<String>(title);
     map['content'] = Variable<String>(content);
     map['data'] = Variable<String>(data);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
     return map;
   }
 
@@ -333,6 +410,8 @@ class Content extends DataClass implements Insertable<Content> {
       title: Value(title),
       content: Value(content),
       data: Value(data),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
     );
   }
 
@@ -344,6 +423,8 @@ class Content extends DataClass implements Insertable<Content> {
       title: serializer.fromJson<String>(json['title']),
       content: serializer.fromJson<String>(json['content']),
       data: serializer.fromJson<String>(json['data']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
     );
   }
   @override
@@ -354,15 +435,25 @@ class Content extends DataClass implements Insertable<Content> {
       'title': serializer.toJson<String>(title),
       'content': serializer.toJson<String>(content),
       'data': serializer.toJson<String>(data),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
     };
   }
 
-  Content copyWith({int? id, String? title, String? content, String? data}) =>
+  Content copyWith(
+          {int? id,
+          String? title,
+          String? content,
+          String? data,
+          DateTime? createdAt,
+          DateTime? updatedAt}) =>
       Content(
         id: id ?? this.id,
         title: title ?? this.title,
         content: content ?? this.content,
         data: data ?? this.data,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
       );
   @override
   String toString() {
@@ -370,13 +461,16 @@ class Content extends DataClass implements Insertable<Content> {
           ..write('id: $id, ')
           ..write('title: $title, ')
           ..write('content: $content, ')
-          ..write('data: $data')
+          ..write('data: $data, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, title, content, data);
+  int get hashCode =>
+      Object.hash(id, title, content, data, createdAt, updatedAt);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -384,7 +478,9 @@ class Content extends DataClass implements Insertable<Content> {
           other.id == this.id &&
           other.title == this.title &&
           other.content == this.content &&
-          other.data == this.data);
+          other.data == this.data &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt);
 }
 
 class ContentsCompanion extends UpdateCompanion<Content> {
@@ -392,17 +488,23 @@ class ContentsCompanion extends UpdateCompanion<Content> {
   final Value<String> title;
   final Value<String> content;
   final Value<String> data;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
   const ContentsCompanion({
     this.id = const Value.absent(),
     this.title = const Value.absent(),
     this.content = const Value.absent(),
     this.data = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
   });
   ContentsCompanion.insert({
     this.id = const Value.absent(),
     required String title,
     required String content,
     this.data = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
   })  : title = Value(title),
         content = Value(content);
   static Insertable<Content> custom({
@@ -410,12 +512,16 @@ class ContentsCompanion extends UpdateCompanion<Content> {
     Expression<String>? title,
     Expression<String>? content,
     Expression<String>? data,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (title != null) 'title': title,
       if (content != null) 'content': content,
       if (data != null) 'data': data,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
     });
   }
 
@@ -423,12 +529,16 @@ class ContentsCompanion extends UpdateCompanion<Content> {
       {Value<int>? id,
       Value<String>? title,
       Value<String>? content,
-      Value<String>? data}) {
+      Value<String>? data,
+      Value<DateTime>? createdAt,
+      Value<DateTime>? updatedAt}) {
     return ContentsCompanion(
       id: id ?? this.id,
       title: title ?? this.title,
       content: content ?? this.content,
       data: data ?? this.data,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
     );
   }
 
@@ -447,6 +557,12 @@ class ContentsCompanion extends UpdateCompanion<Content> {
     if (data.present) {
       map['data'] = Variable<String>(data.value);
     }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
     return map;
   }
 
@@ -456,7 +572,9 @@ class ContentsCompanion extends UpdateCompanion<Content> {
           ..write('id: $id, ')
           ..write('title: $title, ')
           ..write('content: $content, ')
-          ..write('data: $data')
+          ..write('data: $data, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt')
           ..write(')'))
         .toString();
   }
@@ -486,8 +604,21 @@ class $ContentsTable extends Contents with TableInfo<$ContentsTable, Content> {
       typeName: 'TEXT',
       requiredDuringInsert: false,
       defaultValue: const Constant('{}'));
+  final VerificationMeta _createdAtMeta = const VerificationMeta('createdAt');
+  late final GeneratedColumn<DateTime?> createdAt = GeneratedColumn<DateTime?>(
+      'created_at', aliasedName, false,
+      typeName: 'INTEGER',
+      requiredDuringInsert: false,
+      clientDefault: () => DateTime.now());
+  final VerificationMeta _updatedAtMeta = const VerificationMeta('updatedAt');
+  late final GeneratedColumn<DateTime?> updatedAt = GeneratedColumn<DateTime?>(
+      'updated_at', aliasedName, false,
+      typeName: 'INTEGER',
+      requiredDuringInsert: false,
+      clientDefault: () => DateTime.now());
   @override
-  List<GeneratedColumn> get $columns => [id, title, content, data];
+  List<GeneratedColumn> get $columns =>
+      [id, title, content, data, createdAt, updatedAt];
   @override
   String get aliasedName => _alias ?? 'contents';
   @override
@@ -515,6 +646,14 @@ class $ContentsTable extends Contents with TableInfo<$ContentsTable, Content> {
     if (data.containsKey('data')) {
       context.handle(
           _dataMeta, this.data.isAcceptableOrUnknown(data['data']!, _dataMeta));
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(_createdAtMeta,
+          createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(_updatedAtMeta,
+          updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta));
     }
     return context;
   }

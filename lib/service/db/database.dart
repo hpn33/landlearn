@@ -12,7 +12,7 @@ part 'database.g.dart';
 
 final dbProvider = Provider(
   (ref) => constructDb(
-    subPath: 'LLdb',
+    subPath: 'LandLearn',
     fileName: 'landLearn',
     logStatements: !kReleaseMode,
   ),
@@ -26,7 +26,7 @@ class Database extends _$Database {
   Database(QueryExecutor e) : super(e);
 
   @override
-  int get schemaVersion => 3;
+  int get schemaVersion => 4;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -38,13 +38,25 @@ class Database extends _$Database {
 
           if (newFrom == 1) {
             await m.addColumn(contents, contents.data);
+
             newFrom = 2;
           }
 
           if (newFrom == 2) {
             await m.addColumn(words, words.note);
             await m.addColumn(words, words.onlineTranslation);
+
             newFrom = 3;
+          }
+
+          if (newFrom == 3) {
+            await m.addColumn(words, words.createdAt);
+            await m.addColumn(words, words.updatedAt);
+
+            await m.addColumn(contents, contents.createdAt);
+            await m.addColumn(contents, contents.updatedAt);
+
+            newFrom = 4;
           }
         },
         // beforeOpen: (details) async {

@@ -27,18 +27,12 @@ class WordDao extends DatabaseAccessor<Database> with _$WordDaoMixin {
       (select(words)..where((tbl) => tbl.word.equals(wordLowerCase)))
           .getSingleOrNull();
 
-  Future<bool> updateKnow(Word word) =>
-      update(words).replace(word.copyWith(know: !word.know));
-
-  Future<bool> updateOnlineTranslation(Word word, String translation) =>
-      update(words).replace(word.copyWith(onlineTranslation: translation));
-
   Future<List<Word>> getAllByWord(List<String> wordList) =>
       (select(words)..where((tbl) => tbl.word.isIn(wordList))).get();
 
   Future<List<Word>> getIn({required List<int> wordIds}) =>
       (select(words)..where((tbl) => tbl.id.isIn(wordIds))).get();
 
-  updateNote(Word word, String note) =>
-      update(words).replace(word.copyWith(note: note));
+  Future<bool> up(Word word, [DateTime? updateAt]) => update(words)
+      .replace(word.copyWith(updatedAt: updateAt ?? DateTime.now()));
 }

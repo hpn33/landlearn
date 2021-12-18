@@ -19,6 +19,9 @@ class WordNotifier extends ValueNotifier<Word> {
   String? get note => value.note;
   String? get onlineTranslation => value.onlineTranslation;
 
+  DateTime get createAt => value.createdAt;
+  DateTime get updateAt => value.updatedAt;
+
   // on every load change
   int _lastContentId = -1;
   int _contentCount = 0;
@@ -42,9 +45,9 @@ extension DB on WordNotifier {
   Future<void> toggleKnowToDB(WidgetRef ref) async {
     final db = ref.read(dbProvider);
 
-    await db.wordDao.updateKnow(value);
-
     value = value.copyWith(know: !know);
+
+    await db.wordDao.up(value);
   }
 
   Future<void> updateOnlineTranslationToDB(
@@ -53,9 +56,9 @@ extension DB on WordNotifier {
   ) async {
     final db = ref.read(dbProvider);
 
-    await db.wordDao.updateOnlineTranslation(value, translation);
-
     updateOnlineTranslation(translation);
+
+    await db.wordDao.up(value);
   }
 
   Future<void> updateNoteToDB(
@@ -64,9 +67,17 @@ extension DB on WordNotifier {
   ) async {
     final db = ref.read(dbProvider);
 
-    await db.wordDao.updateNote(value, note);
-
     value = value.copyWith(note: note);
+
+    await db.wordDao.up(value);
+  }
+
+  Future<void> updateTime(WidgetRef ref) async {
+    final db = ref.read(dbProvider);
+
+    value = value.copyWith(updatedAt: DateTime.now());
+
+    await db.wordDao.up(value);
   }
 }
 

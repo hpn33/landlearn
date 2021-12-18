@@ -11,7 +11,7 @@ class ContentView extends StatelessWidget {
   const ContentView({Key? key}) : super(key: key);
 
   static final searchProvider = StateProvider((ref) => '');
-  static final contentProvider = StateProvider<List<ContentNotifier>>((ref) {
+  static final searchedContentProvider = StateProvider((ref) {
     final contentNotifier = ref.watch(contentHubProvider).contentNotifiers;
     final searchInput = ref.watch(searchProvider);
 
@@ -24,6 +24,21 @@ class ContentView extends StatelessWidget {
     return contentNotifier;
   });
 
+  static final orderProvider = StateProvider((ref) => 'Norm');
+  static final contentProvider = StateProvider<List<ContentNotifier>>(
+    (ref) {
+      final searchedContents = ref.watch(searchedContentProvider);
+      final order = ref.watch(orderProvider);
+
+      if (order == 'Last') {
+        return searchedContents.toList()
+          ..sort((a, b) => b.value.updatedAt.compareTo(a.value.updatedAt));
+      }
+
+      return searchedContents;
+    },
+  );
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -32,6 +47,7 @@ class ContentView extends StatelessWidget {
         children: [
           const SizedBox(height: 15),
           _toolBar(context),
+          _order(),
           _search(),
           Expanded(
             child: contentListWidget(context),
@@ -63,6 +79,38 @@ class ContentView extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Widget _order() {
+    return HookConsumer(builder: (context, ref, child) {
+      final order = ref.watch(orderProvider);
+
+      return Card(
+        margin: const EdgeInsets.symmetric(horizontal: 16.0),
+        elevation: 0,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            children: [
+              const Text('Order'),
+              const Spacer(),
+              TextButton(
+                child: const Text('Norm'),
+                onPressed: order == 'Norm'
+                    ? null
+                    : () => ref.read(orderProvider.state).state = 'Norm',
+              ),
+              TextButton(
+                child: const Text('Last'),
+                onPressed: order == 'Last'
+                    ? null
+                    : () => ref.read(orderProvider.state).state = 'Last',
+              ),
+            ],
+          ),
+        ),
+      );
+    });
   }
 
   Widget _search() {

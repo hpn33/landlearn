@@ -32,6 +32,8 @@ class WordPanelOpenWidget extends ConsumerWidget {
     // Check if right mouse button clicked
     if (event.kind == PointerDeviceKind.mouse &&
         event.buttons == kSecondaryMouseButton) {
+      wordNotifier.updateTime(ref);
+
       ref.read(selectedWordNotifierProvider.state).state = wordNotifier;
 
       showDialog(
