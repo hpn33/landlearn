@@ -60,7 +60,8 @@
 - [x] show knowage percent of all the content text
 - [x] study page padding to text - space between scrollbar
 - [x] contentHub remove content and contentNotifier after delete
-- [ ] word move when toggle overlay checkbox
+- [ ] fix: word move when toggle overlay checkbox
+- [ ] dublicat content
 
 ## improvment
 - [ ] issue: analyze time need be faster ( make problem for load default data )
@@ -85,6 +86,7 @@
 - [x] delete option for content ( -_- )
 - [x] more readable ( the focus is on the words and text almost ignored )
 - [ ] (UI) study page: better undrestanding of awarness of text and words
+- [ ] store import data (not delete **ever**) ( word mean )
 
 ## publish
 - [x] default content
@@ -154,6 +156,7 @@
 - [x] know level of word count ( like anilist.co )
 - [x] know level of content percent knowlage
 - [ ] achivement
+- [ ] calender
 
 
 ## check 
