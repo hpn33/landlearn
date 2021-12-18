@@ -152,19 +152,22 @@ class ContentView extends StatelessWidget {
         Text(contentNotifier.allWordCount.toString()),
         const Text(' '),
         StyledPercent(
-          awarnessPercent: contentNotifier.awarnessPercentOfAllWord,
-          color: Colors.blue[100],
-        ),
+            awarnessPercent: contentNotifier.awarnessPercentOfAllWord),
       ]),
       const SizedBox(height: 2),
       SizedBox(width: 60, child: percentStatus(contentNotifier)),
       const SizedBox(height: 2),
 
-      Row(children: [
-        Text(contentNotifier.wordCount.toString()),
-        const Text(' '),
-        StyledPercent(awarnessPercent: contentNotifier.awarnessPercent),
-      ]),
+      Row(
+        children: [
+          Text(contentNotifier.wordCount.toString()),
+          const Text(' '),
+          StyledPercent(
+            awarnessPercent: contentNotifier.awarnessPercent,
+            color: Colors.blue[100],
+          ),
+        ],
+      ),
       // const Text(' '),
     ];
   }
@@ -173,14 +176,14 @@ class ContentView extends StatelessWidget {
     return [
       Text(contentNotifier.allWordCount.toString()),
       const Text(' '),
-      StyledPercent(
-        awarnessPercent: contentNotifier.awarnessPercentOfAllWord,
-        color: Colors.blue[100],
-      ),
+      StyledPercent(awarnessPercent: contentNotifier.awarnessPercentOfAllWord),
       const Text(' '),
       Text(contentNotifier.wordCount.toString()),
       const Text(' '),
-      StyledPercent(awarnessPercent: contentNotifier.awarnessPercent),
+      StyledPercent(
+        awarnessPercent: contentNotifier.awarnessPercent,
+        color: Colors.blue[100],
+      ),
     ];
   }
 
