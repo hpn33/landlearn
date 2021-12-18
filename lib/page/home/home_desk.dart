@@ -14,21 +14,36 @@ class DeskHomePage extends StatelessWidget {
       width: 1140,
       child: Row(
         children: [
-          const Expanded(flex: 5, child: WordView()),
-          Expanded(flex: 3, child: _midColumn()),
-          const Expanded(flex: 4, child: ContentView()),
+          Expanded(
+              flex: 9,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: Column(
+                  children: [
+                    const SizedBox(height: 30),
+                    _topRow(),
+                    const Expanded(child: WordView()),
+                  ],
+                ),
+              )),
+          const Expanded(flex: 5, child: ContentView()),
         ],
       ),
     );
   }
 
-  Widget _midColumn() {
-    return Column(
-      children: const [
-        SizedBox(height: 20),
-        ContentStatus(),
-        WordStatus(),
-      ],
+  Widget _topRow() {
+    return SizedBox(
+      height: 120,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: Row(
+          children: const [
+            Expanded(child: ContentStatus()),
+            Expanded(child: WordStatus()),
+          ],
+        ),
+      ),
     );
   }
 }
