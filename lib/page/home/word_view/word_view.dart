@@ -107,21 +107,18 @@ class WordView extends StatelessWidget {
 
         final scrollController = useScrollController();
 
-        return Scrollbar(
-          controller: scrollController,
-          isAlwaysShown: true,
-          child: Padding(
-            padding: const EdgeInsets.only(right: 12.0),
-            child: ListView.builder(
-              shrinkWrap: true,
-              itemCount: wordCategories.length,
-              itemBuilder: (context, index) {
-                final alphaChar = wordCategories.elementAt(index).key;
-                final category = wordCategories.elementAt(index).value;
+        return Padding(
+          padding: const EdgeInsets.only(right: 12.0),
+          child: ListView.builder(
+            // shrinkWrap: true,
+            controller: scrollController,
+            itemCount: wordCategories.length,
+            itemBuilder: (context, index) {
+              final alphaChar = wordCategories.elementAt(index).key;
+              final category = wordCategories.elementAt(index).value;
 
-                return WordSectionWidget(alphaChar, category);
-              },
-            ),
+              return WordSectionWidget(alphaChar, category);
+            },
           ),
         );
       }),

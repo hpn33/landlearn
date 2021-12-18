@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:landlearn/page/dialog/add_content_dialog.dart';
-import 'package:landlearn/page/study/component/persent_status.dart';
 import 'package:landlearn/service/models/content_hub.dart';
 import 'package:landlearn/service/models/content_notifier.dart';
 import 'package:landlearn/util/open_study_page.dart';
@@ -59,20 +58,17 @@ class ContentView extends StatelessWidget {
 
           final scrollController = useScrollController();
 
-          return Scrollbar(
-            controller: scrollController,
-            isAlwaysShown: true,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12.0),
-              child: ListView.builder(
-                shrinkWrap: true,
-                itemCount: contentNotifiers.length,
-                itemBuilder: (context, index) {
-                  final contentNotifier = contentNotifiers[index];
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12.0),
+            child: ListView.builder(
+              controller: scrollController,
+              shrinkWrap: true,
+              itemCount: contentNotifiers.length,
+              itemBuilder: (context, index) {
+                final contentNotifier = contentNotifiers[index];
 
-                  return contentItem(contentNotifier);
-                },
-              ),
+                return contentItem(contentNotifier);
+              },
             ),
           );
         },
@@ -81,9 +77,6 @@ class ContentView extends StatelessWidget {
   Widget contentItem(ContentNotifier contentNotifier, [int index = -1]) {
     return HookConsumer(builder: (context, ref, child) {
       useListenable(contentNotifier);
-
-      final awarnessPercent = contentNotifier.awarnessPercent;
-      final awarnessPercentOfAllWord = contentNotifier.awarnessPercentOfAllWord;
 
       return Card(
         elevation: 0,
