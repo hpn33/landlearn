@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:landlearn/page/home/component/overlay_checkbox.dart';
 import 'package:landlearn/page/study/component/content_text.dart';
 import 'package:landlearn/page/study/component/content_words.dart';
 import 'package:landlearn/page/study/component/persent_status.dart';
@@ -94,22 +95,7 @@ class StudyPage extends HookConsumerWidget {
                   ),
                 ),
 
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 2.0),
-                  child: Column(
-                    children: [
-                      const Text('Overlay'),
-                      Checkbox(
-                        value: ref.watch(showOverlayProvider),
-                        onChanged: showSubtitle
-                            ? null
-                            : (a) {
-                                ref.read(showOverlayProvider.state).state = a!;
-                              },
-                      ),
-                    ],
-                  ),
-                ),
+                const OverlayCheckBox(),
 
                 const Spacer(),
                 awarnessStatus(contentNotifier),
