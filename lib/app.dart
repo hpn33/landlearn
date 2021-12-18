@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 import 'page/load_page/load_page.dart';
@@ -9,9 +12,20 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      scrollBehavior: MyCustomScrollBehavior(),
+      title: 'Land Learn',
       theme: ThemeData(primarySwatch: Colors.blue),
       home: const LoadPage(),
     );
   }
+}
+
+class MyCustomScrollBehavior extends MaterialScrollBehavior {
+  // Override behavior methods and getters like dragDevices
+  @override
+  Set<PointerDeviceKind> get dragDevices => {
+        PointerDeviceKind.touch,
+        if (!Platform.isIOS || !Platform.isAndroid) PointerDeviceKind.mouse,
+        // etc.
+      };
 }
