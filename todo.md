@@ -39,8 +39,8 @@
     - [x] normal
   - word
     - [x] normal
-    - [ ] most use
-    - [ ] last
+    - [x] most use
+    - [x] last
 - [ ] import .srt file
 - [x] dev & version info
 - [x] select word

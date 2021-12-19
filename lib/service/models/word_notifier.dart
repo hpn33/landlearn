@@ -19,8 +19,8 @@ class WordNotifier extends ValueNotifier<Word> {
   String? get note => value.note;
   String? get onlineTranslation => value.onlineTranslation;
 
-  DateTime get createAt => value.createdAt;
-  DateTime get updateAt => value.updatedAt;
+  DateTime get createdAt => value.createdAt;
+  DateTime get updatedAt => value.updatedAt;
 
   // on every load change
   int _lastContentId = -1;
