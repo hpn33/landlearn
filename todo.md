@@ -42,7 +42,7 @@
     - [ ] most use
     - [ ] last
 - [ ] import .srt file
-- [ ] dev & version info
+- [x] dev & version info
 - [x] select word
 
 ## TODO

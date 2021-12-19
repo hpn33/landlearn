@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:landlearn/page/setting_page/setting_page.dart';
 import 'package:landlearn/util/util.dart';
+import 'package:landlearn/widget/app_info_panel.dart';
 
 import 'home_desk.dart';
 import 'home_mobile.dart';
@@ -36,6 +37,20 @@ class HomePage extends HookWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => const SettingPage()),
+              );
+            },
+          ),
+
+          // info icon button
+          IconButton(
+            icon: const Icon(
+              Icons.info,
+              color: Colors.white,
+            ),
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (context) => const AppInfoDialog(),
               );
             },
           ),
