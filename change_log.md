@@ -1,3 +1,27 @@
+## 0.3.0+3
+
+- **ADD**
+  - word panel
+    - online translation
+    - note
+    - know level
+    - reference
+  - select word
+  - mean below of word
+  - panel for show mean
+  - word with [subtitle] file ( just en )
+  - app info panel
+  - search and order for wrods or contents
+
+
+- **IMPROVE**
+  - ui
+  - studyPage: read modes
+  
+- **FIX**
+  - load default content ( wihtou doublicat )
+
+
 ## 0.2.1+2
 
 - **ADD**
