@@ -20,9 +20,9 @@
   - [x] use [package for translation](https://pub.dev/packages/translator)
   - [x] store result
   - [x] open google translate ( https://translate.google.com/ ) in browser
-- [ ] import ( txt - subtitle (.srt) - by hand)
-- [ ] drag new content to app
-  - [ ] https://pub.dev/packages/desktop_drop
+- [x] import ( txt - subtitle (.srt) - by hand)
+- [x] drag new content to app
+  - https://pub.dev/packages/desktop_drop
 
 ## Goal
 * [x] good for public and publish
@@ -42,7 +42,7 @@
     - [x] normal
     - [x] most use
     - [x] last
-- [ ] import .srt file
+- [x] import .srt file
 - [x] dev & version info
 
 ## TODO
