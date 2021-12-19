@@ -29,11 +29,12 @@
 * [ ] nextVER (0.3.0) -
 
 ## Ver 0.3.0
-- [x] new ui
-- [x] show mean below of word
+- [x] new ui ( color and style )
+- [x] show mean below of word (subtitle)
 - [x] toggle overlay panel
-- [x] show select with under line in any mode
-- [ ] diff mode for word view & content view ( home page ) and search bar -mostUse -lastuse 
+- [x] show select with underline ( any mode )
+- [x] select word
+- [x] diff mode for word view & content view ( home page ) and search bar -mostUse -lastuse 
   - content
     - [x] last
     - [x] normal
@@ -43,7 +44,6 @@
     - [x] last
 - [ ] import .srt file
 - [x] dev & version info
-- [x] select word
 
 ## TODO
 * [ ] import .srt convert to content

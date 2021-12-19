@@ -2,7 +2,6 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:landlearn/service/models/word_notifier.dart';
-import 'package:landlearn/service/providers.dart';
 
 import 'word_panel.dart';
 
