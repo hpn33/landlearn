@@ -29,12 +29,21 @@
 * [ ] nextVER (0.3.0) -
 
 ## Ver 0.3.0
+- [x] new ui
 - [x] show mean below of word
 - [x] toggle overlay panel
 - [x] show select with under line in any mode
 - [ ] diff mode for word view & content view ( home page ) and search bar -mostUse -lastuse 
+  - content
+    - [x] last
+    - [x] normal
+  - word
+    - [x] normal
+    - [ ] most use
+    - [ ] last
 - [ ] import .srt file
 - [ ] dev & version info
+- [x] select word
 
 ## TODO
 * [ ] import .srt convert to content
@@ -47,7 +56,7 @@
 * [x] count of word ( on project )
 * [x] count of word ( totaly )
 * [x] refresh and save data after analyze
-* [ ] search bar for word
+* [x] search bar for **word** and **content**
 - [ ] some word not in en alphaChar ( solution )
 - [ ] different view for words ( categories - count )
 - [x] different reading mode ( read only - edit - show knowage - tooltip )
@@ -86,7 +95,7 @@
 - [ ] studyPage: View modes must be more useful ( less mode - more usablity ) read view and tooltip view in same mode - on mode change lost the location ( less mode for solution )
 - [x] delete option for content ( -_- )
 - [x] more readable ( the focus is on the words and text almost ignored )
-- [ ] (UI) study page: better undrestanding of awarness of text and words
+- [x] (UI) study page: better undrestanding of awarness of text and words
 - [ ] store import data (not delete **ever**) ( word mean )
 
 ## publish
@@ -122,8 +131,8 @@
     - [ ] dot orange underline for almost know level
 - [x] performance
 - [x] key binding ( to change mode tab, digit1 normal, digit2 know )
-- [ ] show mean on below of word
-- [ ] select word
+- [x] show mean on below of word
+- [x] select word
 - [ ] 
 
 ## import content panel

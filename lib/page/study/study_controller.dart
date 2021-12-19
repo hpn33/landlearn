@@ -10,8 +10,7 @@ final studyVMProvider = Provider((ref) => StudyController());
 
 class StudyController {
   final contentStack = <ContentNotifier>[];
-  final selectionStack = <List<WordNotifier>>[];
-  final selectionNotifer = ChangeNotifier();
+  final selectionStack = <ValueNotifier<List<WordNotifier>>>[];
 
   ContentNotifier? selectedContent;
 
@@ -48,36 +47,46 @@ class StudyController {
   //-------- words --------
 
   void _enableSelections() {
-    for (var word in selectedWords) {
+    for (var word in selectedWords.value) {
       word.setSelection(true);
     }
   }
 
   void _disableSelections() {
-    for (var word in selectedWords) {
+    for (var word in selectedWords.value) {
       word.setSelection(false);
     }
   }
 
   //--------- selected word ----------
 
-  List<WordNotifier> get selectedWords => selectionStack.last;
+  ValueNotifier<List<WordNotifier>> get selectedWords => selectionStack.last;
 
-  void addSelectedWord(WordNotifier selectedWord) {
-    selectedWords.add(selectedWord);
-    // selectionNotifer.notifyListeners();
+  void toggleWordSelection(WordNotifier wordNotifier) {
+    if (wordNotifier.selected) {
+      removeSelectedWrod(wordNotifier);
+    } else {
+      addSelectedWord(wordNotifier);
+    }
+  }
+
+  void addSelectedWord(WordNotifier wordNotifier) {
+    wordNotifier.setSelection(true);
+
+    selectedWords.value = [...selectedWords.value, wordNotifier];
   }
 
   void removeSelectedWrod(WordNotifier wordNotifier) {
-    selectedWords.remove(wordNotifier);
-    selectionNotifer.notifyListeners();
+    wordNotifier.setSelection(false);
+
+    selectedWords.value = [...selectedWords.value..remove(wordNotifier)];
   }
 
   //---------- Stack ----------
 
   void _pushStack() {
     contentStack.add(selectedContent!);
-    selectionStack.add([]);
+    selectionStack.add(ValueNotifier([]));
   }
 
   void _popStack() {

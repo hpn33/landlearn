@@ -156,11 +156,12 @@ class ReadView extends HookConsumerWidget {
               : () {
                   wordNotifier.toggleKnowToDB(ref);
                 },
-          onLongPress: isNormal
-              ? null
-              : () async {
-                  openGoogleTranslateInBrowser(wordNotifier.word);
-                },
+          onLongPress: () {
+            openGoogleTranslateInBrowser(wordNotifier.word);
+          },
+          onDoubleTap: () {
+            ref.read(studyVMProvider).toggleWordSelection(wordNotifier);
+          },
           child: _child,
         );
 

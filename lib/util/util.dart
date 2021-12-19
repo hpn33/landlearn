@@ -55,3 +55,7 @@ String getTopRange(int length) {
   return (fn + 1).toString() +
       List.generate(s.length - 1, (index) => '0').join();
 }
+
+class Notifier extends ChangeNotifier {
+  void notify() => notifyListeners();
+}

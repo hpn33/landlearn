@@ -65,9 +65,9 @@ class ContentTextWidget extends HookConsumerWidget {
             final studyVM = ref.read(studyVMProvider);
             final selectedWordList = studyVM.selectedWords;
 
-            useListenable(studyVM.selectionNotifer);
+            useListenable(studyVM.selectedWords);
 
-            if (selectedWordList.isEmpty) {
+            if (selectedWordList.value.isEmpty) {
               return Container();
             }
 
@@ -75,12 +75,10 @@ class ContentTextWidget extends HookConsumerWidget {
               padding: const EdgeInsets.all(16.0),
               child: Row(
                 children: [
-                  for (final wordNotifier in selectedWordList)
+                  for (final wordNotifier in selectedWordList.value)
                     InputChip(
                       deleteIconColor: Colors.grey,
                       onDeleted: () {
-                        wordNotifier.setSelection(false);
-
                         ref
                             .read(studyVMProvider)
                             .removeSelectedWrod(wordNotifier);
