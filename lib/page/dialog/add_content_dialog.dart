@@ -12,14 +12,6 @@ import 'package:landlearn/service/models/word_hub.dart';
 import 'package:landlearn/util/sample.dart';
 import 'package:subtitle/subtitle.dart';
 
-void printResult(List<Subtitle> subtitles) {
-  subtitles.sort((s1, s2) => s1.compareTo(s2));
-  for (var result in subtitles) {
-    print(
-        '(${result.index}) Start: ${result.start}, end: ${result.end} [${result.data}]');
-  }
-}
-
 Widget addContentDialog() {
   return Dialog(
     child: HookConsumer(
@@ -31,20 +23,18 @@ Widget addContentDialog() {
 
         return DropTarget(
           onDragDone: (data) async {
-            final controller = SubtitleController(
-              provider: SubtitleProvider.fromFile(
-                File(
-                  data.urls.first.toFilePath(),
-                ),
-              ),
-            );
+            final file = File(data.urls.first.toFilePath());
+            final input = file.readAsString();
+
+            final subtitleProvider = SubtitleProvider.fromFile(file);
+            final controller = SubtitleController(provider: subtitleProvider);
 
             await controller.initial();
 
             titleController.text = data.urls.first.pathSegments.last;
-
-            textController.text =
-                controller.subtitles.map((e) => e.data).join('\n\n');
+            textController.text = controller.subtitles.isNotEmpty
+                ? controller.getAll('\n\n')
+                : await input;
           },
           onDragEntered: (details) {
             isDrop.value = true;
