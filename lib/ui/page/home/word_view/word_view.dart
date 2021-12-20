@@ -6,7 +6,7 @@ import 'package:landlearn/logic/model/word_hub.dart';
 import 'package:landlearn/logic/model/word_notifier.dart';
 import 'package:landlearn/ui/component/word_section_widget.dart';
 
-import '../../dialog/add_word_dialog.dart';
+import '../../../float/add_word_dialog.dart';
 
 class WordView extends StatelessWidget {
   const WordView({Key? key}) : super(key: key);

@@ -4,7 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:landlearn/logic/model/word_notifier.dart';
 import 'package:landlearn/logic/util/open_browser.dart';
 import 'package:landlearn/logic/util/open_study_page.dart';
-import 'package:landlearn/ui/page/study/component/read_view_repo.dart';
+import 'package:landlearn/ui/page/study/logic/read_view_repo.dart';
 
 final selectedWordNotifierProvider =
     StateProvider<WordNotifier?>((ref) => null);

@@ -4,7 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:landlearn/ui/page/study/logic/view_mode.dart';
 
 import '../study.dart';
-import '../study_controller.dart';
+import '../logic/study_controller.dart';
 import 'edit_view.dart';
 import 'read_view.dart';
 
@@ -38,7 +38,7 @@ class ContentTextWidget extends HookConsumerWidget {
 
   Widget textView() {
     return HookConsumer(builder: (context, ref, child) {
-      final contentNotifier = ref.read(studyVMProvider).selectedContent!;
+      final contentNotifier = ref.read(studyVMProvider).selectedContent;
 
       useListenable(contentNotifier);
 

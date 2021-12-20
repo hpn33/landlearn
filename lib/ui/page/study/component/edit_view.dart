@@ -3,7 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:landlearn/logic/model/content_notifier.dart';
 
-import '../study_controller.dart';
+import '../logic/study_controller.dart';
 
 class EditView extends StatelessWidget {
   const EditView({Key? key}) : super(key: key);
@@ -42,7 +42,7 @@ class EditPanel extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, ref) {
     final textController = ref.watch(textControllerProvider);
-    final contentNotifier = ref.read(studyVMProvider).selectedContent!;
+    final contentNotifier = ref.read(studyVMProvider).selectedContent;
 
     useListenable(contentNotifier);
 
@@ -92,10 +92,7 @@ class EditPanel extends HookConsumerWidget {
                       color: Colors.green,
                     ),
                     onPressed: () async {
-                      ref
-                          .read(studyVMProvider)
-                          .selectedContent!
-                          .updateContent(ref.read(textControllerProvider).text);
+                      ref.read(studyVMProvider).updateContent(ref);
 
                       await analyze(ref);
                     },

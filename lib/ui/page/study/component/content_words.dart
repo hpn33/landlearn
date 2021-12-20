@@ -6,7 +6,7 @@ import 'package:landlearn/ui/component/styled_percent_widget.dart';
 import 'package:landlearn/ui/component/word_section_widget.dart';
 
 import '../study.dart';
-import '../study_controller.dart';
+import '../logic/study_controller.dart';
 
 class ContentWordToggleWidget extends HookConsumerWidget {
   const ContentWordToggleWidget({Key? key}) : super(key: key);
@@ -54,11 +54,7 @@ class ContentWordToggleWidget extends HookConsumerWidget {
       builder: (BuildContext context, WidgetRef ref, Widget? child) {
         final contentNotifier = ref.read(studyVMProvider).selectedContent;
 
-        useListenable(contentNotifier ?? ChangeNotifier());
-
-        if (contentNotifier == null) {
-          return Container();
-        }
+        useListenable(contentNotifier);
 
         return SizedBox(
           width: 50,
@@ -114,7 +110,7 @@ class ContentWordWidget extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    final contentNotifier = ref.read(studyVMProvider).selectedContent!;
+    final contentNotifier = ref.read(studyVMProvider).selectedContent;
 
     useListenable(contentNotifier);
 

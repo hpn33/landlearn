@@ -4,7 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:landlearn/logic/model/content_notifier.dart';
 import 'package:landlearn/ui/page/study/component/persent_status.dart';
 
-import '../study_controller.dart';
+import '../logic/study_controller.dart';
 import 'toggle_view_mode.dart';
 
 class AppbarStudy extends HookConsumerWidget {
@@ -15,11 +15,7 @@ class AppbarStudy extends HookConsumerWidget {
     final studyVM = ref.read(studyVMProvider);
     final contentNotifier = studyVM.selectedContent;
 
-    useListenable(contentNotifier ?? ChangeNotifier());
-
-    if (contentNotifier == null) {
-      return Container();
-    }
+    useListenable(contentNotifier);
 
     return Material(
       elevation: 6,

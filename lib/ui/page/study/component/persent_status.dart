@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:landlearn/logic/model/content_notifier.dart';
 
-import '../study_controller.dart';
+import '../logic/study_controller.dart';
 
 class PercentStatusWidget extends ConsumerWidget {
   const PercentStatusWidget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, ref) {
-    final contentNotifier = ref.read(studyVMProvider).selectedContent!;
+    final contentNotifier = ref.read(studyVMProvider).selectedContent;
 
     return Column(
       children: [

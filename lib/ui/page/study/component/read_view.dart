@@ -9,15 +9,15 @@ import 'package:landlearn/ui/component/word_panel_open_widget.dart';
 import 'package:landlearn/ui/page/study/logic/view_mode.dart';
 
 import '../study.dart';
-import '../study_controller.dart';
-import 'read_view_repo.dart';
+import '../logic/study_controller.dart';
+import '../logic/read_view_repo.dart';
 
 class ReadView extends HookConsumerWidget {
   const ReadView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, ref) {
-    final contentNotifier = ref.watch(studyVMProvider).selectedContent!;
+    final contentNotifier = ref.watch(studyVMProvider).selectedContent;
 
     // load data
     final paragraphs = useState<List<Map<String, WordNotifier?>>>([]);

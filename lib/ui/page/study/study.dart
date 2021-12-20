@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:landlearn/logic/model/content_notifier.dart';
@@ -8,10 +7,11 @@ import 'package:landlearn/ui/page/home/component/overlay_checkbox.dart';
 
 import 'component/content_text.dart';
 import 'component/content_words.dart';
+import 'component/key_bind.dart';
 import 'component/persent_status.dart';
 import 'component/toggle_view_mode.dart';
 import 'logic/view_mode.dart';
-import 'study_controller.dart';
+import 'logic/study_controller.dart';
 
 class StudyPage extends HookConsumerWidget {
   static final viewModeProvider = StateProvider((ref) => ViewMode.normal);
@@ -33,11 +33,10 @@ class StudyPage extends HookConsumerWidget {
         child: Material(
           child: Column(
             children: [
-              // const AppbarStudy(),
               Expanded(
                 child: Center(
                   child: SizedBox(
-                    width: MediaQuery.of(context).size.width > 1100
+                    width: MediaQuery.of(context).size.width > 950
                         ? MediaQuery.of(context).size.width > 1140
                             ? 1140
                             : MediaQuery.of(context).size.width * 0.8
@@ -64,22 +63,15 @@ class StudyPage extends HookConsumerWidget {
 
   Widget _bar() => HookConsumer(
         builder: (context, ref, child) {
-          final contentNotifier = ref.read(studyVMProvider).selectedContent!;
+          final contentNotifier = ref.read(studyVMProvider).selectedContent;
           final showSubtitle = ref.watch(showSubtitleProvider);
 
           return SizedBox(
-            // color: Colors.blue[200],
             width: 55,
             child: Column(
               children: [
                 const BackButton(),
                 const ToggleViewModeButton2(),
-                // CheckboxListTile(
-                //   title: Text('title'),
-                //   value: false,
-                //   onChanged: (a) {},
-                // ),
-
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 8.0),
                   child: Column(
@@ -94,18 +86,16 @@ class StudyPage extends HookConsumerWidget {
                     ],
                   ),
                 ),
-
                 const OverlayCheckBox(),
-
                 const Spacer(),
-                awarnessStatus(contentNotifier),
+                _awarnessStatus(contentNotifier),
               ],
             ),
           );
         },
       );
 
-  Widget awarnessStatus(ContentNotifier contentNotifier) => HookBuilder(
+  Widget _awarnessStatus(ContentNotifier contentNotifier) => HookBuilder(
         builder: (context) {
           useListenable(contentNotifier);
 
@@ -118,10 +108,6 @@ class StudyPage extends HookConsumerWidget {
             decoration: BoxDecoration(
               color: Colors.grey[200],
               borderRadius: BorderRadius.circular(5),
-              // border: Border.all(
-              // color: Colors.grey[300],
-              // width: 1,
-              // ),
             ),
             child: Column(
               children: [
@@ -142,54 +128,3 @@ class StudyPage extends HookConsumerWidget {
         },
       );
 }
-
-class StudyKeyBinds extends ConsumerWidget {
-  final Widget child;
-
-  const StudyKeyBinds({Key? key, required this.child}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context, ref) {
-    return Shortcuts(
-      shortcuts: {
-        LogicalKeySet(LogicalKeyboardKey.tab): ToggleViewModeIntent(),
-        LogicalKeySet(LogicalKeyboardKey.digit1): ViewModeNormalIntent(),
-        LogicalKeySet(LogicalKeyboardKey.digit2): ViewModeKnowIntent(),
-        LogicalKeySet(LogicalKeyboardKey.digit3): ViewModeUnknowIntent(),
-      },
-      child: Actions(
-        actions: {
-          ToggleViewModeIntent: CallbackAction(onInvoke: (intent) {
-            final mode = ref.read(StudyPage.viewModeProvider.state);
-
-            if (mode.state == ViewMode.normal) {
-              mode.state = ViewMode.know;
-            } else if (mode.state == ViewMode.know) {
-              mode.state = ViewMode.unknow;
-            } else if (mode.state == ViewMode.unknow) {
-              mode.state = ViewMode.normal;
-            }
-          }),
-          ViewModeNormalIntent: CallbackAction(onInvoke: (intent) {
-            ref.read(StudyPage.viewModeProvider.state).state = ViewMode.normal;
-          }),
-          ViewModeKnowIntent: CallbackAction(onInvoke: (intent) {
-            ref.read(StudyPage.viewModeProvider.state).state = ViewMode.know;
-          }),
-          ViewModeUnknowIntent: CallbackAction(onInvoke: (intent) {
-            ref.read(StudyPage.viewModeProvider.state).state = ViewMode.unknow;
-          }),
-        },
-        child: child,
-      ),
-    );
-  }
-}
-
-class ToggleViewModeIntent extends Intent {}
-
-class ViewModeNormalIntent extends Intent {}
-
-class ViewModeKnowIntent extends Intent {}
-
-class ViewModeUnknowIntent extends Intent {}

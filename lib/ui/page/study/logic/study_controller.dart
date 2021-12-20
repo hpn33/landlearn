@@ -12,14 +12,15 @@ class StudyController {
   final contentStack = <ContentNotifier>[];
   final selectionStack = <ValueNotifier<List<WordNotifier>>>[];
 
-  ContentNotifier? selectedContent;
+  ContentNotifier? _selectedContent;
+  ContentNotifier get selectedContent => _selectedContent!;
 
   void init(ContentNotifier contentNotifier, WordNotifier? selectedWord) {
     if (selectionStack.isNotEmpty) {
       _disableSelections();
     }
 
-    selectedContent = contentNotifier;
+    _selectedContent = contentNotifier;
     _pushStack();
 
     // add & enable selected word
@@ -36,11 +37,11 @@ class StudyController {
     _popStack();
 
     if (contentStack.isNotEmpty) {
-      selectedContent = contentStack.last;
+      _selectedContent = contentStack.last;
 
       _enableSelections();
     } else {
-      selectedContent = null;
+      _selectedContent = null;
     }
   }
 
@@ -85,7 +86,7 @@ class StudyController {
   //---------- Stack ----------
 
   void _pushStack() {
-    contentStack.add(selectedContent!);
+    contentStack.add(selectedContent);
     selectionStack.add(ValueNotifier([]));
   }
 
@@ -95,11 +96,17 @@ class StudyController {
   }
 }
 
+extension Func on StudyController {
+  void updateContent(WidgetRef ref) {
+    selectedContent.updateContent(ref.read(textControllerProvider).text);
+  }
+}
+
 final textControllerProvider = ChangeNotifierProvider.autoDispose((ref) {
   final contentNotifier = ref.watch(studyVMProvider).selectedContent;
 
   return TextEditingController(
-    text: contentNotifier == null ? 'something Wrong' : contentNotifier.content,
+    text: contentNotifier.content,
   );
 });
 
@@ -107,7 +114,7 @@ final textControllerProvider = ChangeNotifierProvider.autoDispose((ref) {
 
 /// extract work from content text
 Future<void> analyze(WidgetRef ref) async {
-  final contentNotifier = ref.read(studyVMProvider).selectedContent!;
+  final contentNotifier = ref.read(studyVMProvider).selectedContent;
   final wordHub = ref.read(wordHubProvider);
   final db = ref.read(dbProvider);
 

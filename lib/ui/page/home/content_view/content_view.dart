@@ -3,7 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:landlearn/logic/model/content_hub.dart';
 import 'package:landlearn/logic/model/content_notifier.dart';
-import 'package:landlearn/ui/page/dialog/add_content_dialog.dart';
+import 'package:landlearn/ui/float/add_content_dialog.dart';
 
 import 'content_item.dart';
 
