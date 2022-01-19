@@ -18,6 +18,9 @@ class WordStatus extends HookConsumerWidget {
     final wordCount = wordHub.wordNotifiers.length;
     final wordKnowedCount = wordHub.wordNotifiers.where((e) => e.know).length;
 
+    double awarness = (wordKnowedCount / wordCount * 100);
+    awarness = awarness.isNaN ? 0.0 : awarness;
+
     const scale = 100;
     const padding = 25 * scale;
 
@@ -55,8 +58,7 @@ class WordStatus extends HookConsumerWidget {
                   ),
                   titer(
                     'Awarness',
-                    (wordKnowedCount / wordCount * 100).toStringAsFixed(2) +
-                        '%',
+                    awarness.toStringAsFixed(2) + '%',
                   ),
                 ],
               ),

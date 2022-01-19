@@ -3,6 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:landlearn/logic/model/content_hub.dart';
 import 'package:landlearn/logic/model/content_notifier.dart';
+import 'package:landlearn/logic/model/word_hub.dart';
 import 'package:landlearn/logic/util/util.dart';
 
 import 'ti.dart';
@@ -16,13 +17,17 @@ class ContentStatus extends HookConsumerWidget {
     final contentHub = ref.read(contentHubProvider);
     useListenable(contentHub);
 
-    final awarness = contentHub.contentNotifiers
+    final wordHub = ref.read(wordHubProvider);
+    useListenable(wordHub);
+
+    double awarness = contentHub.contentNotifiers
             .map((e) => e.awarnessPercentOfAllWord)
             .fold<double>(
               0.0,
               (previousValue, element) => previousValue + element,
             ) /
         contentHub.contentNotifiers.length;
+    awarness = awarness.isNaN ? 0.0 : awarness;
 
     const scale = 100;
     const padding = 25 * scale;

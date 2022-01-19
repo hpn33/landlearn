@@ -72,7 +72,7 @@ class WordView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 40.0, vertical: 8),
       child: Column(
         children: [
           const SizedBox(height: 15),
@@ -253,22 +253,34 @@ class WordView extends StatelessWidget {
   // }
 
   Widget listViewWidget() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8),
-      child: HookConsumer(builder: (context, ref, child) {
-        final wordCategories = ref.watch(wordsProvider).entries;
+    return HookConsumer(builder: (context, ref, child) {
+      final wordCategories = ref
+          .watch(wordsProvider)
+          .entries
+          .where((element) => element.value.words.isNotEmpty);
 
-        final scrollController = useScrollController();
+      final scrollController = useScrollController();
 
-        return Padding(
+      if (wordCategories.isEmpty) {
+        return const Center(
+          child: Text(
+            'Empty',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Colors.grey,
+            ),
+          ),
+        );
+      }
+
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8),
+        child: Padding(
           padding: const EdgeInsets.only(right: 12.0),
           child: ListView.builder(
             // shrinkWrap: true,
             controller: scrollController,
-            itemCount: wordCategories
-                .map((e) => e.value.words)
-                .where((element) => element.isNotEmpty)
-                .length,
+            itemCount: wordCategories.length,
             itemBuilder: (context, index) {
               final alphaChar = wordCategories.elementAt(index).key;
               final category = wordCategories.elementAt(index).value;
@@ -280,8 +292,8 @@ class WordView extends StatelessWidget {
               );
             },
           ),
-        );
-      }),
-    );
+        ),
+      );
+    });
   }
 }

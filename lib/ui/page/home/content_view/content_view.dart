@@ -174,6 +174,18 @@ class ContentView extends StatelessWidget {
 
           final scrollController = useScrollController();
 
+          if (contentNotifiers.isEmpty) {
+            return const Center(
+              child: Text(
+                'Empty',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.grey,
+                ),
+              ),
+            );
+          }
+
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12.0),
             child: ListView.builder(
