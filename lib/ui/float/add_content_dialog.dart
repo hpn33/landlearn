@@ -24,17 +24,21 @@ Widget addContentDialog() {
         return DropTarget(
           onDragDone: (data) async {
             final file = File(data.urls.first.toFilePath());
-            final input = file.readAsString();
 
             final subtitleProvider = SubtitleProvider.fromFile(file);
             final controller = SubtitleController(provider: subtitleProvider);
 
-            await controller.initial();
-
             titleController.text = data.urls.first.pathSegments.last;
-            textController.text = controller.subtitles.isNotEmpty
-                ? controller.getAll('\n\n')
-                : await input;
+
+            controller
+                .initial()
+                .whenComplete(
+                  () => textController.text = controller.getAll('\n\n'),
+                )
+                .onError(
+                  (error, stackTrace) async =>
+                      textController.text = await file.readAsString(),
+                );
           },
           onDragEntered: (details) {
             isDrop.value = true;

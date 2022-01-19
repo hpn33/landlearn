@@ -136,9 +136,9 @@
 - [ ] 
 
 ## import content panel
-- [ ] txt
-- [ ] .srt
+- [ ] subtitle detectetion ( not word well )
 - [x] cliboard
+- [x] file import
 
 
 ## word oriented
