@@ -83,16 +83,6 @@ class ContentItem extends HookConsumerWidget {
 
   List<Widget> status3(ContentNotifier contentNotifier) {
     return [
-      Row(children: [
-        Text(contentNotifier.allWordCount.toString()),
-        const Text(' '),
-        StyledPercent(
-            awarnessPercent: contentNotifier.awarnessPercentOfAllWord),
-      ]),
-      const SizedBox(height: 2),
-      SizedBox(width: 60, child: percentStatus(contentNotifier)),
-      const SizedBox(height: 2),
-
       Row(
         children: [
           Text(contentNotifier.wordCount.toString()),
@@ -103,6 +93,18 @@ class ContentItem extends HookConsumerWidget {
           ),
         ],
       ),
+
+      const SizedBox(height: 2),
+      SizedBox(width: 60, child: percentStatus(contentNotifier)),
+      const SizedBox(height: 2),
+
+      Row(children: [
+        Text(contentNotifier.allWordCount.toString()),
+        const Text(' '),
+        StyledPercent(
+            awarnessPercent: contentNotifier.awarnessPercentOfAllWord),
+      ]),
+
       // const Text(' '),
     ];
   }
@@ -176,25 +178,6 @@ class ContentItem extends HookConsumerWidget {
         Row(
           children: [
             Expanded(
-              flex: contentNotifier.awarnessPercentOfAllWord.toInt(),
-              child: Container(
-                height: 3,
-                color: Colors.green[300],
-              ),
-            ),
-            Expanded(
-              flex: 100 - contentNotifier.awarnessPercentOfAllWord.toInt(),
-              child: Container(
-                height: 3,
-                color: Colors.grey[300],
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 1),
-        Row(
-          children: [
-            Expanded(
               flex: contentNotifier.awarnessPercent.toInt(),
               child: Container(
                 height: 3,
@@ -203,6 +186,27 @@ class ContentItem extends HookConsumerWidget {
             ),
             Expanded(
               flex: 100 - contentNotifier.awarnessPercent.toInt(),
+              child: Container(
+                height: 3,
+                color: Colors.grey[300],
+              ),
+            ),
+          ],
+        ),
+        //
+        const SizedBox(height: 1),
+        //
+        Row(
+          children: [
+            Expanded(
+              flex: contentNotifier.awarnessPercentOfAllWord.toInt(),
+              child: Container(
+                height: 3,
+                color: Colors.green[300],
+              ),
+            ),
+            Expanded(
+              flex: 100 - contentNotifier.awarnessPercentOfAllWord.toInt(),
               child: Container(
                 height: 3,
                 color: Colors.grey[300],

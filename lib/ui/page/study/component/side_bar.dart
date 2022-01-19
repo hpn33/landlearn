@@ -62,17 +62,20 @@ class SideBar extends HookConsumerWidget {
             ),
             child: Column(
               children: [
-                Text('${contentNotifier.allWordCount}'),
-                StyledPercent(
-                  awarnessPercent: contentNotifier.awarnessPercentOfAllWord,
-                ),
-                const SizedBox(height: 8),
-                const PercentStatusWidget(),
-                const SizedBox(height: 8),
+                //
                 Text('${contentNotifier.wordCount}'),
                 StyledPercent(
                   awarnessPercent: contentNotifier.awarnessPercent,
                   color: Colors.blue[100],
+                ),
+                const SizedBox(height: 8),
+                //
+                const PercentStatusWidget(),
+                const SizedBox(height: 8),
+                //
+                Text('${contentNotifier.allWordCount}'),
+                StyledPercent(
+                  awarnessPercent: contentNotifier.awarnessPercentOfAllWord,
                 ),
               ],
             ),

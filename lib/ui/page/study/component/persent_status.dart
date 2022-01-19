@@ -16,14 +16,14 @@ class PercentStatusWidget extends ConsumerWidget {
         Row(
           children: [
             Expanded(
-              flex: contentNotifier.awarnessPercentOfAllWord.toInt(),
+              flex: contentNotifier.awarnessPercent.toInt(),
               child: Container(
                 height: 3,
-                color: Colors.green[300],
+                color: Colors.blue[300],
               ),
             ),
             Expanded(
-              flex: 100 - contentNotifier.awarnessPercentOfAllWord.toInt(),
+              flex: 100 - contentNotifier.awarnessPercent.toInt(),
               child: Container(
                 height: 3,
                 color: Colors.grey[300],
@@ -35,14 +35,14 @@ class PercentStatusWidget extends ConsumerWidget {
         Row(
           children: [
             Expanded(
-              flex: contentNotifier.awarnessPercent.toInt(),
+              flex: contentNotifier.awarnessPercentOfAllWord.toInt(),
               child: Container(
                 height: 3,
-                color: Colors.blue[300],
+                color: Colors.green[300],
               ),
             ),
             Expanded(
-              flex: 100 - contentNotifier.awarnessPercent.toInt(),
+              flex: 100 - contentNotifier.awarnessPercentOfAllWord.toInt(),
               child: Container(
                 height: 3,
                 color: Colors.grey[300],
