@@ -16,8 +16,7 @@ class StudyKeyBinds extends ConsumerWidget {
       shortcuts: {
         LogicalKeySet(LogicalKeyboardKey.tab): ToggleViewModeIntent(),
         LogicalKeySet(LogicalKeyboardKey.digit1): ViewModeNormalIntent(),
-        LogicalKeySet(LogicalKeyboardKey.digit2): ViewModeKnowIntent(),
-        LogicalKeySet(LogicalKeyboardKey.digit3): ViewModeUnknowIntent(),
+        LogicalKeySet(LogicalKeyboardKey.digit2): ViewModeUnknowIntent(),
       },
       child: Actions(
         actions: {
@@ -25,8 +24,6 @@ class StudyKeyBinds extends ConsumerWidget {
             final mode = ref.read(StudyPage.viewModeProvider.state);
 
             if (mode.state == ViewMode.normal) {
-              mode.state = ViewMode.know;
-            } else if (mode.state == ViewMode.know) {
               mode.state = ViewMode.unknow;
             } else if (mode.state == ViewMode.unknow) {
               mode.state = ViewMode.normal;
@@ -34,9 +31,6 @@ class StudyKeyBinds extends ConsumerWidget {
           }),
           ViewModeNormalIntent: CallbackAction(onInvoke: (intent) {
             ref.read(StudyPage.viewModeProvider.state).state = ViewMode.normal;
-          }),
-          ViewModeKnowIntent: CallbackAction(onInvoke: (intent) {
-            ref.read(StudyPage.viewModeProvider.state).state = ViewMode.know;
           }),
           ViewModeUnknowIntent: CallbackAction(onInvoke: (intent) {
             ref.read(StudyPage.viewModeProvider.state).state = ViewMode.unknow;
@@ -51,7 +45,5 @@ class StudyKeyBinds extends ConsumerWidget {
 class ToggleViewModeIntent extends Intent {}
 
 class ViewModeNormalIntent extends Intent {}
-
-class ViewModeKnowIntent extends Intent {}
 
 class ViewModeUnknowIntent extends Intent {}

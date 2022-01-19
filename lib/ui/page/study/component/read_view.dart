@@ -228,17 +228,12 @@ class ReadView extends HookConsumerWidget {
     ViewMode viewMode,
     WordNotifier wordNotifier,
   ) {
-    final decoration = isNormal
-        ? null
-        : viewMode == ViewMode.know
-            ? BoxDecoration(
-                color: wordNotifier.know ? Colors.grey[300] : null,
-                borderRadius: BorderRadius.circular(5),
-              )
-            : BoxDecoration(
-                color: wordNotifier.know ? null : Colors.yellow[200],
-                borderRadius: BorderRadius.circular(5),
-              );
+    final decoration = viewMode == ViewMode.unknow
+        ? BoxDecoration(
+            color: wordNotifier.know ? null : Colors.yellow[200],
+            borderRadius: BorderRadius.circular(5),
+          )
+        : null;
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 1),
