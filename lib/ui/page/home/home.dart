@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:landlearn/logic/util/util.dart';
+import 'package:landlearn/logic/util/window_size.dart';
 import 'package:landlearn/ui/component/app_info_panel.dart';
 import 'package:landlearn/ui/page/setting_page/setting_page.dart';
 
@@ -60,9 +61,9 @@ class HomePage extends HookWidget {
   }
 
   Widget getChild(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
+    final isCompactScreen = MediaQuery.of(context).isCompactScreen;
 
-    if (width < 600) {
+    if (isCompactScreen) {
       return const MobileHomePage();
     }
 
