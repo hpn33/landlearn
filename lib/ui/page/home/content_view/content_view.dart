@@ -45,7 +45,6 @@ class ContentView extends StatelessWidget {
       padding: const EdgeInsets.all(8.0),
       child: Column(
         children: [
-          const SizedBox(height: 15),
           _toolBar(context),
           _order(),
           _search(),
@@ -89,7 +88,7 @@ class ContentView extends StatelessWidget {
         margin: const EdgeInsets.symmetric(horizontal: 16.0),
         elevation: 0,
         child: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 2),
           child: Row(
             children: [
               const Text('Order'),
@@ -119,8 +118,8 @@ class ContentView extends StatelessWidget {
               useTextEditingController(text: ref.read(searchProvider));
 
           return Container(
-            margin: const EdgeInsets.all(16.0),
-            padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8),
+            margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 6),
+            padding: const EdgeInsets.symmetric(horizontal: 8),
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(5),

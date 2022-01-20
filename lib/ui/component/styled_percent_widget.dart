@@ -16,17 +16,49 @@ class StyledPercent extends StatelessWidget {
   Widget build(BuildContext context) {
     final isFull = awarnessPercent.toInt() == 100;
 
+    final clor = (color ?? Colors.grey[300])!;
+    final clorBg = clor.withOpacity(.5);
+
     return Container(
+      width: 50,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(5),
-        color: isFull ? Colors.green[200] : color ?? Colors.grey[300],
+        color: isFull ? Colors.green[200] : clorBg,
       ),
-      padding: const EdgeInsets.all(2),
-      child: Text(
-        awarnessPercent.toStringAsFixed(fractionDigits) + ' %',
-        style: TextStyle(
-          fontSize: 12,
-          color: isFull ? Colors.white : null,
+      child: SizedBox(
+        width: 50,
+        child: Stack(
+          children: [
+            Positioned.fill(
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(5),
+                child: Row(
+                  children: [
+                    Expanded(
+                      flex: awarnessPercent.toInt(),
+                      child: Container(color: clor),
+                    ),
+                    Expanded(
+                      flex: 100 - awarnessPercent.toInt(),
+                      child: Container(),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.all(2.0),
+                child: Text(
+                  awarnessPercent.toStringAsFixed(fractionDigits) + ' %',
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: isFull ? Colors.white : null,
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );

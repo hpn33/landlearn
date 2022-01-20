@@ -25,41 +25,37 @@ class ContentItem extends HookConsumerWidget {
           children: [
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Row(
+              child: Column(
                 children: [
-                  Expanded(
-                    child: Text(
-                      contentNotifier.title,
-                      style: const TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      overflow: TextOverflow.fade,
-                    ),
-                  ),
-                  // ...status2(contentNotifier),
-                  Column(children: status3(contentNotifier)),
-                  PopupMenuButton(
-                    itemBuilder: (context) => [
-                      PopupMenuItem(
-                        onTap: () async {
-                          await contentNotifier.removeWithDB(ref);
-                        },
-                        value: 'delete',
-                        child: Row(
-                          children: const [
-                            Icon(
-                              Icons.delete,
-                              color: Colors.red,
-                            ),
-                            Text(
-                              ' Delete',
-                              style: TextStyle(color: Colors.red),
-                            ),
-                          ],
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          contentNotifier.title,
+                          style: const TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          overflow: TextOverflow.fade,
                         ),
                       ),
+                      // ...status2(contentNotifier),
+                      // Column(children: status3(contentNotifier)),
+                      // SizedBox(
+                      //   width: 60,
+                      //   child: percentStatus(contentNotifier),
+                      // ),
+
+                      _popupMenu(),
                     ],
+                  ),
+
+                  const SizedBox(height: 12),
+                  const Divider(),
+                  // status
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: _status4(contentNotifier),
                   ),
                 ],
               ),
@@ -104,6 +100,37 @@ class ContentItem extends HookConsumerWidget {
         StyledPercent(
             awarnessPercent: contentNotifier.awarnessPercentOfAllWord),
       ]),
+
+      // const Text(' '),
+    ];
+  }
+
+  List<Widget> _status4(ContentNotifier contentNotifier) {
+    return [
+      // SizedBox(width: 60, child: percentStatus(contentNotifier)),
+      //
+      const SizedBox(width: 2),
+
+      Row(
+        children: [
+          Text(contentNotifier.wordCount.toString()),
+          const Text(' '),
+          StyledPercent(
+            awarnessPercent: contentNotifier.awarnessPercent,
+            color: Colors.blue[100],
+          ),
+        ],
+      ),
+
+      const SizedBox(width: 2),
+
+      Row(children: [
+        Text(contentNotifier.allWordCount.toString()),
+        const Text(' '),
+        StyledPercent(
+            awarnessPercent: contentNotifier.awarnessPercentOfAllWord),
+      ]),
+      // const SizedBox(width: 2),
 
       // const Text(' '),
     ];
@@ -215,6 +242,35 @@ class ContentItem extends HookConsumerWidget {
           ],
         ),
       ],
+    );
+  }
+
+  Widget _popupMenu() {
+    return Consumer(
+      builder: (BuildContext context, ref, child) {
+        return PopupMenuButton(
+          itemBuilder: (context) => [
+            PopupMenuItem(
+              onTap: () async {
+                await contentNotifier.removeWithDB(ref);
+              },
+              value: 'delete',
+              child: Row(
+                children: const [
+                  Icon(
+                    Icons.delete,
+                    color: Colors.red,
+                  ),
+                  Text(
+                    ' Delete',
+                    style: TextStyle(color: Colors.red),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }
