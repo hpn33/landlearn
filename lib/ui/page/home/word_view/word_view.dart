@@ -274,23 +274,20 @@ class WordView extends StatelessWidget {
 
       return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8),
-        child: Padding(
-          padding: const EdgeInsets.only(right: 12.0),
-          child: ListView.builder(
-            // shrinkWrap: true,
-            controller: scrollController,
-            itemCount: wordCategories.length,
-            itemBuilder: (context, index) {
-              final alphaChar = wordCategories.elementAt(index).key;
-              final category = wordCategories.elementAt(index).value;
+        child: ListView.builder(
+          // shrinkWrap: true,
+          controller: scrollController,
+          itemCount: wordCategories.length,
+          itemBuilder: (context, index) {
+            final alphaChar = wordCategories.elementAt(index).key;
+            final category = wordCategories.elementAt(index).value;
 
-              return WordSectionWidget(
-                key: ValueKey(alphaChar),
-                alphaChar: alphaChar,
-                wordCategoryNotifier: category,
-              );
-            },
-          ),
+            return WordSectionWidget(
+              key: ValueKey(alphaChar),
+              alphaChar: alphaChar,
+              wordCategoryNotifier: category,
+            );
+          },
         ),
       );
     });
