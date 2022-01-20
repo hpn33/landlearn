@@ -2,41 +2,57 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:landlearn/logic/util/util.dart';
 
 import 'content_view/content_view.dart';
 import 'word_view/word_view.dart';
 
-class MobileHomePage extends HookWidget {
+class MobileHomePage extends HookConsumerWidget {
   const MobileHomePage({Key? key}) : super(key: key);
 
+  static final pageIndexProvider = StateProvider((ref) => 0);
+
   @override
-  Widget build(BuildContext context) {
-    final pageController = usePageController();
+  Widget build(BuildContext context, ref) {
+    final pageIndex = ref.read(pageIndexProvider.state);
+
+    final pageController = usePageController(initialPage: pageIndex.state);
     useListenable(pageController);
 
     return Scaffold(
+      backgroundColor: backgroundColor,
       body: PageView(
         controller: pageController,
-        children: [
-          pageScroll(const WordView(), 0, 2, pageController),
-          pageScroll(const ContentView(), 1, 2, pageController),
+        children: const [
+          // pageScroll(
+          // const
+          ContentView(),
+          //  0, 2, pageController),
+          // pageScroll(
+          // const
+          WordView(),
+          //  1, 2, pageController),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'کلمات',
-          ),
+        items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.business),
             label: 'متن ها',
           ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'کلمات',
+          ),
         ],
-        currentIndex:
-            pageController.positions.isEmpty ? 0 : pageController.page!.toInt(),
+        currentIndex: pageIndex.state,
+        // pageController.positions.isEmpty ? 0 : pageController.page!.toInt(),
         selectedItemColor: Colors.amber[800],
-        onTap: (index) => pageController.jumpToPage(index),
+        onTap: (index) {
+          pageIndex.state = index;
+          pageController.jumpToPage(index);
+        },
       ),
     );
   }
