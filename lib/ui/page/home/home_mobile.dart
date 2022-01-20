@@ -39,11 +39,11 @@ class MobileHomePage extends HookConsumerWidget {
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.business),
-            label: 'متن ها',
+            label: 'Contents',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
-            label: 'کلمات',
+            label: 'Words',
           ),
         ],
         currentIndex: pageIndex.state,
