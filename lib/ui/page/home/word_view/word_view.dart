@@ -5,6 +5,7 @@ import 'package:landlearn/logic/model/word_category_notifier.dart';
 import 'package:landlearn/logic/model/word_hub.dart';
 import 'package:landlearn/logic/model/word_notifier.dart';
 import 'package:landlearn/ui/component/word_section_widget.dart';
+import 'package:landlearn/ui/page/home/word_view/word_short_status.dart';
 
 import '../../../float/add_word_dialog.dart';
 
@@ -75,6 +76,7 @@ class WordView extends StatelessWidget {
       padding: const EdgeInsets.all(8.0),
       child: Column(
         children: [
+          const WordShortStatus(),
           _toolBar(context),
           _order(),
           _search(),
@@ -88,7 +90,7 @@ class WordView extends StatelessWidget {
 
   Widget _toolBar(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24.0),
+      padding: const EdgeInsets.symmetric(horizontal: 12.0),
       child: Row(
         children: [
           const Text(

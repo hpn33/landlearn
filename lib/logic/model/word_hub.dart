@@ -71,3 +71,14 @@ class WordHub extends ChangeNotifier {
     notify();
   }
 }
+
+extension WordHubExtension on WordHub {
+  double get awarness {
+    final wordCount = wordNotifiers.length;
+    final wordKnowedCount = wordNotifiers.where((e) => e.know).length;
+
+    double awarness = (wordKnowedCount / wordCount * 100);
+
+    return awarness.isNaN ? 0.0 : awarness;
+  }
+}

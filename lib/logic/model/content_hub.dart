@@ -67,3 +67,15 @@ class ContentHub extends ChangeNotifier {
     notify();
   }
 }
+
+extension ContentHubExtension on ContentHub {
+  double get awarness {
+    final awarness =
+        contentNotifiers.map((e) => e.awarnessPercentOfAllWord).fold<double>(
+                  0.0,
+                  (previousValue, element) => previousValue + element,
+                ) /
+            contentNotifiers.length;
+    return awarness.isNaN ? 0.0 : awarness;
+  }
+}

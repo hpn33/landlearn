@@ -6,6 +6,7 @@ import 'package:landlearn/logic/model/content_notifier.dart';
 import 'package:landlearn/ui/float/add_content_dialog.dart';
 
 import 'content_item.dart';
+import 'content_short_status.dart';
 
 class ContentView extends StatelessWidget {
   const ContentView({Key? key}) : super(key: key);
@@ -45,6 +46,7 @@ class ContentView extends StatelessWidget {
       padding: const EdgeInsets.all(8.0),
       child: Column(
         children: [
+          const ContentShortStatus(),
           _toolBar(context),
           _order(),
           _search(),

@@ -25,3 +25,5 @@ extension SizeUtil on MediaQueryData {
   bool get isMediumScreen => screenSize == ScreenSize.medium;
   bool get isExpandedScreen => screenSize == ScreenSize.expanded;
 }
+
+MediaQueryData screenSize(BuildContext context) => MediaQuery.of(context);
