@@ -6,6 +6,7 @@ import 'package:landlearn/logic/model/content_notifier.dart';
 import 'package:landlearn/ui/float/add_content_dialog.dart';
 
 import 'content_item.dart';
+import 'content_order_button.dart';
 import 'content_short_status.dart';
 
 class ContentView extends StatelessWidget {
@@ -48,7 +49,7 @@ class ContentView extends StatelessWidget {
         children: [
           const ContentShortStatus(),
           _toolBar(context),
-          _order(),
+          // _order(),
           _search(),
           Expanded(
             child: contentListWidget(context),
@@ -68,6 +69,10 @@ class ContentView extends StatelessWidget {
             style: TextStyle(fontSize: 16),
           ),
           const Spacer(),
+
+          // filter list
+          const ContentOrderButton(),
+          // add item
           IconButton(
             icon: const Icon(Icons.add),
             onPressed: () {
@@ -82,37 +87,37 @@ class ContentView extends StatelessWidget {
     );
   }
 
-  Widget _order() {
-    return HookConsumer(builder: (context, ref, child) {
-      final order = ref.watch(orderProvider);
+  // Widget _order() {
+  //   return HookConsumer(builder: (context, ref, child) {
+  //     final order = ref.watch(orderProvider);
 
-      return Card(
-        margin: const EdgeInsets.symmetric(horizontal: 16.0),
-        elevation: 0,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 2),
-          child: Row(
-            children: [
-              const Text('Order'),
-              const Spacer(),
-              TextButton(
-                child: const Text('Norm'),
-                onPressed: order == 'Norm'
-                    ? null
-                    : () => ref.read(orderProvider.state).state = 'Norm',
-              ),
-              TextButton(
-                child: const Text('Last'),
-                onPressed: order == 'Last'
-                    ? null
-                    : () => ref.read(orderProvider.state).state = 'Last',
-              ),
-            ],
-          ),
-        ),
-      );
-    });
-  }
+  //     return Card(
+  //       margin: const EdgeInsets.symmetric(horizontal: 16.0),
+  //       elevation: 0,
+  //       child: Padding(
+  //         padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 2),
+  //         child: Row(
+  //           children: [
+  //             const Text('Order'),
+  //             const Spacer(),
+  //             TextButton(
+  //               child: const Text('Norm'),
+  //               onPressed: order == 'Norm'
+  //                   ? null
+  //                   : () => ref.read(orderProvider.state).state = 'Norm',
+  //             ),
+  //             TextButton(
+  //               child: const Text('Last'),
+  //               onPressed: order == 'Last'
+  //                   ? null
+  //                   : () => ref.read(orderProvider.state).state = 'Last',
+  //             ),
+  //           ],
+  //         ),
+  //       ),
+  //     );
+  //   });
+  // }
 
   Widget _search() => HookConsumer(
         builder: (context, ref, child) {
