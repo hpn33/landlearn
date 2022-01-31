@@ -4,7 +4,9 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:landlearn/logic/model/content_notifier.dart';
 import 'package:landlearn/logic/model/word_notifier.dart';
 import 'package:landlearn/logic/util/open_browser.dart';
+import 'package:landlearn/logic/util/platform_util.dart';
 import 'package:landlearn/ui/component/my_overlay_panel_widget.dart';
+import 'package:landlearn/ui/component/word_panel.dart';
 import 'package:landlearn/ui/component/word_panel_open_widget.dart';
 import 'package:landlearn/ui/page/study/logic/view_mode.dart';
 
@@ -158,7 +160,16 @@ class ReadView extends HookConsumerWidget {
                   wordNotifier.toggleKnowToDB(ref);
                 },
           onLongPress: () {
-            openGoogleTranslateInBrowser(wordNotifier.word);
+            if (isMobile()) {
+              ref.read(selectedWordNotifierProvider.state).state = wordNotifier;
+
+              showDialog(
+                context: context,
+                builder: (context) => const WordPanel(),
+              );
+            } else {
+              openGoogleTranslateInBrowser(wordNotifier.word);
+            }
           },
           onDoubleTap: () {
             ref.read(studyVMProvider).toggleWordSelection(wordNotifier);
