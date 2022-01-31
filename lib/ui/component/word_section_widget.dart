@@ -4,8 +4,11 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:landlearn/logic/model/word_category_notifier.dart';
 import 'package:landlearn/logic/model/word_notifier.dart';
 import 'package:landlearn/logic/util/open_browser.dart';
+import 'package:landlearn/logic/util/platform_util.dart';
+import 'package:landlearn/logic/util/screen_size.dart';
 
 import 'my_overlay_panel_widget.dart';
+import 'word_panel.dart';
 import 'word_panel_open_widget.dart';
 
 class WordSectionWidget extends StatelessWidget {
@@ -87,7 +90,17 @@ class WordSectionWidget extends StatelessWidget {
                 wordNotifier.toggleKnowToDB(ref);
               },
               onLongPress: () {
-                openGoogleTranslateInBrowser(wordNotifier.word);
+                if (isMobile()) {
+                  ref.read(selectedWordNotifierProvider.state).state =
+                      wordNotifier;
+
+                  showDialog(
+                    context: context,
+                    builder: (context) => const WordPanel(),
+                  );
+                } else {
+                  openGoogleTranslateInBrowser(wordNotifier.word);
+                }
               },
               child: Padding(
                 padding: const EdgeInsets.all(5.0),
