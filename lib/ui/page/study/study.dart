@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:landlearn/logic/util/screen_size.dart';
+import 'package:landlearn/ui/page/study/study_desktop.dart';
 
-import 'component/content_text.dart';
-import 'component/content_words.dart';
 import 'component/key_bind.dart';
-import 'component/side_bar.dart';
 import 'logic/view_mode.dart';
 import 'logic/study_controller.dart';
+import 'study_mobile.dart';
 
 class StudyPage extends HookConsumerWidget {
   static final viewModeProvider = StateProvider((ref) => ViewMode.normal);
@@ -25,32 +25,16 @@ class StudyPage extends HookConsumerWidget {
         return Future.value(true);
       },
       child: StudyKeyBinds(
-        child: Material(
-          child: Column(
-            children: [
-              Expanded(
-                child: Center(
-                  child: SizedBox(
-                    width: MediaQuery.of(context).size.width > 950
-                        ? MediaQuery.of(context).size.width > 1140
-                            ? 1140
-                            : MediaQuery.of(context).size.width * 0.8
-                        : null,
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: const [
-                        SideBar(),
-                        Expanded(child: ContentTextWidget()),
-                        ContentWordToggleWidget(),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
+        child: getChild(context),
       ),
     );
+  }
+
+  Widget getChild(BuildContext context) {
+    if (screenSize(context).isCompactScreen) {
+      return const StudyMobilePage();
+    }
+
+    return const StudyDesktopPage();
   }
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:landlearn/logic/model/content_notifier.dart';
+import 'package:landlearn/logic/util/screen_size.dart';
 import 'package:landlearn/ui/component/styled_percent_widget.dart';
 import 'package:landlearn/ui/component/word_section_widget.dart';
 
@@ -162,13 +163,14 @@ class ContentWordWidget extends HookConsumerWidget {
             const Text(' '),
             StyledPercent(awarnessPercent: contentNotifier.awarnessPercent),
             const Spacer(),
-            IconButton(
-              icon: const Icon(Icons.toggle_off),
-              onPressed: () {
-                ref.read(StudyPage.showContentWordsProvider.state).state =
-                    !ref.read(StudyPage.showContentWordsProvider);
-              },
-            ),
+            if (!screenSize(useContext()).isCompactScreen)
+              IconButton(
+                icon: const Icon(Icons.toggle_off),
+                onPressed: () {
+                  ref.read(StudyPage.showContentWordsProvider.state).state =
+                      !ref.read(StudyPage.showContentWordsProvider);
+                },
+              ),
           ],
         ),
       ),

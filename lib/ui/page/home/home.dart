@@ -61,7 +61,7 @@ class HomePage extends HookWidget {
   }
 
   Widget getChild(BuildContext context) {
-    final isCompactScreen = MediaQuery.of(context).isCompactScreen;
+    final isCompactScreen = screenSize(context).isCompactScreen;
 
     if (isCompactScreen) {
       return const MobileHomePage();
