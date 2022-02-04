@@ -33,6 +33,8 @@ class ReadView extends HookConsumerWidget {
                 word: contentNotifier.getWordNotifier(word),
             },
         ];
+
+        return null;
       },
       [contentNotifier.content],
     );

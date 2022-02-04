@@ -26,6 +26,8 @@ class ContentWordToggleWidget extends HookConsumerWidget {
         } else {
           animationController.reverse();
         }
+
+        return null;
       },
       [show],
     );

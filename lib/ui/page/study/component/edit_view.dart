@@ -65,6 +65,8 @@ class EditPanel extends HookConsumerWidget {
       useEffect(
         () {
           animationController.forward();
+
+          return null;
         },
         [],
       );

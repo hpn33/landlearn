@@ -5,7 +5,6 @@ import 'package:landlearn/logic/model/word_category_notifier.dart';
 import 'package:landlearn/logic/model/word_notifier.dart';
 import 'package:landlearn/logic/util/open_browser.dart';
 import 'package:landlearn/logic/util/platform_util.dart';
-import 'package:landlearn/logic/util/screen_size.dart';
 
 import 'my_overlay_panel_widget.dart';
 import 'word_panel.dart';

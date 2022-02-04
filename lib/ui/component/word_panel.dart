@@ -109,6 +109,8 @@ class WordPanel extends StatelessWidget {
           useEffect(
             () {
               textController.text = note;
+
+              return null;
             },
             [note],
           );
@@ -292,6 +294,7 @@ class EditNotePanel extends HookConsumerWidget {
         }
 
         showAction.value = textController.text != note;
+        return null;
       },
       [note],
     );
@@ -299,6 +302,7 @@ class EditNotePanel extends HookConsumerWidget {
     useEffect(
       () {
         showAction.value = textController.text != note;
+        return null;
       },
       [textController.text],
     );

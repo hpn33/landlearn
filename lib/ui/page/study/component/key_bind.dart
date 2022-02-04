@@ -28,12 +28,18 @@ class StudyKeyBinds extends ConsumerWidget {
             } else if (mode.state == ViewMode.unknow) {
               mode.state = ViewMode.normal;
             }
+
+            return null;
           }),
           ViewModeNormalIntent: CallbackAction(onInvoke: (intent) {
             ref.read(StudyPage.viewModeProvider.state).state = ViewMode.normal;
+
+            return null;
           }),
           ViewModeUnknowIntent: CallbackAction(onInvoke: (intent) {
             ref.read(StudyPage.viewModeProvider.state).state = ViewMode.unknow;
+
+            return null;
           }),
         },
         child: child,

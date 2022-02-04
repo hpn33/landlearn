@@ -29,6 +29,8 @@ class ToggleViewModeButton extends StatelessWidget {
                 final index = ViewMode.values.indexOf(viewMode.state);
                 isSelected.value =
                     List.generate(viewModeItems.length, (i) => i == index);
+
+                return null;
               },
               [viewMode.state],
             );
@@ -111,6 +113,8 @@ class ToggleViewModeButton2 extends StatelessWidget {
               final index = ViewMode.values.indexOf(viewMode.state);
               isSelected.value =
                   List.generate(viewModeItems.length, (i) => i == index);
+
+              return null;
             },
             [viewMode.state],
           );
