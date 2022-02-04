@@ -3,19 +3,19 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:landlearn/logic/model/content_hub.dart';
 import 'package:landlearn/logic/model/content_notifier.dart';
+import 'package:landlearn/ui/component/search_box.dart';
 import 'package:landlearn/ui/float/add_content_dialog.dart';
 
 import 'content_item.dart';
 import 'content_order_button.dart';
 import 'content_short_status.dart';
 
-class ContentView extends StatelessWidget {
+class ContentView extends ConsumerWidget {
   const ContentView({Key? key}) : super(key: key);
 
-  static final searchProvider = StateProvider((ref) => '');
   static final searchedContentProvider = StateProvider((ref) {
     final contentNotifier = ref.watch(contentHubProvider).contentNotifiers;
-    final searchInput = ref.watch(searchProvider);
+    final searchInput = ref.watch(SearchBox.searchProvider('content'));
 
     if (searchInput.isNotEmpty) {
       return contentNotifier
@@ -42,20 +42,25 @@ class ContentView extends StatelessWidget {
   );
 
   @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Column(
-        children: [
-          const ContentShortStatus(),
-          _toolBar(context),
-          // _order(),
-          _search(),
-          Expanded(
-            child: contentListWidget(context),
+  Widget build(BuildContext context, ref) {
+    return Column(
+      children: [
+        const ContentShortStatus(),
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.only(bottom: 8.0, right: 8.0, left: 8.0),
+            child: Column(
+              children: [
+                _toolBar(context),
+                const SearchBox(stateName: 'content'),
+                Expanded(
+                  child: contentListWidget(context),
+                ),
+              ],
+            ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
@@ -86,93 +91,6 @@ class ContentView extends StatelessWidget {
       ),
     );
   }
-
-  // Widget _order() {
-  //   return HookConsumer(builder: (context, ref, child) {
-  //     final order = ref.watch(orderProvider);
-
-  //     return Card(
-  //       margin: const EdgeInsets.symmetric(horizontal: 16.0),
-  //       elevation: 0,
-  //       child: Padding(
-  //         padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 2),
-  //         child: Row(
-  //           children: [
-  //             const Text('Order'),
-  //             const Spacer(),
-  //             TextButton(
-  //               child: const Text('Norm'),
-  //               onPressed: order == 'Norm'
-  //                   ? null
-  //                   : () => ref.read(orderProvider.state).state = 'Norm',
-  //             ),
-  //             TextButton(
-  //               child: const Text('Last'),
-  //               onPressed: order == 'Last'
-  //                   ? null
-  //                   : () => ref.read(orderProvider.state).state = 'Last',
-  //             ),
-  //           ],
-  //         ),
-  //       ),
-  //     );
-  //   });
-  // }
-
-  Widget _search() => HookConsumer(
-        builder: (context, ref, child) {
-          final searchController =
-              useTextEditingController(text: ref.read(searchProvider));
-
-          return Container(
-            margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 6),
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(5),
-            ),
-            child: Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: searchController,
-                    decoration: const InputDecoration(
-                      hintText: 'Search',
-                      border: InputBorder.none,
-                    ),
-                    onChanged: (value) {
-                      ref.read(searchProvider.state).state = value;
-                    },
-                  ),
-                ),
-                HookBuilder(
-                  builder: (context) {
-                    useListenable(searchController);
-
-                    return Row(
-                      children: [
-                        if (searchController.text.isNotEmpty)
-                          IconButton(
-                            icon: const Icon(Icons.clear),
-                            onPressed: () {
-                              searchController.clear();
-                              ref.read(searchProvider.state).state = '';
-                            },
-                          ),
-                        if (searchController.text.isEmpty)
-                          const Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: Icon(Icons.search),
-                          ),
-                      ],
-                    );
-                  },
-                ),
-              ],
-            ),
-          );
-        },
-      );
 
   Widget contentListWidget(BuildContext context) => HookConsumer(
         builder: (context, ref, child) {

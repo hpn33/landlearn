@@ -23,12 +23,12 @@ Widget addContentDialog() {
 
         return DropTarget(
           onDragDone: (data) async {
-            final file = File(data.urls.first.toFilePath());
+            final file = File(data.files.first.path);
 
             final subtitleProvider = SubtitleProvider.fromFile(file);
             final controller = SubtitleController(provider: subtitleProvider);
 
-            titleController.text = data.urls.first.pathSegments.last;
+            titleController.text = data.files.first.name;
 
             controller
                 .initial()

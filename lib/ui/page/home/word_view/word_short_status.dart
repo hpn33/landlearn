@@ -15,10 +15,11 @@ class WordShortStatus extends ConsumerWidget {
     final wordHub = ref.watch(wordHubProvider);
 
     return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 16.0),
+      // margin: const EdgeInsets.symmetric(horizontal: 16.0),
+      margin: const EdgeInsets.all(0.0),
       elevation: 0,
       child: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(2.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
