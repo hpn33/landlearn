@@ -22,6 +22,24 @@ class StudyMobilePage extends HookConsumerWidget {
       appBar: AppBar(
         title: Text(ref.read(studyVMProvider).selectedContent.title),
         actions: [
+          // toggle icon for view mode
+          Consumer(
+            builder: (BuildContext context, WidgetRef ref, Widget? child) {
+              final viewMode = ref.watch(StudyPage.viewModeProvider);
+
+              return IconButton(
+                icon: viewMode == ViewMode.normal
+                    ? const Icon(Icons.remove_red_eye_outlined)
+                    : const Icon(Icons.thumb_down_alt_outlined),
+                onPressed: () {
+                  ref.read(StudyPage.viewModeProvider.state).state =
+                      viewMode == ViewMode.normal
+                          ? ViewMode.unknow
+                          : ViewMode.normal;
+                },
+              );
+            },
+          ),
           PopupMenuButton<String>(
             itemBuilder: (context) => [
               // change between content view and word view
