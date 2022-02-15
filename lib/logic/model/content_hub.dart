@@ -12,7 +12,18 @@ class ContentHub extends ChangeNotifier {
   final List<Content> contents = [];
   final List<ContentNotifier> contentNotifiers = [];
 
-  void load(WordHub wordHub, [List<Content>? newContents]) {
+  Future<void> load(WordHub wordHub, [List<Content>? newContents]) async {
+    if (newContents != null) {
+      contents.clear();
+      contents.addAll(newContents);
+    }
+
+    for (final content in contents) {
+      addByContent(content, wordHub);
+    }
+  }
+
+  void loadSync(WordHub wordHub, [List<Content>? newContents]) {
     if (newContents != null) {
       contents.clear();
       contents.addAll(newContents);

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:landlearn/logic/service/db/database.dart';
@@ -12,15 +13,19 @@ class LoadPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    Future.wait([load(ref)]).then(
-      (value) {
-        Navigator.pop(context);
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (c) => const HomePage()),
-        );
-      },
-    );
+    useEffect(() {
+      Future.wait([load(ref)]).then(
+        (value) {
+          Navigator.pop(context);
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (c) => const HomePage()),
+          );
+        },
+      );
+
+      return null;
+    }, []);
 
     return const Material(
       child: SafeArea(
@@ -50,11 +55,19 @@ class LoadPage extends HookConsumerWidget {
     WordHub wordHub,
     ContentHub contentHub,
   ) async {
+    // db.wordDao.getAll().then((words) {
+    //   wordHub.load(words);
+
+    //   db.contentDao
+    //       .getAll()
+    //       .then((contents) => contentHub.load(wordHub, contents));
+    // });
+
     final words = await db.wordDao.getAll();
-    wordHub.load(words);
+    await wordHub.load(words);
 
     final contents = await db.contentDao.getAll();
-    contentHub.load(wordHub, contents);
+    await contentHub.load(wordHub, contents);
 
     await Future.delayed(const Duration(milliseconds: 100));
   }

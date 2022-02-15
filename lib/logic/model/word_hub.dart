@@ -25,7 +25,25 @@ class WordHub extends ChangeNotifier {
 
   /// load with all words in db
   /// because clear prevs data
-  void load([List<Word>? newWords]) {
+  Future<void> load([List<Word>? newWords]) async {
+    if (newWords != null) {
+      words.clear();
+      words.addAll(newWords);
+    }
+
+    _wordNotifiers.addAll(
+      words.map(
+        (e) => WordNotifier(e)..addListener(() => notifyListeners()),
+      ),
+    );
+
+    for (final wordNotifier in _wordNotifiers) {
+      wordCategories[wordNotifier.word.substring(0, 1)]!
+          .addNotifier(wordNotifier);
+    }
+  }
+
+  void loadSync([List<Word>? newWords]) {
     if (newWords != null) {
       words.clear();
       words.addAll(newWords);
