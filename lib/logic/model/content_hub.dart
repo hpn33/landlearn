@@ -3,7 +3,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:landlearn/logic/service/db/database.dart';
 import 'package:landlearn/logic/model/content_notifier.dart';
 
-import 'content_notifier.dart';
 import 'word_hub.dart';
 
 final contentHubProvider = ChangeNotifierProvider((ref) => ContentHub());

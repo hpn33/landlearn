@@ -21,7 +21,7 @@ class StudyKeyBinds extends ConsumerWidget {
       child: Actions(
         actions: {
           ToggleViewModeIntent: CallbackAction(onInvoke: (intent) {
-            final mode = ref.read(StudyPage.viewModeProvider.state);
+            final mode = ref.read(StudyPage.viewModeProvider.notifier);
 
             if (mode.state == ViewMode.normal) {
               mode.state = ViewMode.unknow;
@@ -32,12 +32,14 @@ class StudyKeyBinds extends ConsumerWidget {
             return null;
           }),
           ViewModeNormalIntent: CallbackAction(onInvoke: (intent) {
-            ref.read(StudyPage.viewModeProvider.state).state = ViewMode.normal;
+            ref.read(StudyPage.viewModeProvider.notifier).state =
+                ViewMode.normal;
 
             return null;
           }),
           ViewModeUnknowIntent: CallbackAction(onInvoke: (intent) {
-            ref.read(StudyPage.viewModeProvider.state).state = ViewMode.unknow;
+            ref.read(StudyPage.viewModeProvider.notifier).state =
+                ViewMode.unknow;
 
             return null;
           }),

@@ -90,7 +90,7 @@ class WordSectionWidget extends StatelessWidget {
               },
               onLongPress: () {
                 if (isMobile()) {
-                  ref.read(selectedWordNotifierProvider.state).state =
+                  ref.read(selectedWordNotifierProvider.notifier).state =
                       wordNotifier;
 
                   showDialog(

@@ -78,7 +78,7 @@ class ContentWordToggleWidget extends HookConsumerWidget {
               ),
               TextButton(
                 onPressed: () {
-                  ref.read(StudyPage.showContentWordsProvider.state).state =
+                  ref.read(StudyPage.showContentWordsProvider.notifier).state =
                       true;
                 },
                 child: const RotatedBox(
@@ -167,7 +167,7 @@ class ContentWordWidget extends HookConsumerWidget {
               IconButton(
                 icon: const Icon(Icons.toggle_off),
                 onPressed: () {
-                  ref.read(StudyPage.showContentWordsProvider.state).state =
+                  ref.read(StudyPage.showContentWordsProvider.notifier).state =
                       !ref.read(StudyPage.showContentWordsProvider);
                 },
               ),

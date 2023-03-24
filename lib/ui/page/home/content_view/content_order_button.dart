@@ -9,7 +9,7 @@ class ContentOrderButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    final order = ref.watch(ContentView.orderProvider.state);
+    final order = ref.watch(ContentView.orderProvider.notifier);
 
     return ActionChip(
       avatar: const Icon(Icons.filter_list),
@@ -24,18 +24,18 @@ class ContentOrderButton extends ConsumerWidget {
           initialValue: order.state,
           items: [
             PopupMenuItem(
-              child: const Text('Norm'),
               value: 'Norm',
               onTap: () {
                 order.state = 'Norm';
               },
+              child: const Text('Norm'),
             ),
             PopupMenuItem(
-              child: const Text('Last'),
               value: 'Last',
               onTap: () {
                 order.state = 'Last';
               },
+              child: const Text('Last'),
             ),
           ],
         );

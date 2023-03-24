@@ -20,7 +20,7 @@ class ToggleViewModeButton extends StatelessWidget {
         const Text('Views '),
         HookConsumer(
           builder: (BuildContext context, WidgetRef ref, Widget? child) {
-            final viewMode = ref.watch(StudyPage.viewModeProvider.state);
+            final viewMode = ref.watch(StudyPage.viewModeProvider.notifier);
 
             final isSelected = useState(<bool>[]);
 
@@ -36,7 +36,6 @@ class ToggleViewModeButton extends StatelessWidget {
             );
 
             return ToggleButtons(
-              children: viewModeItems,
               onPressed: (int index) async {
                 isSelected.value =
                     List.generate(viewModeItems.length, (i) => index == i);
@@ -44,6 +43,7 @@ class ToggleViewModeButton extends StatelessWidget {
                 viewMode.state = ViewMode.values[index];
               },
               isSelected: isSelected.value,
+              children: viewModeItems,
             );
           },
         ),
@@ -55,7 +55,7 @@ class ToggleViewModeButton extends StatelessWidget {
               child: FloatingActionButton(
                 child: const Icon(Icons.edit),
                 onPressed: () {
-                  ref.read(StudyPage.viewModeProvider.state).state =
+                  ref.read(StudyPage.viewModeProvider.notifier).state =
                       ViewMode.edit;
                 },
               ),
@@ -90,7 +90,7 @@ class ToggleViewModeButton2 extends StatelessWidget {
                 child: FloatingActionButton(
                   child: const Icon(Icons.edit),
                   onPressed: () {
-                    ref.read(StudyPage.viewModeProvider.state).state =
+                    ref.read(StudyPage.viewModeProvider.notifier).state =
                         ViewMode.edit;
                   },
                 ),
@@ -104,7 +104,7 @@ class ToggleViewModeButton2 extends StatelessWidget {
 
   Widget toggleWidget() => HookConsumer(
         builder: (BuildContext context, WidgetRef ref, Widget? child) {
-          final viewMode = ref.watch(StudyPage.viewModeProvider.state);
+          final viewMode = ref.watch(StudyPage.viewModeProvider.notifier);
 
           final isSelected = useState(<bool>[]);
 
@@ -129,7 +129,6 @@ class ToggleViewModeButton2 extends StatelessWidget {
           return ToggleButtons(
             borderRadius: BorderRadius.circular(24),
             direction: Axis.vertical,
-            children: viewModeItems,
             onPressed: (int index) async {
               isSelected.value =
                   List.generate(viewModeItems.length, (i) => index == i);
@@ -137,6 +136,7 @@ class ToggleViewModeButton2 extends StatelessWidget {
               viewMode.state = ViewMode.values[index];
             },
             isSelected: isSelected.value,
+            children: viewModeItems,
           );
         },
       );

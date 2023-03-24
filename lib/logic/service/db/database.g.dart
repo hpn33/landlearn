@@ -6,7 +6,7 @@ part of 'database.dart';
 // MoorGenerator
 // **************************************************************************
 
-// ignore_for_file: unnecessary_brace_in_string_interps, unnecessary_this
+// ignore_for_file: type=lint
 class Word extends DataClass implements Insertable<Word> {
   final int id;
   final String word;
@@ -258,44 +258,52 @@ class WordsCompanion extends UpdateCompanion<Word> {
 }
 
 class $WordsTable extends Words with TableInfo<$WordsTable, Word> {
-  final GeneratedDatabase _db;
+  @override
+  final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $WordsTable(this._db, [this._alias]);
+  $WordsTable(this.attachedDatabase, [this._alias]);
   final VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
   late final GeneratedColumn<int?> id = GeneratedColumn<int?>(
       'id', aliasedName, false,
-      typeName: 'INTEGER',
+      type: const IntType(),
       requiredDuringInsert: false,
       defaultConstraints: 'PRIMARY KEY AUTOINCREMENT');
   final VerificationMeta _wordMeta = const VerificationMeta('word');
+  @override
   late final GeneratedColumn<String?> word = GeneratedColumn<String?>(
       'word', aliasedName, false,
-      typeName: 'TEXT', requiredDuringInsert: true);
+      type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _knowMeta = const VerificationMeta('know');
+  @override
   late final GeneratedColumn<bool?> know = GeneratedColumn<bool?>(
       'know', aliasedName, false,
-      typeName: 'INTEGER',
+      type: const BoolType(),
       requiredDuringInsert: true,
       defaultConstraints: 'CHECK (know IN (0, 1))');
   final VerificationMeta _noteMeta = const VerificationMeta('note');
+  @override
   late final GeneratedColumn<String?> note = GeneratedColumn<String?>(
       'note', aliasedName, true,
-      typeName: 'TEXT', requiredDuringInsert: false);
+      type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _onlineTranslationMeta =
       const VerificationMeta('onlineTranslation');
+  @override
   late final GeneratedColumn<String?> onlineTranslation =
       GeneratedColumn<String?>('online_translation', aliasedName, true,
-          typeName: 'TEXT', requiredDuringInsert: false);
+          type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _createdAtMeta = const VerificationMeta('createdAt');
+  @override
   late final GeneratedColumn<DateTime?> createdAt = GeneratedColumn<DateTime?>(
       'created_at', aliasedName, false,
-      typeName: 'INTEGER',
+      type: const IntType(),
       requiredDuringInsert: false,
       clientDefault: () => DateTime.now());
   final VerificationMeta _updatedAtMeta = const VerificationMeta('updatedAt');
+  @override
   late final GeneratedColumn<DateTime?> updatedAt = GeneratedColumn<DateTime?>(
       'updated_at', aliasedName, false,
-      typeName: 'INTEGER',
+      type: const IntType(),
       requiredDuringInsert: false,
       clientDefault: () => DateTime.now());
   @override
@@ -350,13 +358,13 @@ class $WordsTable extends Words with TableInfo<$WordsTable, Word> {
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
   Word map(Map<String, dynamic> data, {String? tablePrefix}) {
-    return Word.fromData(data, _db,
+    return Word.fromData(data, attachedDatabase,
         prefix: tablePrefix != null ? '$tablePrefix.' : null);
   }
 
   @override
   $WordsTable createAlias(String alias) {
-    return $WordsTable(_db, alias);
+    return $WordsTable(attachedDatabase, alias);
   }
 }
 
@@ -581,39 +589,46 @@ class ContentsCompanion extends UpdateCompanion<Content> {
 }
 
 class $ContentsTable extends Contents with TableInfo<$ContentsTable, Content> {
-  final GeneratedDatabase _db;
+  @override
+  final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $ContentsTable(this._db, [this._alias]);
+  $ContentsTable(this.attachedDatabase, [this._alias]);
   final VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
   late final GeneratedColumn<int?> id = GeneratedColumn<int?>(
       'id', aliasedName, false,
-      typeName: 'INTEGER',
+      type: const IntType(),
       requiredDuringInsert: false,
       defaultConstraints: 'PRIMARY KEY AUTOINCREMENT');
   final VerificationMeta _titleMeta = const VerificationMeta('title');
+  @override
   late final GeneratedColumn<String?> title = GeneratedColumn<String?>(
       'title', aliasedName, false,
-      typeName: 'TEXT', requiredDuringInsert: true);
+      type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _contentMeta = const VerificationMeta('content');
+  @override
   late final GeneratedColumn<String?> content = GeneratedColumn<String?>(
       'content', aliasedName, false,
-      typeName: 'TEXT', requiredDuringInsert: true);
+      type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _dataMeta = const VerificationMeta('data');
+  @override
   late final GeneratedColumn<String?> data = GeneratedColumn<String?>(
       'data', aliasedName, false,
-      typeName: 'TEXT',
+      type: const StringType(),
       requiredDuringInsert: false,
       defaultValue: const Constant('{}'));
   final VerificationMeta _createdAtMeta = const VerificationMeta('createdAt');
+  @override
   late final GeneratedColumn<DateTime?> createdAt = GeneratedColumn<DateTime?>(
       'created_at', aliasedName, false,
-      typeName: 'INTEGER',
+      type: const IntType(),
       requiredDuringInsert: false,
       clientDefault: () => DateTime.now());
   final VerificationMeta _updatedAtMeta = const VerificationMeta('updatedAt');
+  @override
   late final GeneratedColumn<DateTime?> updatedAt = GeneratedColumn<DateTime?>(
       'updated_at', aliasedName, false,
-      typeName: 'INTEGER',
+      type: const IntType(),
       requiredDuringInsert: false,
       clientDefault: () => DateTime.now());
   @override
@@ -662,13 +677,13 @@ class $ContentsTable extends Contents with TableInfo<$ContentsTable, Content> {
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
   Content map(Map<String, dynamic> data, {String? tablePrefix}) {
-    return Content.fromData(data, _db,
+    return Content.fromData(data, attachedDatabase,
         prefix: tablePrefix != null ? '$tablePrefix.' : null);
   }
 
   @override
   $ContentsTable createAlias(String alias) {
-    return $ContentsTable(_db, alias);
+    return $ContentsTable(attachedDatabase, alias);
   }
 }
 

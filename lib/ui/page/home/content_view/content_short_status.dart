@@ -39,7 +39,7 @@ class ContentShortStatus extends ConsumerWidget {
               children: [
                 const Text('awarness'),
                 Text(
-                  contentHub.awarness.toStringAsFixed(2) + '%',
+                  '${contentHub.awarness.toStringAsFixed(2)}%',
                   style: const TextStyle(fontSize: 24),
                 ),
               ],

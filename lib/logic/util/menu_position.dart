@@ -5,7 +5,7 @@ RelativeRect buttonMenuPosition(BuildContext context) {
   //     LocalizedApp.of(context).delegate.currentLocale.languageCode == 'en';
   final RenderBox bar = context.findRenderObject() as RenderBox;
   final RenderBox overlay =
-      Overlay.of(context)!.context.findRenderObject() as RenderBox;
+      Overlay.of(context).context.findRenderObject() as RenderBox;
   const Offset offset = Offset.zero;
 
   final RelativeRect position = RelativeRect.fromRect(

@@ -164,8 +164,7 @@ class ContentItem extends HookConsumerWidget {
             Text(contentNotifier.allWordCountString),
             const Text(' '),
             Text(
-              contentNotifier.awarnessPercentOfAllWord.toStringAsFixed(1) +
-                  ' %',
+              '${contentNotifier.awarnessPercentOfAllWord.toStringAsFixed(1)} %',
               style: const TextStyle(fontSize: 12),
             ),
           ],
@@ -188,7 +187,7 @@ class ContentItem extends HookConsumerWidget {
                 horizontal: 2.0,
               ),
               child: Text(
-                contentNotifier.awarnessPercent.toStringAsFixed(1) + ' %',
+                '${contentNotifier.awarnessPercent.toStringAsFixed(1)} %',
                 style: const TextStyle(fontSize: 12),
               ),
             ),

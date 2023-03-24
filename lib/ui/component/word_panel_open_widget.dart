@@ -33,7 +33,7 @@ class WordPanelOpenWidget extends ConsumerWidget {
         event.buttons == kSecondaryMouseButton) {
       wordNotifier.updateTime(ref);
 
-      ref.read(selectedWordNotifierProvider.state).state = wordNotifier;
+      ref.read(selectedWordNotifierProvider.notifier).state = wordNotifier;
 
       showDialog(
         context: context,

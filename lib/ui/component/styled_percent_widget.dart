@@ -50,7 +50,7 @@ class StyledPercent extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.all(2.0),
                 child: Text(
-                  awarnessPercent.toStringAsFixed(fractionDigits) + ' %',
+                  '${awarnessPercent.toStringAsFixed(fractionDigits)} %',
                   style: TextStyle(
                     fontSize: 12,
                     color: isFull ? Colors.white : null,

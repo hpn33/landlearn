@@ -56,7 +56,7 @@ class ContentStatus extends HookConsumerWidget {
                   ),
                   titer(
                     'Awarness',
-                    contentHub.awarness.toStringAsFixed(2) + '%',
+                    '${contentHub.awarness.toStringAsFixed(2)}%',
                   ),
                 ],
               ),

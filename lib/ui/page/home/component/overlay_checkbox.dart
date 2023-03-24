@@ -18,7 +18,7 @@ class OverlayCheckBox extends ConsumerWidget {
 
   Widget _checkBox() {
     return Consumer(builder: (context, ref, child) {
-      final showOverlay = ref.watch(StudyPage.showOverlayProvider.state);
+      final showOverlay = ref.watch(StudyPage.showOverlayProvider.notifier);
 
       return Padding(
         padding: const EdgeInsets.symmetric(vertical: 2.0),

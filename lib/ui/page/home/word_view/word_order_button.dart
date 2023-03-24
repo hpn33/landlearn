@@ -9,7 +9,7 @@ class WordOrderButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    final order = ref.watch(WordView.orderProvider.state);
+    final order = ref.watch(WordView.orderProvider.notifier);
 
     return ActionChip(
       avatar: const Icon(Icons.filter_list),
@@ -24,25 +24,25 @@ class WordOrderButton extends ConsumerWidget {
           initialValue: order.state,
           items: [
             PopupMenuItem(
-              child: const Text('Norm'),
               value: 'Norm',
               onTap: () {
                 order.state = 'Norm';
               },
+              child: const Text('Norm'),
             ),
             PopupMenuItem(
-              child: const Text('Most'),
               value: 'Most',
               onTap: () {
                 order.state = 'Most';
               },
+              child: const Text('Most'),
             ),
             PopupMenuItem(
-              child: const Text('Last'),
               value: 'Last',
               onTap: () {
                 order.state = 'Last';
               },
+              child: const Text('Last'),
             ),
           ],
         );

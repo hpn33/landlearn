@@ -18,3 +18,16 @@ after stury on each content and adding new content you can see the new words ( t
 * [Change Log](change_log.md)
 * [TODO](todo.md)
 <!-- [TODO](todo.md) -->
+
+
+``` mermaid
+stateDiagram-v2
+[*] --> Still
+Still --> [*]
+Still --> Moving
+Moving --> Still
+Moving --> Crash
+Crash --> [*]
+```
+
+

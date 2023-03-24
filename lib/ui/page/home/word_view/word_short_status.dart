@@ -40,7 +40,7 @@ class WordShortStatus extends ConsumerWidget {
               children: [
                 const Text('awarness'),
                 Text(
-                  wordHub.awarness.toStringAsFixed(2) + '%',
+                  '${wordHub.awarness.toStringAsFixed(2)}%',
                   style: const TextStyle(fontSize: 24),
                 ),
               ],

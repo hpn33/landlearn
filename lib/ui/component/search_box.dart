@@ -50,7 +50,7 @@ class SearchBox extends HookConsumerWidget {
                 ),
               ),
               onChanged: (value) {
-                ref.read(searchProvider(stateName).state).state = value;
+                ref.read(searchProvider(stateName).notifier).state = value;
               },
             ),
           ),
@@ -65,7 +65,7 @@ class SearchBox extends HookConsumerWidget {
                       icon: const Icon(Icons.clear),
                       onPressed: () {
                         searchController.clear();
-                        ref.read(searchProvider(stateName).state).state = '';
+                        ref.read(searchProvider(stateName).notifier).state = '';
                       },
                     ),
                   if (searchController.text.isEmpty)

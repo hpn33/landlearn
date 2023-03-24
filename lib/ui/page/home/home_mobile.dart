@@ -15,7 +15,7 @@ class MobileHomePage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    final pageIndex = ref.read(pageIndexProvider.state);
+    final pageIndex = ref.read(pageIndexProvider.notifier);
 
     final pageController = usePageController(initialPage: pageIndex.state);
     useListenable(pageController);

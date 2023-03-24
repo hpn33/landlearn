@@ -32,7 +32,8 @@ class SideBar extends HookConsumerWidget {
                 Checkbox(
                   value: showSubtitle,
                   onChanged: (a) {
-                    ref.read(StudyPage.showSubtitleProvider.state).state = a!;
+                    ref.read(StudyPage.showSubtitleProvider.notifier).state =
+                        a!;
                   },
                 ),
               ],

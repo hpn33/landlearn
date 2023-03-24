@@ -17,7 +17,7 @@ class MyOverLayPanel {
       return;
     }
 
-    final overlay = Overlay.of(context)!;
+    final overlay = Overlay.of(context);
     final renderBox = context.findRenderObject()! as RenderBox;
     final size = renderBox.size;
 

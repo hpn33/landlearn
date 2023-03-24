@@ -1,8 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:landlearn/logic/model/word_notifier.dart';
 
-import 'word_notifier.dart';
-
 class WordCategoryNotifier extends ChangeNotifier {
   final List<WordNotifier> words = [];
 

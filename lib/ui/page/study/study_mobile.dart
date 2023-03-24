@@ -32,7 +32,7 @@ class StudyMobilePage extends HookConsumerWidget {
                     ? const Icon(Icons.remove_red_eye_outlined)
                     : const Icon(Icons.thumb_down_alt_outlined),
                 onPressed: () {
-                  ref.read(StudyPage.viewModeProvider.state).state =
+                  ref.read(StudyPage.viewModeProvider.notifier).state =
                       viewMode == ViewMode.normal
                           ? ViewMode.unknow
                           : ViewMode.normal;
@@ -61,7 +61,7 @@ class StudyMobilePage extends HookConsumerWidget {
                       : 'Hide Level',
                 ),
                 onTap: () {
-                  ref.read(StudyPage.viewModeProvider.state).state =
+                  ref.read(StudyPage.viewModeProvider.notifier).state =
                       ref.read(StudyPage.viewModeProvider) == ViewMode.normal
                           ? ViewMode.unknow
                           : ViewMode.normal;
@@ -76,7 +76,7 @@ class StudyMobilePage extends HookConsumerWidget {
             ],
             onSelected: (selectedIndex) {
               if (selectedIndex == 'subtitle') {
-                ref.read(StudyPage.showSubtitleProvider.state).state =
+                ref.read(StudyPage.showSubtitleProvider.notifier).state =
                     !ref.read(StudyPage.showSubtitleProvider);
               }
             },

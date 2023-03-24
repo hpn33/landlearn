@@ -166,6 +166,7 @@ extension Util on ContentNotifier {
     return wordNotifiers.value;
   }
 
+  // ignore: todo
   // TODO : optimize ( is slow )
   WordNotifier? getWordNotifier(String word) {
     if (word.isEmpty) {

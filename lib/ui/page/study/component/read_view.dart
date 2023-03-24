@@ -153,9 +153,9 @@ class ReadView extends HookConsumerWidget {
         final viewMode = ref.watch(StudyPage.viewModeProvider);
         final isNormal = viewMode == ViewMode.normal;
 
-        Widget _child = child;
+        Widget child0 = child;
 
-        _child = InkWell(
+        child0 = InkWell(
           onTap: isNormal
               ? () {}
               : () {
@@ -163,7 +163,8 @@ class ReadView extends HookConsumerWidget {
                 },
           onLongPress: () {
             if (isMobile()) {
-              ref.read(selectedWordNotifierProvider.state).state = wordNotifier;
+              ref.read(selectedWordNotifierProvider.notifier).state =
+                  wordNotifier;
 
               showDialog(
                 context: context,
@@ -176,20 +177,20 @@ class ReadView extends HookConsumerWidget {
           onDoubleTap: () {
             ref.read(studyVMProvider).toggleWordSelection(wordNotifier);
           },
-          child: _child,
+          child: child0,
         );
 
         if (!ref.watch(StudyPage.showSubtitleProvider) &&
             ref.watch(StudyPage.showOverlayProvider)) {
-          _child = MyOverlayPanelWidget(
+          child0 = MyOverlayPanelWidget(
             wordNotifier: wordNotifier,
-            child: _child,
+            child: child0,
           );
         }
 
         return WordPanelOpenWidget(
           wordNotifier: wordNotifier,
-          child: _child,
+          child: child0,
         );
       },
     );
