@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:landlearn/logic/service/db/database.dart';
 import 'package:landlearn/logic/util/delete_all_database.dart';
 import 'package:landlearn/logic/util/load_default_data.dart';

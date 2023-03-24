@@ -1,12 +1,12 @@
 import 'package:landlearn/logic/service/db/table/contents.dart';
 import 'package:landlearn/logic/model/content_notifier.dart';
-import 'package:moor/moor.dart';
+import 'package:drift/drift.dart';
 
 import '../database.dart';
 
 part 'content_dao.g.dart';
 
-@UseDao(tables: [Contents])
+@DriftAccessor(tables: [Contents])
 class ContentDao extends DatabaseAccessor<Database> with _$ContentDaoMixin {
   final Database db;
 

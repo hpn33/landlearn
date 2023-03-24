@@ -1,3 +1,4 @@
+import 'package:drift/drift.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -67,7 +68,7 @@ extension DB on WordNotifier {
   ) async {
     final db = ref.read(dbProvider);
 
-    value = value.copyWith(note: note);
+    value = value.copyWith(note: Value(note));
 
     await db.wordDao.up(value);
   }
@@ -83,7 +84,7 @@ extension DB on WordNotifier {
 
 extension Update on WordNotifier {
   void updateOnlineTranslation(String translation) {
-    value = value.copyWith(onlineTranslation: translation);
+    value = value.copyWith(onlineTranslation: Value(translation));
   }
 }
 

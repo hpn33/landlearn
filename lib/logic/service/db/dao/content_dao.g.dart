@@ -2,10 +2,7 @@
 
 part of 'content_dao.dart';
 
-// **************************************************************************
-// DaoGenerator
-// **************************************************************************
-
+// ignore_for_file: type=lint
 mixin _$ContentDaoMixin on DatabaseAccessor<Database> {
   $ContentsTable get contents => attachedDatabase.contents;
 }

@@ -44,11 +44,15 @@ dependencies:
   translator: ^0.1.7
   url_launcher: ^6.1.10
 
-  moor: ^4.6.1+1
-  moor_flutter: ^4.1.0
-  moor_db_viewer: ^5.0.0
-  sqlite3_flutter_libs: ^0.5.13
-  path_provider: ^2.0.14
+  drift: ^2.6.0
+  sqlite3_flutter_libs: ^0.5.0
+  sqflite: ^1.1.7
+  path_provider: ^2.0.0
+  path: ^1.8.2
+
+  # moor: ^4.6.1+1
+  # moor_flutter: ^4.1.0
+  # moor_db_viewer: ^5.0.0
 
   subtitle: ^0.1.0-beta.3
 
@@ -59,7 +63,8 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   
-  moor_generator: ^4.6.0+1
+  # moor_generator: ^4.6.0+1
+  drift_dev: ^2.6.0
   build_runner: ^2.3.3
 
   # The "flutter_lints" package below contains a set of recommended lints to

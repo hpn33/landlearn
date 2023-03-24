@@ -2,10 +2,7 @@
 
 part of 'word_dao.dart';
 
-// **************************************************************************
-// DaoGenerator
-// **************************************************************************
-
+// ignore_for_file: type=lint
 mixin _$WordDaoMixin on DatabaseAccessor<Database> {
   $WordsTable get words => attachedDatabase.words;
 }

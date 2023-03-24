@@ -16,12 +16,12 @@ Future<void> openStudyPage(
 
   ref.read(studyVMProvider).init(contentNotifier, selectedWord);
 
-  if (context.mounted) return;
-
-  Navigator.push(
-    context,
-    MaterialPageRoute(builder: (c) => const StudyPage()),
-  );
+  if (context.mounted) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (c) => const StudyPage()),
+    );
+  }
 
   ref.read(contentHubProvider).notify();
 }

@@ -143,9 +143,7 @@ Widget _form(
 
                       await analyzeContent(db, contentNotifier, wordHub);
 
-                      if (context.mounted) return;
-
-                      Navigator.pop(context);
+                      if (context.mounted) Navigator.pop(context);
                     },
                   ),
                 ],

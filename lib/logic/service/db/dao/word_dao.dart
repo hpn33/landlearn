@@ -1,11 +1,11 @@
+import 'package:drift/drift.dart';
 import 'package:landlearn/logic/service/db/table/words.dart';
-import 'package:moor/moor.dart';
 
 import '../database.dart';
 
 part 'word_dao.g.dart';
 
-@UseDao(tables: [Words])
+@DriftAccessor(tables: [Words])
 class WordDao extends DatabaseAccessor<Database> with _$WordDaoMixin {
   final Database db;
 

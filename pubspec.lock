@@ -5,26 +5,26 @@ packages:
     dependency: transitive
     description:
       name: _fe_analyzer_shared
-      sha256: "4897882604d919befd350648c7f91926a9d5de99e67b455bf0917cc2362f4bb8"
+      sha256: a36ec4843dc30ea6bf652bf25e3448db6c5e8bcf4aa55f063a5d1dad216d8214
       url: "https://pub.dev"
     source: hosted
-    version: "47.0.0"
+    version: "58.0.0"
   analyzer:
     dependency: transitive
     description:
       name: analyzer
-      sha256: "690e335554a8385bc9d787117d9eb52c0c03ee207a607e593de3c9d71b1cfe80"
+      sha256: cc4242565347e98424ce9945c819c192ec0838cb9d1f6aa4a97cc96becbc5b27
       url: "https://pub.dev"
     source: hosted
-    version: "4.7.0"
+    version: "5.10.0"
   analyzer_plugin:
     dependency: transitive
     description:
       name: analyzer_plugin
-      sha256: "02b0046b8b9a4c97a238c66f70acd22eec4263dfc8d9205f9dab5cc8630c5a6f"
+      sha256: c1d5f167683de03d5ab6c3b53fc9aeefc5d59476e7810ba7bbddff50c6f4392d
       url: "https://pub.dev"
     source: hosted
-    version: "0.11.1"
+    version: "0.11.2"
   args:
     dependency: transitive
     description:
@@ -209,14 +209,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.2.4"
-  db_viewer:
-    dependency: transitive
-    description:
-      name: db_viewer
-      sha256: "426daaaa0142facb95590da5b5b1d9a86d31c129098423c8644d3cc009bfe849"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.3"
   desktop_drop:
     dependency: "direct main"
     description:
@@ -226,21 +218,21 @@ packages:
     source: hosted
     version: "0.4.1"
   drift:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: drift
-      sha256: "43ae515270f38ffe47702dc920c04d415894bcc6ebdf3e2b6a292cb207ed8cb7"
+      sha256: a843a73ccb6703b7dec59c0b3ebf9404a1e534d22289ce6399e7a440c604b9b4
       url: "https://pub.dev"
     source: hosted
-    version: "1.7.1"
+    version: "2.6.0"
   drift_dev:
-    dependency: transitive
+    dependency: "direct dev"
     description:
       name: drift_dev
-      sha256: "7d51538da971823a158236823cfb299731f720cd55078c6a478bfa4effb69275"
+      sha256: "152bd8cd782e88beef2a5b2eff8036b90f7f9f310b6790be103f4048d6ee9208"
       url: "https://pub.dev"
     source: hosted
-    version: "1.7.1"
+    version: "2.6.0"
   fake_async:
     dependency: transitive
     description:
@@ -456,46 +448,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.4"
-  moor:
-    dependency: "direct main"
-    description:
-      name: moor
-      sha256: "3c9500ebb0996592480728a5480e020c881110597416b9f3c6f72e57212bd78c"
-      url: "https://pub.dev"
-    source: hosted
-    version: "4.6.1+1"
-  moor_db_viewer:
-    dependency: "direct main"
-    description:
-      name: moor_db_viewer
-      sha256: eb53e930de9ec9fe46b555df7010f724011058e07f4a65bfbf97966b0e928028
-      url: "https://pub.dev"
-    source: hosted
-    version: "5.0.0"
-  moor_flutter:
-    dependency: "direct main"
-    description:
-      name: moor_flutter
-      sha256: "337babe6977103a765d01a838b5d166483eff0a6a83ad5f997761c247f428cdf"
-      url: "https://pub.dev"
-    source: hosted
-    version: "4.1.0"
-  moor_generator:
-    dependency: "direct dev"
-    description:
-      name: moor_generator
-      sha256: "511df4d32bc6150456024592e4839fb868eda96b49d8c3515e30781eec6bc31d"
-      url: "https://pub.dev"
-    source: hosted
-    version: "4.6.0+1"
-  nested:
-    dependency: transitive
-    description:
-      name: nested
-      sha256: "03bac4c528c64c95c722ec99280375a6f2fc708eec17c7b3f07253b626cd2a20"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.0"
   package_config:
     dependency: transitive
     description:
@@ -505,7 +457,7 @@ packages:
     source: hosted
     version: "2.1.0"
   path:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: path
       sha256: db9d4f58c908a4ba5953fcee2ae317c94889433e5024c27ce74a37f94267945b
@@ -592,14 +544,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.2.4"
-  provider:
-    dependency: transitive
-    description:
-      name: provider
-      sha256: cdbe7530b12ecd9eb455bdaa2fcb8d4dad22e80b8afb4798b41479d5ce26847f
-      url: "https://pub.dev"
-    source: hosted
-    version: "6.0.5"
   pub_semver:
     dependency: transitive
     description:
@@ -670,21 +614,21 @@ packages:
     source: hosted
     version: "1.9.1"
   sqflite:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: sqflite
-      sha256: "500d6fec583d2c021f2d25a056d96654f910662c64f836cd2063167b8f1fa758"
+      sha256: "00f32a183fd9410b7d221a5106fec2cfc34b72d15ce694ee4da9c12e235cc2a4"
       url: "https://pub.dev"
     source: hosted
-    version: "2.2.6"
+    version: "1.3.2+4"
   sqflite_common:
     dependency: transitive
     description:
       name: sqflite_common
-      sha256: "963dad8c4aa2f814ce7d2d5b1da2f36f31bd1a439d8f27e3dc189bb9d26bc684"
+      sha256: cd2c3caf1cdfd79bbf5787e3a95983e43d19584784df2e6dd1863673497a791f
       url: "https://pub.dev"
     source: hosted
-    version: "2.4.3"
+    version: "1.0.3+3"
   sqlite3:
     dependency: transitive
     description:
@@ -705,10 +649,10 @@ packages:
     dependency: transitive
     description:
       name: sqlparser
-      sha256: "9ed8f4a24a2a243e23ad267bb50378cb75c7de0b200b5336229b2d6096e6a5df"
+      sha256: a96a7851b69b54c40425ef8da15a19701ec4c994fbcebf4fb4fbf53782859160
       url: "https://pub.dev"
     source: hosted
-    version: "0.22.0"
+    version: "0.28.0"
   stack_trace:
     dependency: transitive
     description:
@@ -761,10 +705,10 @@ packages:
     dependency: transitive
     description:
       name: synchronized
-      sha256: "33b31b6beb98100bf9add464a36a8dd03eb10c7a8cf15aeec535e9b054aaf04b"
+      sha256: "294228ee6183405c4053a60e8b47c22956da37c92fd410c89ddf0279c188f735"
       url: "https://pub.dev"
     source: hosted
-    version: "3.0.1"
+    version: "2.2.0+2"
   term_glyph:
     dependency: transitive
     description:

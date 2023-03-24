@@ -1,6 +1,6 @@
+import 'package:drift/drift.dart';
 import 'package:flutter/foundation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:moor/moor.dart';
 
 import 'dao/content_dao.dart';
 import 'dao/word_dao.dart';
@@ -18,7 +18,7 @@ final dbProvider = Provider(
   ),
 );
 
-@UseMoor(
+@DriftDatabase(
   tables: [Words, Contents],
   daos: [WordDao, ContentDao],
 )

@@ -2,11 +2,141 @@
 
 part of 'database.dart';
 
-// **************************************************************************
-// MoorGenerator
-// **************************************************************************
-
 // ignore_for_file: type=lint
+class $WordsTable extends Words with TableInfo<$WordsTable, Word> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $WordsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+      'id', aliasedName, false,
+      hasAutoIncrement: true,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
+  static const VerificationMeta _wordMeta = const VerificationMeta('word');
+  @override
+  late final GeneratedColumn<String> word = GeneratedColumn<String>(
+      'word', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _knowMeta = const VerificationMeta('know');
+  @override
+  late final GeneratedColumn<bool> know =
+      GeneratedColumn<bool>('know', aliasedName, false,
+          type: DriftSqlType.bool,
+          requiredDuringInsert: true,
+          defaultConstraints: GeneratedColumn.constraintsDependsOnDialect({
+            SqlDialect.sqlite: 'CHECK ("know" IN (0, 1))',
+            SqlDialect.mysql: '',
+            SqlDialect.postgres: '',
+          }));
+  static const VerificationMeta _noteMeta = const VerificationMeta('note');
+  @override
+  late final GeneratedColumn<String> note = GeneratedColumn<String>(
+      'note', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _onlineTranslationMeta =
+      const VerificationMeta('onlineTranslation');
+  @override
+  late final GeneratedColumn<String> onlineTranslation =
+      GeneratedColumn<String>('online_translation', aliasedName, true,
+          type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _createdAtMeta =
+      const VerificationMeta('createdAt');
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+      'created_at', aliasedName, false,
+      type: DriftSqlType.dateTime,
+      requiredDuringInsert: false,
+      clientDefault: () => DateTime.now());
+  static const VerificationMeta _updatedAtMeta =
+      const VerificationMeta('updatedAt');
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+      'updated_at', aliasedName, false,
+      type: DriftSqlType.dateTime,
+      requiredDuringInsert: false,
+      clientDefault: () => DateTime.now());
+  @override
+  List<GeneratedColumn> get $columns =>
+      [id, word, know, note, onlineTranslation, createdAt, updatedAt];
+  @override
+  String get aliasedName => _alias ?? 'words';
+  @override
+  String get actualTableName => 'words';
+  @override
+  VerificationContext validateIntegrity(Insertable<Word> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('word')) {
+      context.handle(
+          _wordMeta, word.isAcceptableOrUnknown(data['word']!, _wordMeta));
+    } else if (isInserting) {
+      context.missing(_wordMeta);
+    }
+    if (data.containsKey('know')) {
+      context.handle(
+          _knowMeta, know.isAcceptableOrUnknown(data['know']!, _knowMeta));
+    } else if (isInserting) {
+      context.missing(_knowMeta);
+    }
+    if (data.containsKey('note')) {
+      context.handle(
+          _noteMeta, note.isAcceptableOrUnknown(data['note']!, _noteMeta));
+    }
+    if (data.containsKey('online_translation')) {
+      context.handle(
+          _onlineTranslationMeta,
+          onlineTranslation.isAcceptableOrUnknown(
+              data['online_translation']!, _onlineTranslationMeta));
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(_createdAtMeta,
+          createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(_updatedAtMeta,
+          updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  Word map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return Word(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+      word: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}word'])!,
+      know: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}know'])!,
+      note: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}note']),
+      onlineTranslation: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}online_translation']),
+      createdAt: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
+      updatedAt: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}updated_at'])!,
+    );
+  }
+
+  @override
+  $WordsTable createAlias(String alias) {
+    return $WordsTable(attachedDatabase, alias);
+  }
+}
+
 class Word extends DataClass implements Insertable<Word> {
   final int id;
   final String word;
@@ -15,7 +145,7 @@ class Word extends DataClass implements Insertable<Word> {
   final String? onlineTranslation;
   final DateTime createdAt;
   final DateTime updatedAt;
-  Word(
+  const Word(
       {required this.id,
       required this.word,
       required this.know,
@@ -23,26 +153,6 @@ class Word extends DataClass implements Insertable<Word> {
       this.onlineTranslation,
       required this.createdAt,
       required this.updatedAt});
-  factory Word.fromData(Map<String, dynamic> data, GeneratedDatabase db,
-      {String? prefix}) {
-    final effectivePrefix = prefix ?? '';
-    return Word(
-      id: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}id'])!,
-      word: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}word'])!,
-      know: const BoolType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}know'])!,
-      note: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}note']),
-      onlineTranslation: const StringType().mapFromDatabaseResponse(
-          data['${effectivePrefix}online_translation']),
-      createdAt: const DateTimeType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}created_at'])!,
-      updatedAt: const DateTimeType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}updated_at'])!,
-    );
-  }
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -50,10 +160,10 @@ class Word extends DataClass implements Insertable<Word> {
     map['word'] = Variable<String>(word);
     map['know'] = Variable<bool>(know);
     if (!nullToAbsent || note != null) {
-      map['note'] = Variable<String?>(note);
+      map['note'] = Variable<String>(note);
     }
     if (!nullToAbsent || onlineTranslation != null) {
-      map['online_translation'] = Variable<String?>(onlineTranslation);
+      map['online_translation'] = Variable<String>(onlineTranslation);
     }
     map['created_at'] = Variable<DateTime>(createdAt);
     map['updated_at'] = Variable<DateTime>(updatedAt);
@@ -76,7 +186,7 @@ class Word extends DataClass implements Insertable<Word> {
 
   factory Word.fromJson(Map<String, dynamic> json,
       {ValueSerializer? serializer}) {
-    serializer ??= moorRuntimeOptions.defaultSerializer;
+    serializer ??= driftRuntimeOptions.defaultSerializer;
     return Word(
       id: serializer.fromJson<int>(json['id']),
       word: serializer.fromJson<String>(json['word']),
@@ -90,7 +200,7 @@ class Word extends DataClass implements Insertable<Word> {
   }
   @override
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
-    serializer ??= moorRuntimeOptions.defaultSerializer;
+    serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'id': serializer.toJson<int>(id),
       'word': serializer.toJson<String>(word),
@@ -106,16 +216,18 @@ class Word extends DataClass implements Insertable<Word> {
           {int? id,
           String? word,
           bool? know,
-          String? note,
-          String? onlineTranslation,
+          Value<String?> note = const Value.absent(),
+          Value<String?> onlineTranslation = const Value.absent(),
           DateTime? createdAt,
           DateTime? updatedAt}) =>
       Word(
         id: id ?? this.id,
         word: word ?? this.word,
         know: know ?? this.know,
-        note: note ?? this.note,
-        onlineTranslation: onlineTranslation ?? this.onlineTranslation,
+        note: note.present ? note.value : this.note,
+        onlineTranslation: onlineTranslation.present
+            ? onlineTranslation.value
+            : this.onlineTranslation,
         createdAt: createdAt ?? this.createdAt,
         updatedAt: updatedAt ?? this.updatedAt,
       );
@@ -180,8 +292,8 @@ class WordsCompanion extends UpdateCompanion<Word> {
     Expression<int>? id,
     Expression<String>? word,
     Expression<bool>? know,
-    Expression<String?>? note,
-    Expression<String?>? onlineTranslation,
+    Expression<String>? note,
+    Expression<String>? onlineTranslation,
     Expression<DateTime>? createdAt,
     Expression<DateTime>? updatedAt,
   }) {
@@ -228,10 +340,10 @@ class WordsCompanion extends UpdateCompanion<Word> {
       map['know'] = Variable<bool>(know.value);
     }
     if (note.present) {
-      map['note'] = Variable<String?>(note.value);
+      map['note'] = Variable<String>(note.value);
     }
     if (onlineTranslation.present) {
-      map['online_translation'] = Variable<String?>(onlineTranslation.value);
+      map['online_translation'] = Variable<String>(onlineTranslation.value);
     }
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
@@ -257,91 +369,84 @@ class WordsCompanion extends UpdateCompanion<Word> {
   }
 }
 
-class $WordsTable extends Words with TableInfo<$WordsTable, Word> {
+class $ContentsTable extends Contents with TableInfo<$ContentsTable, Content> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $WordsTable(this.attachedDatabase, [this._alias]);
-  final VerificationMeta _idMeta = const VerificationMeta('id');
+  $ContentsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
-  late final GeneratedColumn<int?> id = GeneratedColumn<int?>(
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
       'id', aliasedName, false,
-      type: const IntType(),
+      hasAutoIncrement: true,
+      type: DriftSqlType.int,
       requiredDuringInsert: false,
-      defaultConstraints: 'PRIMARY KEY AUTOINCREMENT');
-  final VerificationMeta _wordMeta = const VerificationMeta('word');
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
+  static const VerificationMeta _titleMeta = const VerificationMeta('title');
   @override
-  late final GeneratedColumn<String?> word = GeneratedColumn<String?>(
-      'word', aliasedName, false,
-      type: const StringType(), requiredDuringInsert: true);
-  final VerificationMeta _knowMeta = const VerificationMeta('know');
+  late final GeneratedColumn<String> title = GeneratedColumn<String>(
+      'title', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _contentMeta =
+      const VerificationMeta('content');
   @override
-  late final GeneratedColumn<bool?> know = GeneratedColumn<bool?>(
-      'know', aliasedName, false,
-      type: const BoolType(),
-      requiredDuringInsert: true,
-      defaultConstraints: 'CHECK (know IN (0, 1))');
-  final VerificationMeta _noteMeta = const VerificationMeta('note');
+  late final GeneratedColumn<String> content = GeneratedColumn<String>(
+      'content', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _dataMeta = const VerificationMeta('data');
   @override
-  late final GeneratedColumn<String?> note = GeneratedColumn<String?>(
-      'note', aliasedName, true,
-      type: const StringType(), requiredDuringInsert: false);
-  final VerificationMeta _onlineTranslationMeta =
-      const VerificationMeta('onlineTranslation');
+  late final GeneratedColumn<String> data = GeneratedColumn<String>(
+      'data', aliasedName, false,
+      type: DriftSqlType.string,
+      requiredDuringInsert: false,
+      defaultValue: const Constant('{}'));
+  static const VerificationMeta _createdAtMeta =
+      const VerificationMeta('createdAt');
   @override
-  late final GeneratedColumn<String?> onlineTranslation =
-      GeneratedColumn<String?>('online_translation', aliasedName, true,
-          type: const StringType(), requiredDuringInsert: false);
-  final VerificationMeta _createdAtMeta = const VerificationMeta('createdAt');
-  @override
-  late final GeneratedColumn<DateTime?> createdAt = GeneratedColumn<DateTime?>(
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
       'created_at', aliasedName, false,
-      type: const IntType(),
+      type: DriftSqlType.dateTime,
       requiredDuringInsert: false,
       clientDefault: () => DateTime.now());
-  final VerificationMeta _updatedAtMeta = const VerificationMeta('updatedAt');
+  static const VerificationMeta _updatedAtMeta =
+      const VerificationMeta('updatedAt');
   @override
-  late final GeneratedColumn<DateTime?> updatedAt = GeneratedColumn<DateTime?>(
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
       'updated_at', aliasedName, false,
-      type: const IntType(),
+      type: DriftSqlType.dateTime,
       requiredDuringInsert: false,
       clientDefault: () => DateTime.now());
   @override
   List<GeneratedColumn> get $columns =>
-      [id, word, know, note, onlineTranslation, createdAt, updatedAt];
+      [id, title, content, data, createdAt, updatedAt];
   @override
-  String get aliasedName => _alias ?? 'words';
+  String get aliasedName => _alias ?? 'contents';
   @override
-  String get actualTableName => 'words';
+  String get actualTableName => 'contents';
   @override
-  VerificationContext validateIntegrity(Insertable<Word> instance,
+  VerificationContext validateIntegrity(Insertable<Content> instance,
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
     }
-    if (data.containsKey('word')) {
+    if (data.containsKey('title')) {
       context.handle(
-          _wordMeta, word.isAcceptableOrUnknown(data['word']!, _wordMeta));
+          _titleMeta, title.isAcceptableOrUnknown(data['title']!, _titleMeta));
     } else if (isInserting) {
-      context.missing(_wordMeta);
+      context.missing(_titleMeta);
     }
-    if (data.containsKey('know')) {
-      context.handle(
-          _knowMeta, know.isAcceptableOrUnknown(data['know']!, _knowMeta));
+    if (data.containsKey('content')) {
+      context.handle(_contentMeta,
+          content.isAcceptableOrUnknown(data['content']!, _contentMeta));
     } else if (isInserting) {
-      context.missing(_knowMeta);
+      context.missing(_contentMeta);
     }
-    if (data.containsKey('note')) {
+    if (data.containsKey('data')) {
       context.handle(
-          _noteMeta, note.isAcceptableOrUnknown(data['note']!, _noteMeta));
-    }
-    if (data.containsKey('online_translation')) {
-      context.handle(
-          _onlineTranslationMeta,
-          onlineTranslation.isAcceptableOrUnknown(
-              data['online_translation']!, _onlineTranslationMeta));
+          _dataMeta, this.data.isAcceptableOrUnknown(data['data']!, _dataMeta));
     }
     if (data.containsKey('created_at')) {
       context.handle(_createdAtMeta,
@@ -357,14 +462,27 @@ class $WordsTable extends Words with TableInfo<$WordsTable, Word> {
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  Word map(Map<String, dynamic> data, {String? tablePrefix}) {
-    return Word.fromData(data, attachedDatabase,
-        prefix: tablePrefix != null ? '$tablePrefix.' : null);
+  Content map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return Content(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+      title: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}title'])!,
+      content: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}content'])!,
+      data: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}data'])!,
+      createdAt: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
+      updatedAt: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}updated_at'])!,
+    );
   }
 
   @override
-  $WordsTable createAlias(String alias) {
-    return $WordsTable(attachedDatabase, alias);
+  $ContentsTable createAlias(String alias) {
+    return $ContentsTable(attachedDatabase, alias);
   }
 }
 
@@ -375,31 +493,13 @@ class Content extends DataClass implements Insertable<Content> {
   final String data;
   final DateTime createdAt;
   final DateTime updatedAt;
-  Content(
+  const Content(
       {required this.id,
       required this.title,
       required this.content,
       required this.data,
       required this.createdAt,
       required this.updatedAt});
-  factory Content.fromData(Map<String, dynamic> data, GeneratedDatabase db,
-      {String? prefix}) {
-    final effectivePrefix = prefix ?? '';
-    return Content(
-      id: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}id'])!,
-      title: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}title'])!,
-      content: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}content'])!,
-      data: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}data'])!,
-      createdAt: const DateTimeType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}created_at'])!,
-      updatedAt: const DateTimeType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}updated_at'])!,
-    );
-  }
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -425,7 +525,7 @@ class Content extends DataClass implements Insertable<Content> {
 
   factory Content.fromJson(Map<String, dynamic> json,
       {ValueSerializer? serializer}) {
-    serializer ??= moorRuntimeOptions.defaultSerializer;
+    serializer ??= driftRuntimeOptions.defaultSerializer;
     return Content(
       id: serializer.fromJson<int>(json['id']),
       title: serializer.fromJson<String>(json['title']),
@@ -437,7 +537,7 @@ class Content extends DataClass implements Insertable<Content> {
   }
   @override
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
-    serializer ??= moorRuntimeOptions.defaultSerializer;
+    serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'id': serializer.toJson<int>(id),
       'title': serializer.toJson<String>(title),
@@ -588,113 +688,15 @@ class ContentsCompanion extends UpdateCompanion<Content> {
   }
 }
 
-class $ContentsTable extends Contents with TableInfo<$ContentsTable, Content> {
-  @override
-  final GeneratedDatabase attachedDatabase;
-  final String? _alias;
-  $ContentsTable(this.attachedDatabase, [this._alias]);
-  final VerificationMeta _idMeta = const VerificationMeta('id');
-  @override
-  late final GeneratedColumn<int?> id = GeneratedColumn<int?>(
-      'id', aliasedName, false,
-      type: const IntType(),
-      requiredDuringInsert: false,
-      defaultConstraints: 'PRIMARY KEY AUTOINCREMENT');
-  final VerificationMeta _titleMeta = const VerificationMeta('title');
-  @override
-  late final GeneratedColumn<String?> title = GeneratedColumn<String?>(
-      'title', aliasedName, false,
-      type: const StringType(), requiredDuringInsert: true);
-  final VerificationMeta _contentMeta = const VerificationMeta('content');
-  @override
-  late final GeneratedColumn<String?> content = GeneratedColumn<String?>(
-      'content', aliasedName, false,
-      type: const StringType(), requiredDuringInsert: true);
-  final VerificationMeta _dataMeta = const VerificationMeta('data');
-  @override
-  late final GeneratedColumn<String?> data = GeneratedColumn<String?>(
-      'data', aliasedName, false,
-      type: const StringType(),
-      requiredDuringInsert: false,
-      defaultValue: const Constant('{}'));
-  final VerificationMeta _createdAtMeta = const VerificationMeta('createdAt');
-  @override
-  late final GeneratedColumn<DateTime?> createdAt = GeneratedColumn<DateTime?>(
-      'created_at', aliasedName, false,
-      type: const IntType(),
-      requiredDuringInsert: false,
-      clientDefault: () => DateTime.now());
-  final VerificationMeta _updatedAtMeta = const VerificationMeta('updatedAt');
-  @override
-  late final GeneratedColumn<DateTime?> updatedAt = GeneratedColumn<DateTime?>(
-      'updated_at', aliasedName, false,
-      type: const IntType(),
-      requiredDuringInsert: false,
-      clientDefault: () => DateTime.now());
-  @override
-  List<GeneratedColumn> get $columns =>
-      [id, title, content, data, createdAt, updatedAt];
-  @override
-  String get aliasedName => _alias ?? 'contents';
-  @override
-  String get actualTableName => 'contents';
-  @override
-  VerificationContext validateIntegrity(Insertable<Content> instance,
-      {bool isInserting = false}) {
-    final context = VerificationContext();
-    final data = instance.toColumns(true);
-    if (data.containsKey('id')) {
-      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    }
-    if (data.containsKey('title')) {
-      context.handle(
-          _titleMeta, title.isAcceptableOrUnknown(data['title']!, _titleMeta));
-    } else if (isInserting) {
-      context.missing(_titleMeta);
-    }
-    if (data.containsKey('content')) {
-      context.handle(_contentMeta,
-          content.isAcceptableOrUnknown(data['content']!, _contentMeta));
-    } else if (isInserting) {
-      context.missing(_contentMeta);
-    }
-    if (data.containsKey('data')) {
-      context.handle(
-          _dataMeta, this.data.isAcceptableOrUnknown(data['data']!, _dataMeta));
-    }
-    if (data.containsKey('created_at')) {
-      context.handle(_createdAtMeta,
-          createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
-    }
-    if (data.containsKey('updated_at')) {
-      context.handle(_updatedAtMeta,
-          updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta));
-    }
-    return context;
-  }
-
-  @override
-  Set<GeneratedColumn> get $primaryKey => {id};
-  @override
-  Content map(Map<String, dynamic> data, {String? tablePrefix}) {
-    return Content.fromData(data, attachedDatabase,
-        prefix: tablePrefix != null ? '$tablePrefix.' : null);
-  }
-
-  @override
-  $ContentsTable createAlias(String alias) {
-    return $ContentsTable(attachedDatabase, alias);
-  }
-}
-
 abstract class _$Database extends GeneratedDatabase {
-  _$Database(QueryExecutor e) : super(SqlTypeSystem.defaultInstance, e);
+  _$Database(QueryExecutor e) : super(e);
   late final $WordsTable words = $WordsTable(this);
   late final $ContentsTable contents = $ContentsTable(this);
   late final WordDao wordDao = WordDao(this as Database);
   late final ContentDao contentDao = ContentDao(this as Database);
   @override
-  Iterable<TableInfo> get allTables => allSchemaEntities.whereType<TableInfo>();
+  Iterable<TableInfo<Table, Object?>> get allTables =>
+      allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
   List<DatabaseSchemaEntity> get allSchemaEntities => [words, contents];
 }
