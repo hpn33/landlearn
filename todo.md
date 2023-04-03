@@ -28,6 +28,10 @@
 * [x] good for public and publish
 * [ ] nextVER (0.3.0) -
 
+## Ver 0.4.0
+- [ ] jp support
+- [ ] "[\p{Script_Extensions=Hiragana}\p{Script_Extensions=Katakana}\p{Han}\p{Latin}]+\n?"
+
 ## Ver 0.3.0
 - [x] new ui ( color and style )
 - [x] show mean below of word (subtitle)

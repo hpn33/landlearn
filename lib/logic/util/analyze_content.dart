@@ -19,7 +19,14 @@ Future<void> analyzeContent(
   WordHub wordHub,
 ) async {
   final wordExtractedFromContentText =
-      contentNotifier.content.split(regex).map((e) => e.toLowerCase()).toList();
+      // contentNotifier.content.split(regex).map((e) => e.toLowerCase()).toList();
+      regex
+          .allMatches(contentNotifier.content)
+          .map((e) => e[0])
+          .where((element) => element != null)
+          .map((e) => e?.toLowerCase())
+          .map((e) => e.toString())
+          .toList();
 
   final wordMap = collectAndCountWords(wordExtractedFromContentText);
 
@@ -56,8 +63,12 @@ Map<String, List<WordData>> collectAndCountWords(List<String> words) {
       continue;
     }
 
-    final category = wordMap[word.substring(0, 1)]!;
+    final alpha = word.substring(0, 1);
+    if (!wordMap.containsKey(alpha)) {
+      continue;
+    }
 
+    final category = wordMap[alpha]!;
     final selection = category.where((element) => element.word == word);
 
     if (selection.isEmpty) {

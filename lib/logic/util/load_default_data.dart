@@ -19,6 +19,20 @@ const materials = [
   'Yussouf',
 ];
 
+const enTop100 = [
+  'enTop100',
+  't100 1',
+  't100 2',
+  't100 The Lost Locket',
+  't100 The Missing Key',
+];
+
+const w504 = [
+  '504-001-050',
+  '504',
+  '504-Emily',
+];
+
 Future<void> loadDefaultData(
   Database db,
   WordHub wordHub,
@@ -27,17 +41,9 @@ Future<void> loadDefaultData(
   final newContent = <Content>[];
 
   // insert new content
-  for (final fileTitle in materials) {
-    final matchContent = contentHub.contents.where((c) => c.title == fileTitle);
-    if (matchContent.isNotEmpty) {
-      continue;
-    }
-
-    final assets =
-        await rootBundle.loadString('assets/material/$fileTitle.txt');
-
-    newContent.add(await db.contentDao.add(fileTitle, assets));
-  }
+  await loadFiles("assets/en/material/", materials, contentHub, newContent, db);
+  await loadFiles("assets/en/t100/", enTop100, contentHub, newContent, db);
+  await loadFiles("assets/en/504/", w504, contentHub, newContent, db);
 
   if (newContent.isEmpty) {
     return;
@@ -51,5 +57,19 @@ Future<void> loadDefaultData(
     await analyzeContent(db, contentNotifier, wordHub);
     contentHub.notify();
     await Future.delayed(const Duration(milliseconds: 100));
+  }
+}
+
+Future<void> loadFiles(String path, List<String> fileList,
+    ContentHub contentHub, List<Content> newContent, Database db) async {
+  for (final fileTitle in fileList) {
+    final matchContent = contentHub.contents.where((c) => c.title == fileTitle);
+    if (matchContent.isNotEmpty) {
+      continue;
+    }
+
+    final assets = await rootBundle.loadString('$path$fileTitle.txt');
+
+    newContent.add(await db.contentDao.add(fileTitle, assets));
   }
 }

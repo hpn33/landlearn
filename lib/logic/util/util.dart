@@ -31,7 +31,9 @@ const alphabeta = [
   'z',
 ];
 
-final regex = RegExp("(?:(?![a-zA-Z])'|'(?![a-zA-Z])|[^a-zA-Z'])+");
+// final regex = RegExp("(?:(?![a-zA-Z])'|'(?![a-zA-Z])|[^a-zA-Z'])+");
+// final regex = RegExp("\b\w+\b");
+final regex = RegExp(r'\w+');
 
 const backgroundColor = Color.fromARGB(255, 237, 241, 245);
 
